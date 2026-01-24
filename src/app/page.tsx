@@ -64,34 +64,35 @@ export default function Home() {
   };
 
   return (
-    <SidebarProvider>
-      <div className="flex h-screen bg-background text-foreground">
-        <Sidebar className="w-80 lg:w-96" collapsible="icon">
-          <AiAssistant code={code} />
-        </Sidebar>
-        <SidebarInset>
-          <div className="flex h-dvh flex-col">
-            <Header />
-            <main className="flex-1 overflow-auto p-4 md:p-6">
-              <GameView
-                level={currentLevel}
-                onNextLevel={handleNextLevel}
-                onPrevLevel={handlePrevLevel}
-                isFirstLevel={currentLevelIndex === 0}
-                isLastLevel={currentLevelIndex === levels.length - 1}
-              />
-            </main>
-            <div className="h-[40%] min-h-[300px] flex-shrink-0 border-t border-border bg-card">
-              <CodeConsole
-                code={code}
-                setCode={setCode}
-                output={consoleOutput}
-                onRunCode={handleRunCode}
-              />
-            </div>
+    <SidebarProvider
+      style={{ "--sidebar-width": "20rem" } as React.CSSProperties}
+      className="bg-background text-foreground"
+    >
+      <Sidebar collapsible="icon">
+        <AiAssistant code={code} />
+      </Sidebar>
+      <SidebarInset>
+        <div className="flex h-dvh flex-col">
+          <Header />
+          <main className="flex-1 overflow-auto p-4 md:p-6">
+            <GameView
+              level={currentLevel}
+              onNextLevel={handleNextLevel}
+              onPrevLevel={handlePrevLevel}
+              isFirstLevel={currentLevelIndex === 0}
+              isLastLevel={currentLevelIndex === levels.length - 1}
+            />
+          </main>
+          <div className="h-[40%] min-h-[300px] flex-shrink-0 border-t border-border bg-card">
+            <CodeConsole
+              code={code}
+              setCode={setCode}
+              output={consoleOutput}
+              onRunCode={handleRunCode}
+            />
           </div>
-        </SidebarInset>
-      </div>
+        </div>
+      </SidebarInset>
     </SidebarProvider>
   );
 }
