@@ -134,7 +134,7 @@ export default function Header({
                       )}
                     </button>
                     <p className={cn(
-                      "w-full truncate text-xs font-semibold", 
+                      "w-full text-xs font-semibold", 
                       isUnlocked ? "text-foreground" : "text-muted-foreground"
                     )}>
                       {topic.topicTitle}
@@ -143,7 +143,7 @@ export default function Header({
                   </div>
                   {index < topics.length - 1 && (
                     <div className="flex h-20 items-center">
-                      <div className="h-px w-12 border-t-2 border-dashed border-border" />
+                      <div className="h-px w-12 border-t-2 border-border" />
                     </div>
                   )}
                 </React.Fragment>
@@ -152,45 +152,47 @@ export default function Header({
           </div>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
-        <div className="mt-4 border-t border-border pt-4">
-            <div className="mb-6 text-center">
-                <p className="mb-1 text-xs font-bold uppercase tracking-wider text-primary">{currentLevel.topicTitle}</p>
-                <h2 className="font-headline text-2xl font-bold text-foreground">{currentLevel.title}</h2>
-                <p className="mx-auto mt-1 max-w-2xl text-sm text-muted-foreground">{currentLevel.description}</p>
-            </div>
-            
-            <div className="flex items-center justify-center gap-4">
-                {currentTopicTasks.map((task, index) => {
-                    const isTaskUnlocked = task.id <= highestLevelUnlocked;
-                    const isTaskCurrent = task.id === currentLevel.id;
-                    const isTaskCompleted = task.id < highestLevelUnlocked;
+        <div className="mt-2 border-t border-border pt-2 pb-3 px-4">
+          <div className="flex items-center justify-between gap-8">
+              <div className="flex-1 min-w-0">
+                  <p className="text-xs font-bold uppercase tracking-wider text-primary">{currentLevel.topicTitle}</p>
+                  <h2 className="font-headline text-lg font-bold text-foreground truncate">{currentLevel.title}</h2>
+                  <p className="text-xs text-muted-foreground truncate">{currentLevel.description}</p>
+              </div>
+              
+              <div className="flex items-center shrink-0">
+                  {currentTopicTasks.map((task, index) => {
+                      const isTaskUnlocked = task.id <= highestLevelUnlocked;
+                      const isTaskCurrent = task.id === currentLevel.id;
+                      const isTaskCompleted = task.id < highestLevelUnlocked;
 
-                    return (
-                        <React.Fragment key={task.id}>
-                           <div className="flex flex-col items-center gap-2">
-                             <button onClick={() => isTaskUnlocked && onSelectLevel(task.id)}
-                                     disabled={!isTaskUnlocked}
-                                     className={cn(
-                                        "flex h-12 w-16 items-center justify-center rounded-lg border-2 transition-all",
-                                        !isTaskUnlocked && "cursor-not-allowed border-muted-foreground/20 bg-muted/50 text-muted-foreground",
-                                        isTaskUnlocked && (
-                                            isTaskCurrent ? "scale-110 border-primary shadow-lg" :
-                                            isTaskCompleted ? "border-green-500/50 bg-green-500/20 text-foreground hover:border-green-500" :
-                                            "border-border bg-card hover:border-primary"
-                                        )
-                                     )}
-                             >
-                               {isTaskCompleted ? <Check className="h-6 w-6 text-green-500" /> : <p className="text-lg font-bold">{index + 1}</p>}
-                             </button>
-                             <p className="w-16 truncate text-center text-xs font-medium">{task.title}</p>
-                           </div>
-                           {index < currentTopicTasks.length - 1 && (
-                               <div className="h-px w-8 bg-border" />
-                           )}
-                        </React.Fragment>
-                    )
-                })}
-            </div>
+                      return (
+                          <React.Fragment key={task.id}>
+                            <div className="flex flex-col items-center">
+                                <button onClick={() => isTaskUnlocked && onSelectLevel(task.id)}
+                                        disabled={!isTaskUnlocked}
+                                        title={task.title}
+                                        className={cn(
+                                          "flex h-10 w-12 items-center justify-center rounded-md border-2 transition-all",
+                                          !isTaskUnlocked && "cursor-not-allowed border-muted-foreground/20 bg-muted/50 text-muted-foreground",
+                                          isTaskUnlocked && (
+                                              isTaskCurrent ? "scale-105 border-primary shadow-md" :
+                                              isTaskCompleted ? "border-green-500/50 bg-green-500/20 text-foreground hover:border-green-500" :
+                                              "border-border bg-card hover:border-primary"
+                                          )
+                                        )}
+                                >
+                                  {isTaskCompleted ? <Check className="h-5 w-5 text-green-500" /> : <p className="text-base font-bold">{index + 1}</p>}
+                                </button>
+                              </div>
+                            {index < currentTopicTasks.length - 1 && (
+                                <div className="h-full w-4 border-b-2 border-border" />
+                            )}
+                          </React.Fragment>
+                      )
+                  })}
+              </div>
+          </div>
         </div>
       </div>
     </header>
