@@ -1,7 +1,6 @@
 "use server";
 
 import { aiCodingAssistantSuggestsImprovements } from "@/ai/flows/ai-coding-assistant-improvements";
-import { executePythonCode } from "@/ai/flows/ai-python-interpreter";
 import { z } from "zod";
 
 const submissionSchema = z.object({
@@ -45,6 +44,139 @@ export async function getAiSuggestionAction(
   }
 }
 
+// WARNING: This is a VERY simplified Python interpreter for educational purposes.
+// It is NOT safe, secure, or complete. It only supports a tiny subset of Python
+// needed for the Code Odyssey game.
+function simplePythonInterpreter(code: string): { output: string[], error: string | null } {
+  const output: string[] = [];
+  const scope: Record<string, any> = {};
+
+  const lines = code.split('\n');
+  
+  const evalExpression = (expression: string): any => {
+    expression = expression.trim();
+    if ((expression.startsWith("'") && expression.endsWith("'")) || (expression.startsWith('"') && expression.endsWith('"'))) {
+      return expression.slice(1, -1);
+    }
+    if (expression in scope) {
+      return scope[expression];
+    }
+    if (!isNaN(Number(expression))) {
+      return Number(expression);
+    }
+    if (expression.includes('+')) {
+      const parts = expression.split('+').map(p => p.trim());
+      const values = parts.map(p => evalExpression(p));
+      if (values.every(v => typeof v === 'number' || (typeof v === 'string' && !isNaN(Number(v))))) {
+        return values.reduce((a, b) => Number(a) + Number(b), 0);
+      }
+    }
+    throw new Error(`NameError: name '${expression}' is not defined`);
+  };
+
+  const executeBlock = (blockLines: string[], blockScope: Record<string, any> = {}) => {
+      const localScope = {...scope, ...blockScope};
+      
+      for (let i = 0; i < blockLines.length; i++) {
+        let line = blockLines[i];
+        const trimmedLine = line.trim();
+        const lineIndent = line.length - line.trimStart().length;
+
+        if (trimmedLine === '' || trimmedLine.startsWith('#')) continue;
+
+        // print()
+        const printMatch = trimmedLine.match(/^print\((.*)\)$/);
+        if (printMatch) {
+            output.push(String(evalExpression(printMatch[1])));
+            continue;
+        }
+
+        // variable assignment
+        const assignMatch = trimmedLine.match(/^(\w+)\s*=\s*(.*)$/);
+        if (assignMatch) {
+            scope[assignMatch[1]] = evalExpression(assignMatch[2]);
+            continue;
+        }
+
+        // for loop
+        const forMatch = trimmedLine.match(/^for\s+(\w+)\s+in\s+range\((\d+)\):$/);
+        if(forMatch) {
+            const loopVar = forMatch[1];
+            const count = parseInt(forMatch[2], 10);
+            const bodyLines = [];
+            i++;
+            while(i < blockLines.length && (blockLines[i].length - blockLines[i].trimStart().length > lineIndent || blockLines[i].trim() === '')) {
+                bodyLines.push(blockLines[i]);
+                i++;
+            }
+            i--;
+
+            for(let j=0; j<count; j++) {
+                executeBlock(bodyLines, {[loopVar]: j});
+            }
+            continue;
+        }
+
+        // if statement
+        const ifMatch = trimmedLine.match(/^if\s+(.*):$/);
+        if (ifMatch) {
+            const condition = ifMatch[1];
+            const condParts = condition.split(/\s*(>=|<=|==|!=|>|<)\s*/);
+            if (condParts.length < 3) throw new Error("Invalid if condition");
+
+            const varValue = evalExpression(condParts[0]);
+            const operator = condParts[1];
+            const value = evalExpression(condParts[2]);
+
+            let conditionResult = false;
+            if (operator === '>=') conditionResult = varValue >= value;
+            else if (operator === '<=') conditionResult = varValue <= value;
+            else if (operator === '>') conditionResult = varValue > value;
+            else if (operator === '<') conditionResult = varValue < value;
+            else if (operator === '==') conditionResult = varValue == value;
+            else if (operator === '!=') conditionResult = varValue != value;
+            
+            const ifBody: string[] = [];
+            const elseBody: string[] = [];
+            let currentBody: string[] = ifBody;
+            
+            i++;
+            while(i < blockLines.length && (blockLines[i].length - blockLines[i].trimStart().length > lineIndent || blockLines[i].trim() === '')) {
+                currentBody.push(blockLines[i]);
+                i++;
+            }
+
+            if (i < blockLines.length && blockLines[i].trim().startsWith('else:')) {
+                currentBody = elseBody;
+                i++;
+                while(i < blockLines.length && (blockLines[i].length - blockLines[i].trimStart().length > lineIndent || blockLines[i].trim() === '')) {
+                    currentBody.push(blockLines[i]);
+                    i++;
+                }
+            }
+            i--;
+
+            if (conditionResult) {
+                executeBlock(ifBody);
+            } else {
+                executeBlock(elseBody);
+            }
+            continue;
+        }
+
+        throw new Error(`SyntaxError: Unsupported syntax on line: "${trimmedLine}"`);
+    }
+  }
+
+
+  try {
+    executeBlock(lines);
+    return { output, error: null };
+  } catch(e: any) {
+    return { output: [], error: e.message };
+  }
+}
+
 export async function runPythonCode(
   code: string
 ): Promise<{ output: string[]; error: string | null }> {
@@ -54,18 +186,7 @@ export async function runPythonCode(
       error: "Code is empty.",
     };
   }
-  try {
-    const result = await executePythonCode({ code });
-    const outputLines = result.output.split("\n");
-    return {
-      output: outputLines,
-      error: null,
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      output: [],
-      error: "Failed to run code using AI. Please try again.",
-    };
-  }
+  
+  // Using a simple, non-AI interpreter
+  return simplePythonInterpreter(code);
 }
