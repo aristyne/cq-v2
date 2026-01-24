@@ -11,6 +11,7 @@ export type Level = {
   image: ImagePlaceholder;
   expectedOutput?: string;
   xp: number;
+  difficulty: 'Easy' | 'Medium' | 'Hard';
 };
 
 const findImage = (id: string) => {
@@ -30,6 +31,7 @@ export const levels: Level[] = [
     image: findImage('start-village'),
     expectedOutput: "Hello, World!",
     xp: 100,
+    difficulty: 'Easy',
   },
   {
     id: 2,
@@ -40,6 +42,7 @@ export const levels: Level[] = [
     solution: "print(player_name)",
     image: findImage('enchanted-forest'),
     xp: 100,
+    difficulty: 'Easy',
   },
   {
     id: 3,
@@ -51,6 +54,7 @@ export const levels: Level[] = [
     image: findImage('dragons-cave'),
     expectedOutput: "175",
     xp: 150,
+    difficulty: 'Medium',
   },
   {
     id: 4,
@@ -62,6 +66,7 @@ export const levels: Level[] = [
     image: findImage('conditional-bridge'),
     expectedOutput: "You may pass",
     xp: 150,
+    difficulty: 'Medium',
   },
   {
     id: 5,
@@ -73,5 +78,6 @@ export const levels: Level[] = [
     image: findImage('loop-spire'),
     expectedOutput: "Abracadabra\nAbracadabra\nAbracadabra",
     xp: 200,
+    difficulty: 'Hard',
   },
 ];

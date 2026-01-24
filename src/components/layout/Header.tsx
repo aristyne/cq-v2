@@ -5,6 +5,7 @@ import type { Level } from "@/lib/levels";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import React from "react";
+import { Badge } from "@/components/ui/badge";
 
 type HeaderProps = {
   playerName: string;
@@ -69,7 +70,7 @@ export default function Header({
       </div>
       <div className="py-4">
         <ScrollArea className="w-full whitespace-nowrap">
-          <div className="mt-2 flex w-max items-start gap-4 pb-4">
+          <div className="mt-2 flex w-max items-start gap-4 pb-4 pt-2">
             {levels.map((mapLevel, index) => {
               const isUnlocked = mapLevel.id <= highestLevelUnlocked;
               const isCurrent = mapLevel.id === currentLevel.id;
@@ -96,14 +97,29 @@ export default function Header({
                         <Lock className="h-6 w-6 shrink-0" />
                       )}
                     </button>
-                    <p
-                      className={cn(
-                        "w-full text-center text-xs font-semibold",
-                        isUnlocked ? "text-foreground" : "text-muted-foreground"
+                    <div className="flex h-full flex-col items-center justify-start text-center">
+                      <p
+                        className={cn(
+                          "whitespace-normal text-xs font-semibold",
+                          isUnlocked
+                            ? "text-foreground"
+                            : "text-muted-foreground"
+                        )}
+                      >
+                        {mapLevel.title}
+                      </p>
+                      {isUnlocked && (
+                        <Badge
+                          variant={isCurrent ? "default" : "secondary"}
+                          className={cn(
+                            "mt-1 text-[10px] leading-tight",
+                            !isUnlocked && "opacity-50"
+                          )}
+                        >
+                          {mapLevel.difficulty}
+                        </Badge>
                       )}
-                    >
-                      {mapLevel.title}
-                    </p>
+                    </div>
                   </div>
                   {index < levels.length - 1 && (
                     <div className="h-1 w-16 translate-y-8 rounded-full bg-border" />
