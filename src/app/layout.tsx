@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import 'prismjs/themes/prism-okaidia.css';
 
 export const metadata: Metadata = {
-  title: 'Code Odyssey',
+  title: 'CodeQuest',
   description: 'An RPG game to improve Python coding skills for HKDSE students.',
 };
 

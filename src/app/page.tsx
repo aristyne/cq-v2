@@ -263,11 +263,11 @@ export default function Home() {
     <div className="h-dvh w-dvw bg-background text-foreground">
       {showConfetti && <Confetti recycle={false} onConfettiComplete={() => setShowConfetti(false)} />}
       <PanelGroup direction="horizontal" className="h-full w-full">
-        <Panel defaultSize={25} minSize={25} className="h-full bg-sidebar">
+        <Panel defaultSize={25} minSize={20} className="h-full bg-sidebar">
           <AiAssistant code={code} level={currentLevel} />
         </Panel>
         <PanelResizeHandle className="w-2 bg-border transition-colors hover:bg-primary" />
-        <Panel minSize={40}>
+        <Panel minSize={50}>
           <div className="flex h-dvh flex-col">
             <Header
               playerName={playerName}
@@ -281,7 +281,7 @@ export default function Home() {
               onSelectLevel={handleSelectLevel}
             />
             <PanelGroup direction="vertical">
-              <Panel defaultSize={50} minSize={25}>
+              <Panel defaultSize={40} minSize={25}>
                 <main className="h-full overflow-auto p-4 md:p-6">
                   <GameView
                     level={currentLevel}
@@ -289,7 +289,7 @@ export default function Home() {
                 </main>
               </Panel>
               <PanelResizeHandle className="h-2 w-full bg-border transition-colors hover:bg-primary" />
-              <Panel defaultSize={50} minSize={25} className="bg-card">
+              <Panel defaultSize={60} minSize={25} className="bg-card">
                 <CodeConsole
                   code={code}
                   setCode={setCode}

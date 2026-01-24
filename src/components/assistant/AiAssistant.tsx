@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bot, Lightbulb, LoaderCircle, BookOpen } from "lucide-react";
+import { Bot, Lightbulb, LoaderCircle, BookOpen, ChevronRight } from "lucide-react";
 import { ScrollArea } from "../ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -32,7 +31,7 @@ type HintState = {
 
 function AssistantTab({ code, level }: AiAssistantProps) {
   const [attempts, setAttempts] = useState(0);
-  const [state, setState] = useState<HintState>({ hint: null, error: null });
+  const [displayedHints, setDisplayedHints] = useState<string[]>([]);
   const [isThinking, setIsThinking] = useState(false);
 
   const handleGetHint = () => {
@@ -43,75 +42,61 @@ function AssistantTab({ code, level }: AiAssistantProps) {
     if (newAttempts <= level.hints.length) {
       hint = level.hints[newAttempts - 1];
     } else {
-      hint = `You've asked for a lot of hints! Here is the solution:\n\n${'```python'}
-${level.solution}
-${'```'}`;
+      hint = `You've asked for a lot of hints! Here is the solution:\n\n\`\`\`python\n${level.solution}\n\`\`\``;
     }
     
-    // Simulate thinking so the user sees the loading state
     setTimeout(() => {
         setAttempts(newAttempts);
-        setState({ hint, error: null });
+        setDisplayedHints(prev => [...prev, hint]);
         setIsThinking(false);
     }, 300);
   };
 
   return (
     <div className="flex h-full flex-col gap-4">
-      <p className="text-sm text-sidebar-foreground/80">
-        Stuck on a problem? Get a hint. The more hints you request, the more specific they become.
-      </p>
+      <div className="flex justify-between items-center">
+        <p className="text-sm text-sidebar-foreground/80">
+          Hints Used: {attempts}/{level.hints.length}
+        </p>
+        <Button onClick={handleGetHint} disabled={isThinking} variant="outline" size="sm" className="bg-sidebar-accent hover:bg-sidebar-accent/80">
+          {isThinking ? (
+            <>
+              <LoaderCircle className="mr-2 h-4 w-4 animate-spin shrink-0" />
+              Thinking...
+            </>
+          ) : (
+            <>
+              <Lightbulb className="mr-2 h-4 w-4 shrink-0" />
+              Get Hint
+            </>
+          )}
+        </Button>
+      </div>
 
-      <Button onClick={handleGetHint} disabled={isThinking} className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-        {isThinking ? (
-          <>
-            <LoaderCircle className="mr-2 h-4 w-4 animate-spin shrink-0" />
-            Thinking...
-          </>
-        ) : (
-          <>
-            <Lightbulb className="mr-2 h-4 w-4 shrink-0" />
-            Get a Hint
-          </>
-        )}
-      </Button>
-
-      {attempts > 0 && (
-        <p className="text-xs text-center text-sidebar-foreground/60">Hint attempts: {attempts}</p>
-      )}
-
-      {(state.hint || state.error) && (
-        <Card className="flex-1 bg-sidebar-accent text-sidebar-accent-foreground">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              Hint
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ScrollArea className="h-full max-h-[40vh] pr-4">
-              {state.hint && (
-                <div className="prose prose-sm prose-invert max-w-none whitespace-pre-wrap font-body text-sidebar-accent-foreground">
-                   {state.hint.includes('```') ? (
-                    <Editor
-                      value={state.hint.replace(/```python\n|```/g, '')}
-                      onValueChange={() => {}}
-                      highlight={(code) => highlight(code, languages.python, 'python')}
-                      padding={8}
-                      readOnly
-                      className="!bg-card rounded-md"
-                    />
-                  ) : (
-                    state.hint
-                  )}
-                </div>
+      <ScrollArea className="flex-1 -mx-4">
+        <div className="space-y-2 px-4">
+          {displayedHints.map((hint, index) => (
+             <div key={index} className="rounded-lg border border-sidebar-border bg-sidebar-accent p-3">
+              <div className="flex justify-between items-center mb-2">
+                <span className="font-bold text-sm text-sidebar-accent-foreground">Hint {index + 1}</span>
+                <ChevronRight className="h-4 w-4 text-sidebar-accent-foreground/50"/>
+              </div>
+              {hint.includes('```') ? (
+                <Editor
+                  value={hint.replace(/```python\n|```/g, '')}
+                  onValueChange={() => {}}
+                  highlight={(code) => highlight(code, languages.python, 'python')}
+                  padding={8}
+                  readOnly
+                  className="!bg-card rounded-md text-sm"
+                />
+              ) : (
+                <p className="text-sm text-sidebar-accent-foreground/90">{hint}</p>
               )}
-              {state.error && (
-                <p className="text-sm text-destructive">{state.error}</p>
-              )}
-            </ScrollArea>
-          </CardContent>
-        </Card>
-      )}
+            </div>
+          ))}
+        </div>
+      </ScrollArea>
     </div>
   );
 }
@@ -162,19 +147,22 @@ function GlossaryTab() {
 
 export default function AiAssistant({ code, level }: AiAssistantProps) {
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex items-center gap-3 p-4 pb-0">
+    <div className="flex h-full flex-col p-4">
+      <div className="flex items-center gap-3">
         <Bot className="h-8 w-8 text-sidebar-primary shrink-0" />
-        <h2 className="font-headline text-2xl font-bold">Code Guide</h2>
+        <div>
+          <h2 className="font-headline text-xl font-bold">AI Assistant</h2>
+          <p className="text-sm text-sidebar-foreground/80">Here to help you learn</p>
+        </div>
       </div>
 
-      <Tabs defaultValue="assistant" className="flex-1 flex flex-col p-4">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="assistant">
-            <Bot className="mr-2 h-4 w-4 shrink-0" />
-            AI Assistant
+      <Tabs defaultValue="assistant" className="flex-1 flex flex-col mt-4">
+        <TabsList className="grid w-full grid-cols-2 bg-sidebar-accent">
+          <TabsTrigger value="assistant" className="data-[state=active]:bg-background">
+            <Lightbulb className="mr-2 h-4 w-4 shrink-0" />
+            Hints
           </TabsTrigger>
-          <TabsTrigger value="glossary">
+          <TabsTrigger value="glossary" className="data-[state=active]:bg-background">
             <BookOpen className="mr-2 h-4 w-4 shrink-0" />
             Glossary
           </TabsTrigger>
