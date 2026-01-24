@@ -153,7 +153,12 @@ export default function Header({
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
         <div className="mt-4 pt-4 border-t border-border">
-            <p className="text-center text-xs font-bold tracking-wider text-primary/80 uppercase mb-4">Tasks: {currentLevel.topicTitle}</p>
+            <div className="text-center mb-6">
+                <p className="font-bold text-primary uppercase text-xs tracking-wider mb-1">{currentLevel.topicTitle}</p>
+                <h2 className="font-headline text-2xl font-bold text-foreground">{currentLevel.title}</h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto mt-1 text-sm">{currentLevel.description}</p>
+            </div>
+            
             <div className="flex justify-center items-center gap-4">
                 {currentTopicTasks.map((task, index) => {
                     const isTaskUnlocked = task.id <= highestLevelUnlocked;
