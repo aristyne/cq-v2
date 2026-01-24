@@ -61,7 +61,7 @@ export default function GameView({
                             )}
                             aria-label={`Level ${mapLevel.id}: ${mapLevel.title}`}
                           >
-                            {isUnlocked ? mapLevel.id : <Lock className="h-6 w-6" />}
+                            {isUnlocked ? mapLevel.id : <Lock className="h-6 w-6 shrink-0" />}
                           </button>
                           <p className={cn(
                             "text-xs font-semibold truncate w-full text-center",
