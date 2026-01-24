@@ -69,7 +69,7 @@ export default function Header({
       </div>
       <div className="py-4">
         <ScrollArea className="w-full whitespace-nowrap">
-          <div className="mt-2 flex w-max items-end gap-4 pb-4">
+          <div className="mt-2 flex w-max items-start gap-4 pb-4">
             {levels.map((mapLevel, index) => {
               const isUnlocked = mapLevel.id <= highestLevelUnlocked;
               const isCurrent = mapLevel.id === currentLevel.id;
@@ -98,7 +98,7 @@ export default function Header({
                     </button>
                     <p
                       className={cn(
-                        "w-full truncate text-center text-xs font-semibold",
+                        "w-full text-center text-xs font-semibold",
                         isUnlocked ? "text-foreground" : "text-muted-foreground"
                       )}
                     >
@@ -106,7 +106,7 @@ export default function Header({
                     </p>
                   </div>
                   {index < levels.length - 1 && (
-                    <div className="h-1 w-16 -translate-y-8 rounded-full bg-border" />
+                    <div className="h-1 w-16 translate-y-8 rounded-full bg-border" />
                   )}
                 </React.Fragment>
               );
