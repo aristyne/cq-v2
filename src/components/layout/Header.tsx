@@ -70,7 +70,7 @@ export default function Header({
       </div>
       <div className="py-4">
         <ScrollArea className="w-full whitespace-nowrap">
-          <div className="mt-4 flex w-max items-end gap-4 pb-4">
+          <div className="mt-4 flex w-max items-start gap-4 pb-4">
             {levels.map((mapLevel, index) => {
               const isUnlocked = mapLevel.id <= highestLevelUnlocked;
               const isCurrent = mapLevel.id === currentLevel.id;
