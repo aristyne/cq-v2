@@ -1,3 +1,22 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "start-village",
+      "description": "The starting village in the Code Odyssey RPG.",
+      "imageUrl": "https://images.unsplash.com/photo-1642523700208-f36d6ccf2e26?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxmYW50YXN5JTIwdmlsbGFnZXxlbnwwfHx8fDE3NjkxNzIwNTF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fantasy village"
+    },
+    {
+      "id": "enchanted-forest",
+      "description": "An enchanted forest where the hero must solve a puzzle.",
+      "imageUrl": "https://images.unsplash.com/photo-1596237563267-84ffd99c80e1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxlbmNoYW50ZWQlMjBmb3Jlc3R8ZW58MHx8fHwxNzY5MjM0OTUyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "enchanted forest"
+    },
+    {
+      "id": "dragons-cave",
+      "description": "The entrance to a fearsome dragon's cave.",
+      "imageUrl": "https://images.unsplash.com/photo-1679996439563-05c6d571f69b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxkcmFnb24lMjBjYXZlfGVufDB8fHx8MTc2OTI3MTAxOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dragon cave"
+    }
+  ]
 }
