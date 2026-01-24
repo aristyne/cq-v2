@@ -49,33 +49,34 @@ export async function getAiSuggestionAction(
 // needed for the Code Odyssey game.
 function simplePythonInterpreter(code: string): { output: string[], error: string | null } {
   const output: string[] = [];
-  const scope: Record<string, any> = {};
+  const globalScope: Record<string, any> = {};
 
   const lines = code.split('\n');
   
-  const evalExpression = (expression: string): any => {
+  const evalExpression = (expression: string, currentScope: Record<string, any>): any => {
     expression = expression.trim();
     if ((expression.startsWith("'") && expression.endsWith("'")) || (expression.startsWith('"') && expression.endsWith('"'))) {
       return expression.slice(1, -1);
     }
-    if (expression in scope) {
-      return scope[expression];
+    if (expression in currentScope) {
+      return currentScope[expression];
     }
     if (!isNaN(Number(expression))) {
       return Number(expression);
     }
     if (expression.includes('+')) {
       const parts = expression.split('+').map(p => p.trim());
-      const values = parts.map(p => evalExpression(p));
+      const values = parts.map(p => evalExpression(p, currentScope));
       if (values.every(v => typeof v === 'number' || (typeof v === 'string' && !isNaN(Number(v))))) {
         return values.reduce((a, b) => Number(a) + Number(b), 0);
       }
+      return values.join('');
     }
     throw new Error(`NameError: name '${expression}' is not defined`);
   };
 
   const executeBlock = (blockLines: string[], blockScope: Record<string, any> = {}) => {
-      const localScope = {...scope, ...blockScope};
+      const currentScope = {...globalScope, ...blockScope};
       
       for (let i = 0; i < blockLines.length; i++) {
         let line = blockLines[i];
@@ -87,14 +88,14 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
         // print()
         const printMatch = trimmedLine.match(/^print\((.*)\)$/);
         if (printMatch) {
-            output.push(String(evalExpression(printMatch[1])));
+            output.push(String(evalExpression(printMatch[1], currentScope)));
             continue;
         }
 
         // variable assignment
         const assignMatch = trimmedLine.match(/^(\w+)\s*=\s*(.*)$/);
         if (assignMatch) {
-            scope[assignMatch[1]] = evalExpression(assignMatch[2]);
+            globalScope[assignMatch[1]] = evalExpression(assignMatch[2], currentScope);
             continue;
         }
 
@@ -124,9 +125,9 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
             const condParts = condition.split(/\s*(>=|<=|==|!=|>|<)\s*/);
             if (condParts.length < 3) throw new Error("Invalid if condition");
 
-            const varValue = evalExpression(condParts[0]);
+            const varValue = evalExpression(condParts[0], currentScope);
             const operator = condParts[1];
-            const value = evalExpression(condParts[2]);
+            const value = evalExpression(condParts[2], currentScope);
 
             let conditionResult = false;
             if (operator === '>=') conditionResult = varValue >= value;
@@ -157,9 +158,9 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
             i--;
 
             if (conditionResult) {
-                executeBlock(ifBody);
+                executeBlock(ifBody, blockScope);
             } else {
-                executeBlock(elseBody);
+                executeBlock(elseBody, blockScope);
             }
             continue;
         }
