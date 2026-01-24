@@ -2,13 +2,11 @@
 
 import { useState } from "react";
 import { levels, type Level } from "@/lib/levels";
-
 import {
-  SidebarProvider,
-  Sidebar,
-  SidebarContent,
-  SidebarInset,
-} from "@/components/ui/sidebar";
+  Panel,
+  PanelGroup,
+  PanelResizeHandle,
+} from "react-resizable-panels";
 import Header from "@/components/layout/Header";
 import GameView from "@/components/game/GameView";
 import AiAssistant from "@/components/assistant/AiAssistant";
@@ -64,35 +62,42 @@ export default function Home() {
   };
 
   return (
-    <SidebarProvider
-      style={{ "--sidebar-width": "20rem" } as React.CSSProperties}
-      className="bg-background text-foreground"
-    >
-      <Sidebar collapsible="icon">
-        <AiAssistant code={code} />
-      </Sidebar>
-      <SidebarInset>
-        <div className="flex h-dvh flex-col">
-          <Header />
-          <main className="flex-1 overflow-auto p-4 md:p-6">
-            <GameView
-              level={currentLevel}
-              onNextLevel={handleNextLevel}
-              onPrevLevel={handlePrevLevel}
-              isFirstLevel={currentLevelIndex === 0}
-              isLastLevel={currentLevelIndex === levels.length - 1}
-            />
-          </main>
-          <div className="h-[40%] min-h-[300px] flex-shrink-0 border-t border-border bg-card">
-            <CodeConsole
-              code={code}
-              setCode={setCode}
-              output={consoleOutput}
-              onRunCode={handleRunCode}
-            />
+    <div className="h-dvh w-dvw bg-background text-foreground">
+      <PanelGroup direction="horizontal">
+        <Panel defaultSize={20} minSize={15}>
+          <div className="h-full bg-sidebar">
+            <AiAssistant code={code} />
           </div>
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+        </Panel>
+        <PanelResizeHandle className="w-2 bg-border transition-colors hover:bg-primary" />
+        <Panel>
+          <div className="flex h-dvh flex-col">
+            <Header />
+            <PanelGroup direction="vertical">
+              <Panel>
+                <main className="h-full overflow-auto p-4 md:p-6">
+                  <GameView
+                    level={currentLevel}
+                    onNextLevel={handleNextLevel}
+                    onPrevLevel={handlePrevLevel}
+                    isFirstLevel={currentLevelIndex === 0}
+                    isLastLevel={currentLevelIndex === levels.length - 1}
+                  />
+                </main>
+              </Panel>
+              <PanelResizeHandle className="h-2 w-full bg-border transition-colors hover:bg-primary" />
+              <Panel defaultSize={40} minSize={20} className="bg-card">
+                <CodeConsole
+                  code={code}
+                  setCode={setCode}
+                  output={consoleOutput}
+                  onRunCode={handleRunCode}
+                />
+              </Panel>
+            </PanelGroup>
+          </div>
+        </Panel>
+      </PanelGroup>
+    </div>
   );
 }
