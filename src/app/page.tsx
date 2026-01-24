@@ -100,15 +100,15 @@ export default function Home() {
   return (
     <div className="h-dvh w-dvw bg-background text-foreground">
       <PanelGroup direction="horizontal" className="h-full w-full">
-        <Panel defaultSize={20} minSize={15} className="h-full bg-sidebar">
+        <Panel defaultSize={25} minSize={25} className="h-full bg-sidebar">
           <AiAssistant code={code} />
         </Panel>
         <PanelResizeHandle className="w-2 bg-border transition-colors hover:bg-primary" />
-        <Panel minSize={30}>
+        <Panel minSize={40}>
           <div className="flex h-dvh flex-col">
             <Header />
             <PanelGroup direction="vertical">
-              <Panel defaultSize={50} minSize={20}>
+              <Panel defaultSize={50} minSize={25}>
                 <main className="h-full overflow-auto p-4 md:p-6">
                   <GameView
                     level={currentLevel}
@@ -119,7 +119,7 @@ export default function Home() {
                 </main>
               </Panel>
               <PanelResizeHandle className="h-2 w-full bg-border transition-colors hover:bg-primary" />
-              <Panel defaultSize={50} minSize={20} className="bg-card">
+              <Panel defaultSize={50} minSize={25} className="bg-card">
                 <CodeConsole
                   code={code}
                   setCode={setCode}
