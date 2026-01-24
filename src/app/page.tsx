@@ -182,11 +182,14 @@ export default function Home() {
   const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
   const [highestLevelUnlocked, setHighestLevelUnlocked] = useState(1);
   const [xp, setXp] = useState(0);
+  const [gems, setGems] = useState(0);
   const [code, setCode] = useState(levels[0].starterCode);
   const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [playerName, setPlayerName] = useState("Adventurer");
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
+  const [xpGained, setXpGained] = useState(0);
+  const [gemsGained, setGemsGained] = useState(0);
 
   const currentLevel = levels[currentLevelIndex];
   const completedLevels = highestLevelUnlocked > 1 ? highestLevelUnlocked - 1 : 0;
@@ -216,11 +219,15 @@ export default function Home() {
 
     if (success) {
       finalOutput.push("\n✅ Success! You solved the challenge.");
-      setShowCompletionDialog(true);
       
+      let earnedXp = 0;
+      let earnedGems = 0;
+
       if (currentLevel.id >= highestLevelUnlocked) {
-        setXp((prevXp) => prevXp + currentLevel.xp);
-        finalOutput.push(`✨ You gained ${currentLevel.xp} XP!`);
+        earnedXp = currentLevel.xp;
+        earnedGems = 10;
+        setXp((prevXp) => prevXp + earnedXp);
+        setGems((prevGems) => prevGems + earnedGems);
 
         if (highestLevelUnlocked <= levels.length) {
           setHighestLevelUnlocked(highestLevelUnlocked + 1);
@@ -229,6 +236,10 @@ export default function Home() {
           }
         }
       }
+      
+      setXpGained(earnedXp);
+      setGemsGained(earnedGems);
+      setShowCompletionDialog(true);
       
       setConsoleOutput(finalOutput);
     } else {
@@ -265,7 +276,8 @@ export default function Home() {
         open={showCompletionDialog}
         onOpenChange={setShowCompletionDialog}
         level={currentLevel}
-        xpGained={currentLevel.xp}
+        xpGained={xpGained}
+        gemsGained={gemsGained}
         onNextLevel={handleNextLevel}
         hasNextLevel={hasNextLevel}
       />
@@ -280,6 +292,7 @@ export default function Home() {
               playerName={playerName}
               onPlayerNameChange={setPlayerName}
               xp={xp}
+              gems={gems}
               completedLevels={completedLevels}
               totalLevels={levels.length}
               levels={levels}

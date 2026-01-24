@@ -11,6 +11,7 @@ type HeaderProps = {
   playerName: string;
   onPlayerNameChange: (name: string) => void;
   xp: number;
+  gems: number;
   completedLevels: number;
   totalLevels: number;
   levels: Level[];
@@ -23,6 +24,7 @@ export default function Header({
   playerName,
   onPlayerNameChange,
   xp,
+  gems,
   completedLevels,
   totalLevels,
   levels,
@@ -71,7 +73,7 @@ export default function Header({
           </div>
           <div className="flex items-center gap-2">
             <Gem className="h-5 w-5 text-blue-400" />
-            <span className="font-medium">140</span>
+            <span className="font-medium">{gems}</span>
           </div>
           <div className="flex w-32 flex-col gap-1">
             <div className="flex justify-between text-xs text-muted-foreground">

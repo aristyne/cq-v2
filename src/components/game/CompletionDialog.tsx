@@ -18,6 +18,7 @@ type CompletionDialogProps = {
   onOpenChange: (open: boolean) => void;
   level: Level;
   xpGained: number;
+  gemsGained: number;
   onNextLevel: () => void;
   hasNextLevel: boolean;
 };
@@ -27,6 +28,7 @@ export default function CompletionDialog({
   onOpenChange,
   level,
   xpGained,
+  gemsGained,
   onNextLevel,
   hasNextLevel,
 }: CompletionDialogProps) {
@@ -37,6 +39,8 @@ export default function CompletionDialog({
         onNextLevel();
     }
   }
+
+  const hasRewards = xpGained > 0 || gemsGained > 0;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -50,16 +54,18 @@ export default function CompletionDialog({
             You successfully completed "{level.title}".
           </DialogDescription>
         </DialogHeader>
-        <div className="flex justify-center items-center gap-4 my-4">
-            <div className="flex items-center gap-2 rounded-full bg-yellow-400/10 px-4 py-2 text-yellow-400">
-                <Star className="h-5 w-5" />
-                <span className="font-bold">+{xpGained} XP</span>
+        {hasRewards && (
+            <div className="flex justify-center items-center gap-4 my-4">
+                <div className="flex items-center gap-2 rounded-full bg-yellow-400/10 px-4 py-2 text-yellow-400">
+                    <Star className="h-5 w-5" />
+                    <span className="font-bold">+{xpGained} XP</span>
+                </div>
+                 <div className="flex items-center gap-2 rounded-full bg-blue-400/10 px-4 py-2 text-blue-400">
+                    <Gem className="h-5 w-5" />
+                    <span className="font-bold">+{gemsGained} Gems</span>
+                </div>
             </div>
-             <div className="flex items-center gap-2 rounded-full bg-blue-400/10 px-4 py-2 text-blue-400">
-                <Gem className="h-5 w-5" />
-                <span className="font-bold">+10 Gems</span>
-            </div>
-        </div>
+        )}
         <DialogFooter className="sm:justify-center">
           {hasNextLevel ? (
             <Button onClick={handleContinue}>
