@@ -2,7 +2,6 @@
 
 import { aiCodingAssistantSuggestsImprovements } from "@/ai/flows/ai-coding-assistant-improvements";
 import { executePythonCode } from "@/ai/flows/ai-python-interpreter";
-import { dictateCode } from "@/ai/flows/ai-code-dictation";
 import { z } from "zod";
 
 const submissionSchema = z.object({
@@ -67,31 +66,6 @@ export async function runPythonCode(
     return {
       output: [],
       error: "Failed to run code using AI. Please try again.",
-    };
-  }
-}
-
-export async function dictateCodeAction(
-  dictatedText: string
-): Promise<{ formattedCode: string | null; error: string | null }> {
-  if (!dictatedText.trim()) {
-    return {
-      formattedCode: null,
-      error: "No text was dictated.",
-    };
-  }
-
-  try {
-    const result = await dictateCode({ dictatedText });
-    return {
-      formattedCode: result.formattedCode,
-      error: null,
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      formattedCode: null,
-      error: "Failed to format dictated code using AI. Please try again.",
     };
   }
 }
