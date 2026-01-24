@@ -17,6 +17,18 @@
       "description": "The entrance to a fearsome dragon's cave.",
       "imageUrl": "https://images.unsplash.com/photo-1679996439563-05c6d571f69b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxkcmFnb24lMjBjYXZlfGVufDB8fHx8MTc2OTI3MTAxOXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "dragon cave"
+    },
+    {
+      "id": "conditional-bridge",
+      "description": "A rickety bridge that represents a conditional choice.",
+      "imageUrl": "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmYW50YXN5JTIwYnJpZGdlfGVufDB8fHx8MTc3MDExNzM3N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fantasy bridge"
+    },
+    {
+      "id": "loop-spire",
+      "description": "A tall, spiral tower that represents a loop.",
+      "imageUrl": "https://images.unsplash.com/photo-1617303531482-75854b29a244?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmYW50YXN5JTIwdG93ZXJ8ZW58MHx8fHwxNzcwMTE3NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fantasy tower"
     }
   ]
 }

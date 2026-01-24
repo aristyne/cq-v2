@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { levels, type Level } from "@/lib/levels";
+import { levels } from "@/lib/levels";
 import {
   Panel,
   PanelGroup,
@@ -15,6 +15,7 @@ import { runPythonCode } from "@/app/actions";
 
 export default function Home() {
   const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
+  const [highestLevelUnlocked, setHighestLevelUnlocked] = useState(1);
   const [code, setCode] = useState(levels[0].starterCode);
   const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
@@ -42,30 +43,31 @@ export default function Home() {
     if (currentLevel.expectedOutput) {
         success = cleanOutput === currentLevel.expectedOutput;
     } else if (currentLevel.id === 2) {
-        // Special case for Level 2 where output is dynamic
         const nameIsSet = !code.includes('player_name = ""');
         const outputIsNotBlank = cleanOutput !== '';
-        // Also check if they are actually printing the variable
         const printsVariable = code.includes(currentLevel.solution);
         success = nameIsSet && outputIsNotBlank && printsVariable;
     }
 
     if (success) {
       finalOutput.push("\n✅ Success! You solved the challenge.");
+      if (currentLevel.id === highestLevelUnlocked && highestLevelUnlocked < levels.length) {
+        setHighestLevelUnlocked(highestLevelUnlocked + 1);
+        finalOutput.push("✨ New level unlocked!");
+      }
       setConsoleOutput(finalOutput);
 
       setTimeout(() => {
         const nextLevelOutput = [...finalOutput];
         if (currentLevelIndex < levels.length - 1) {
-          handleNextLevel();
-          nextLevelOutput.push("🚀 Moving to the next level...");
+          nextLevelOutput.push("\n🚀 Select the next level from the map to continue your journey!");
         } else {
           nextLevelOutput.push(
-            "🎉 Congratulations! You have completed all levels!"
+            "\n🎉 Congratulations! You have completed all levels!"
           );
         }
         setConsoleOutput(nextLevelOutput);
-      }, 1000);
+      }, 500);
     } else {
       finalOutput.push(
         "\n❌ Almost there! Your code didn't produce the correct result. Try again or ask the AI assistant for a hint."
@@ -75,20 +77,11 @@ export default function Home() {
     setIsRunning(false);
   };
 
-  const handleNextLevel = () => {
-    if (currentLevelIndex < levels.length - 1) {
-      const nextIndex = currentLevelIndex + 1;
-      setCurrentLevelIndex(nextIndex);
-      setCode(levels[nextIndex].starterCode);
-      setConsoleOutput([]);
-    }
-  };
-
-  const handlePrevLevel = () => {
-    if (currentLevelIndex > 0) {
-      const prevIndex = currentLevelIndex - 1;
-      setCurrentLevelIndex(prevIndex);
-      setCode(levels[prevIndex].starterCode);
+  const handleSelectLevel = (levelId: number) => {
+    const levelIndex = levels.findIndex(l => l.id === levelId);
+    if (levelIndex !== -1 && levelId <= highestLevelUnlocked) {
+      setCurrentLevelIndex(levelIndex);
+      setCode(levels[levelIndex].starterCode);
       setConsoleOutput([]);
     }
   };
@@ -108,10 +101,9 @@ export default function Home() {
                 <main className="h-full overflow-auto p-4 md:p-6">
                   <GameView
                     level={currentLevel}
-                    onNextLevel={handleNextLevel}
-                    onPrevLevel={handlePrevLevel}
-                    isFirstLevel={currentLevelIndex === 0}
-                    isLastLevel={currentLevelIndex === levels.length - 1}
+                    levels={levels}
+                    highestLevelUnlocked={highestLevelUnlocked}
+                    onSelectLevel={handleSelectLevel}
                   />
                 </main>
               </Panel>
