@@ -129,15 +129,16 @@ export default function Home() {
               xp={xp}
               completedLevels={completedLevels}
               totalLevels={levels.length}
+              levels={levels}
+              currentLevel={currentLevel}
+              highestLevelUnlocked={highestLevelUnlocked}
+              onSelectLevel={handleSelectLevel}
             />
             <PanelGroup direction="vertical">
               <Panel defaultSize={50} minSize={25}>
                 <main className="h-full overflow-auto p-4 md:p-6">
                   <GameView
                     level={currentLevel}
-                    levels={levels}
-                    highestLevelUnlocked={highestLevelUnlocked}
-                    onSelectLevel={handleSelectLevel}
                   />
                 </main>
               </Panel>
