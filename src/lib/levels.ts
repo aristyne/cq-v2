@@ -10,6 +10,7 @@ export type Level = {
   solution: string;
   image: ImagePlaceholder;
   expectedOutput?: string;
+  xp: number;
 };
 
 const findImage = (id: string) => {
@@ -28,6 +29,7 @@ export const levels: Level[] = [
     solution: "print('Hello, World!')",
     image: findImage('start-village'),
     expectedOutput: "Hello, World!",
+    xp: 100,
   },
   {
     id: 2,
@@ -37,6 +39,7 @@ export const levels: Level[] = [
     starterCode: "# Create your variable here\nplayer_name = \"\"\n\n# Print your variable here\n",
     solution: "print(player_name)",
     image: findImage('enchanted-forest'),
+    xp: 100,
   },
   {
     id: 3,
@@ -47,6 +50,7 @@ export const levels: Level[] = [
     solution: "total_coins = gold_coins + found_coins\nprint(total_coins)",
     image: findImage('dragons-cave'),
     expectedOutput: "175",
+    xp: 150,
   },
   {
     id: 4,
@@ -57,6 +61,7 @@ export const levels: Level[] = [
     solution: "if mana_potions >= 10:\n    print('You may pass')\nelse:\n    print('You need more mana.')",
     image: findImage('conditional-bridge'),
     expectedOutput: "You may pass",
+    xp: 150,
   },
   {
     id: 5,
@@ -67,5 +72,6 @@ export const levels: Level[] = [
     solution: "for i in range(3):\n    print('Abracadabra')",
     image: findImage('loop-spire'),
     expectedOutput: "Abracadabra\nAbracadabra\nAbracadabra",
+    xp: 200,
   },
 ];

@@ -16,11 +16,13 @@ import { runPythonCode } from "@/app/actions";
 export default function Home() {
   const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
   const [highestLevelUnlocked, setHighestLevelUnlocked] = useState(1);
+  const [xp, setXp] = useState(0);
   const [code, setCode] = useState(levels[0].starterCode);
   const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
 
   const currentLevel = levels[currentLevelIndex];
+  const completedLevels = highestLevelUnlocked > 1 ? highestLevelUnlocked - 1 : 0;
 
   const handleRunCode = async () => {
     setIsRunning(true);
@@ -51,10 +53,19 @@ export default function Home() {
 
     if (success) {
       finalOutput.push("\n✅ Success! You solved the challenge.");
-      if (currentLevel.id === highestLevelUnlocked && highestLevelUnlocked < levels.length) {
-        setHighestLevelUnlocked(highestLevelUnlocked + 1);
-        finalOutput.push("✨ New level unlocked!");
+      
+      if (currentLevel.id >= highestLevelUnlocked) {
+        setXp((prevXp) => prevXp + currentLevel.xp);
+        finalOutput.push(`✨ You gained ${currentLevel.xp} XP!`);
+
+        if (highestLevelUnlocked <= levels.length) {
+          setHighestLevelUnlocked(highestLevelUnlocked + 1);
+          if (currentLevel.id < levels.length) {
+            finalOutput.push("✨ New level unlocked!");
+          }
+        }
       }
+      
       setConsoleOutput(finalOutput);
 
       setTimeout(() => {
@@ -95,7 +106,7 @@ export default function Home() {
 
   const hasNextLevel = currentLevelIndex < levels.length - 1;
   const isNextLevelUnlocked =
-    hasNextLevel && levels[currentLevelIndex + 1].id <= highestLevelUnlocked;
+    hasNextLevel && (levels[currentLevelIndex + 1].id <= highestLevelUnlocked || highestLevelUnlocked > levels.length) ;
 
   return (
     <div className="h-dvh w-dvw bg-background text-foreground">
@@ -106,7 +117,7 @@ export default function Home() {
         <PanelResizeHandle className="w-2 bg-border transition-colors hover:bg-primary" />
         <Panel minSize={40}>
           <div className="flex h-dvh flex-col">
-            <Header />
+            <Header xp={xp} completedLevels={completedLevels} totalLevels={levels.length} />
             <PanelGroup direction="vertical">
               <Panel defaultSize={50} minSize={25}>
                 <main className="h-full overflow-auto p-4 md:p-6">
