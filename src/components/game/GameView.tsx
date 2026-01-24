@@ -38,7 +38,7 @@ export default function GameView({
         <CardContent className="space-y-6">
           <div className="mb-8">
             <h3 className="text-xl font-bold mb-4 font-headline">World Map</h3>
-            <div className="bg-card-foreground/5 p-4 rounded-lg">
+            <div className="bg-card-foreground/5 p-6 rounded-lg">
               <ScrollArea className="w-full whitespace-nowrap">
                 <div className="flex w-max items-center gap-4 pb-4">
                   {levels.map((mapLevel, index) => {
