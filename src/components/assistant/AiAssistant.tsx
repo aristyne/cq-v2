@@ -1,6 +1,7 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { getAiSuggestionAction } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -32,7 +33,7 @@ function SubmitButton() {
 
 export default function AiAssistant({ code }: AiAssistantProps) {
   const initialState = { suggestion: null, error: null };
-  const [state, formAction] = useFormState(getAiSuggestionAction, initialState);
+  const [state, formAction] = useActionState(getAiSuggestionAction, initialState);
 
   return (
     <div className="flex h-full flex-col gap-4 p-4 text-sidebar-foreground">
