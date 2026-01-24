@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
-import { Play, Terminal } from "lucide-react";
+import { LoaderCircle, Play, Terminal } from "lucide-react";
 
 type CodeConsoleProps = {
   code: string;
   setCode: (code: string) => void;
   output: string[];
   onRunCode: () => void;
+  isRunning: boolean;
 };
 
 export default function CodeConsole({
@@ -15,6 +16,7 @@ export default function CodeConsole({
   setCode,
   output,
   onRunCode,
+  isRunning,
 }: CodeConsoleProps) {
   return (
     <div className="flex h-full w-full flex-col">
@@ -23,9 +25,13 @@ export default function CodeConsole({
           <Terminal className="h-5 w-5" />
           <h2 className="font-headline text-lg font-bold">Console</h2>
         </div>
-        <Button onClick={onRunCode} size="sm">
-          <Play className="mr-2 h-4 w-4" />
-          Run Code
+        <Button onClick={onRunCode} size="sm" disabled={isRunning}>
+          {isRunning ? (
+            <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Play className="mr-2 h-4 w-4" />
+          )}
+          {isRunning ? "Running..." : "Run Code"}
         </Button>
       </div>
       <div className="flex flex-1 overflow-hidden">
