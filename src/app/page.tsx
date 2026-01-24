@@ -205,9 +205,15 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (showConfetti && successSound) {
-      successSound.currentTime = 0;
-      successSound.play();
+    if (showConfetti) {
+      if (successSound) {
+        successSound.currentTime = 0;
+        successSound.play();
+      }
+      const timer = setTimeout(() => {
+        setShowConfetti(false);
+      }, 200);
+      return () => clearTimeout(timer);
     }
   }, [showConfetti]);
 
@@ -295,7 +301,6 @@ export default function Home() {
           h: 0,
         }}
         recycle={false}
-        onConfettiComplete={() => setShowConfetti(false)}
         numberOfPieces={400}
       />}
       <CompletionDialog
