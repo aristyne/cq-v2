@@ -110,7 +110,12 @@ export default function Header({
                       </p>
                       {isUnlocked && (
                         <Badge
-                          variant={isCurrent ? "default" : "secondary"}
+                          variant={
+                            mapLevel.difficulty.toLowerCase() as
+                              | "easy"
+                              | "medium"
+                              | "hard"
+                          }
                           className={cn(
                             "mt-1 text-[10px] leading-tight",
                             !isUnlocked && "opacity-50"

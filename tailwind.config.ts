@@ -65,6 +65,14 @@ export default {
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))',
         },
+        difficulty: {
+          easy: 'hsl(var(--difficulty-easy))',
+          'easy-foreground': 'hsl(var(--difficulty-easy-foreground))',
+          medium: 'hsl(var(--difficulty-medium))',
+          'medium-foreground': 'hsl(var(--difficulty-medium-foreground))',
+          hard: 'hsl(var(--difficulty-hard))',
+          'hard-foreground': 'hsl(var(--difficulty-hard-foreground))',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
