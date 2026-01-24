@@ -212,7 +212,7 @@ export default function Home() {
       }
       const timer = setTimeout(() => {
         setShowConfetti(false);
-      }, 200);
+      }, 1000);
       return () => clearTimeout(timer);
     }
   }, [showConfetti]);
