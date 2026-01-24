@@ -1,5 +1,5 @@
-# Firebase Studio
+# CodeQuest
 
-This is a NextJS starter in Firebase Studio.
+This is a gamified learning platform to help you master Python, built with Next.js in Firebase Studio.
 
-To get started, take a look at src/app/page.tsx.
+To get started, launch the app and begin your first quest!
