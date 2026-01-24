@@ -60,7 +60,7 @@ function AssistantTab({ code, level }: AiAssistantProps) {
     <div className="flex h-full flex-col gap-4">
       <div className="flex justify-between items-center">
         <p className="text-sm text-sidebar-foreground/80">
-          Hints Used: {attempts}/{level.hints.length}
+          Hints Used: {attempts}
         </p>
         <Button onClick={handleGetHint} disabled={isThinking || solutionShown} variant="outline" size="sm" className="bg-sidebar-accent hover:bg-sidebar-accent/80">
           {isThinking ? (
