@@ -302,6 +302,8 @@ export default function Home() {
         }}
         recycle={false}
         numberOfPieces={400}
+        spread={360}
+        gravity={0.3}
       />}
       <CompletionDialog
         open={showCompletionDialog}
