@@ -20,6 +20,7 @@ export default function GameView({
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6">
       <div className="space-y-2">
+        <p className="font-bold text-primary">{level.topicTitle}</p>
         <h1 className="font-headline text-3xl font-bold text-foreground">
           {level.title}
         </h1>

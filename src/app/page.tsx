@@ -41,6 +41,17 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
       }
       return values.join('');
     }
+     if (expression.includes('*')) {
+      const parts = expression.split('*').map(p => p.trim());
+      const values = parts.map(p => evalExpression(p, currentScope));
+      return values.reduce((a, b) => Number(a) * Number(b), 1);
+    }
+    if (expression.includes('/')) {
+      const parts = expression.split('/').map(p => p.trim());
+      const values = parts.map(p => evalExpression(p, currentScope));
+      if(values[1] === 0) throw new Error("ZeroDivisionError: division by zero");
+      return values.reduce((a, b) => Number(a) / Number(b));
+    }
     throw new Error(`NameError: name '${expression}' is not defined`);
   };
 
@@ -78,10 +89,21 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
         }
 
         // for loop
-        const forMatch = trimmedLine.match(/^for\s+(\w+)\s+in\s+range\((\d+)\):$/);
+        const forMatch = trimmedLine.match(/^for\s+(\w+)\s+in\s+range\((.*)\):$/);
         if(forMatch) {
             const loopVar = forMatch[1];
-            const count = parseInt(forMatch[2], 10);
+            const rangeArgs = forMatch[2].split(',').map(s => parseInt(s.trim(), 10));
+            let start = 0;
+            let end = 0;
+            if (rangeArgs.length === 1) {
+              end = rangeArgs[0];
+            } else if (rangeArgs.length === 2) {
+              start = rangeArgs[0];
+              end = rangeArgs[1];
+            } else {
+              throw new Error("SyntaxError: Invalid range() arguments");
+            }
+            
             const bodyLines = [];
             i++;
             while(i < blockLines.length && (blockLines[i].length - blockLines[i].trimStart().length > lineIndent || blockLines[i].trim() === '')) {
@@ -90,7 +112,7 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
             }
             i--;
 
-            for(let j=0; j<count; j++) {
+            for(let j=start; j<end; j++) {
                 executeBlock(bodyLines, {...blockScope, [loopVar]: j});
             }
             continue;
@@ -174,6 +196,7 @@ export default function Home() {
     const initialOutput = [`> Running code for: ${currentLevel.title}`];
     setConsoleOutput(initialOutput);
 
+    // A simple timeout to simulate code execution
     const result = simplePythonInterpreter(code);
 
     let finalOutput = [...initialOutput];
@@ -189,16 +212,6 @@ export default function Home() {
 
     if (currentLevel.expectedOutput) {
         success = cleanOutput === currentLevel.expectedOutput;
-    } else if (currentLevel.id === 2) {
-        const nameIsSet = !code.includes('player_name = ""') && !code.includes("player_name = ''");
-        
-        const nameValueMatch = code.match(/player_name\s*=\s*["'](.+)["']/);
-        const nameValue = nameValueMatch ? nameValueMatch[1] : "";
-
-        const printsVariable = code.includes(`print(${currentLevel.solution})`) || code.includes(`print(player_name)`);
-        const outputIsCorrect = cleanOutput === nameValue;
-        
-        success = nameIsSet && outputIsCorrect && printsVariable && nameValue !== '';
     }
 
     if (success) {
@@ -212,7 +225,7 @@ export default function Home() {
         if (highestLevelUnlocked <= levels.length) {
           setHighestLevelUnlocked(highestLevelUnlocked + 1);
           if (currentLevel.id < levels.length) {
-            finalOutput.push("✨ New level unlocked!");
+            finalOutput.push("✨ New task unlocked!");
           }
         }
       }
@@ -222,7 +235,7 @@ export default function Home() {
       setTimeout(() => {
         const nextLevelOutput = [...finalOutput];
         if (currentLevelIndex < levels.length - 1) {
-          nextLevelOutput.push("\n🚀 Select the next level from the map to continue your journey!");
+          nextLevelOutput.push("\n🚀 Select the next task to continue your journey!");
         } else {
           nextLevelOutput.push(
             "\n🎉 Congratulations! You have completed all levels!"
