@@ -1,4 +1,4 @@
-import { CodeXml, User, Star, Lock } from "lucide-react";
+import { CodeXml, User, Star, Lock, Check } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import type { Level } from "@/lib/levels";
@@ -70,33 +70,46 @@ export default function Header({
       </div>
       <div className="py-4">
         <ScrollArea className="w-full whitespace-nowrap">
-          <div className="mt-2 flex w-max items-start gap-4 pb-4 pt-2">
+          <div className="mt-4 flex w-max items-end gap-4 pb-4">
             {levels.map((mapLevel, index) => {
               const isUnlocked = mapLevel.id <= highestLevelUnlocked;
               const isCurrent = mapLevel.id === currentLevel.id;
+              const isCompleted = mapLevel.id < highestLevelUnlocked;
+
               return (
                 <React.Fragment key={mapLevel.id}>
                   <div className="flex w-28 flex-col items-center gap-2">
-                    <button
-                      onClick={() => isUnlocked && onSelectLevel(mapLevel.id)}
-                      disabled={!isUnlocked}
-                      className={cn(
-                        "flex h-16 w-16 items-center justify-center rounded-full border-4 text-xl font-bold transition-all",
-                        isCurrent
-                          ? "scale-110 border-primary-foreground/50 bg-primary text-primary-foreground shadow-lg"
-                          : "border-border bg-card",
-                        isUnlocked
-                          ? "cursor-pointer hover:border-accent-foreground hover:bg-accent"
-                          : "cursor-not-allowed border-muted-foreground/20 bg-muted text-muted-foreground"
+                    <div className="relative">
+                      <button
+                        onClick={() => isUnlocked && onSelectLevel(mapLevel.id)}
+                        disabled={!isUnlocked}
+                        className={cn(
+                          "flex h-16 w-16 items-center justify-center rounded-full border-4 text-xl font-bold transition-all",
+                          !isUnlocked
+                            ? "cursor-not-allowed border-muted-foreground/20 bg-muted text-muted-foreground"
+                            : [
+                                "cursor-pointer",
+                                isCurrent
+                                  ? "scale-110 border-primary-foreground/50 bg-primary text-primary-foreground shadow-lg"
+                                  : isCompleted
+                                  ? "border-completed-foreground/50 bg-completed text-completed-foreground hover:bg-completed/90"
+                                  : "border-border bg-card hover:border-accent-foreground hover:bg-accent",
+                              ]
+                        )}
+                        aria-label={`Level ${mapLevel.id}: ${mapLevel.title}`}
+                      >
+                        {isUnlocked ? (
+                          mapLevel.id
+                        ) : (
+                          <Lock className="h-6 w-6 shrink-0" />
+                        )}
+                      </button>
+                      {isCompleted && (
+                        <div className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-green-500 text-white shadow-md">
+                          <Check className="h-4 w-4" />
+                        </div>
                       )}
-                      aria-label={`Level ${mapLevel.id}: ${mapLevel.title}`}
-                    >
-                      {isUnlocked ? (
-                        mapLevel.id
-                      ) : (
-                        <Lock className="h-6 w-6 shrink-0" />
-                      )}
-                    </button>
+                    </div>
                     <div className="flex h-full flex-col items-center justify-start text-center">
                       <p
                         className={cn(

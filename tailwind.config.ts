@@ -73,6 +73,10 @@ export default {
           hard: 'hsl(var(--difficulty-hard))',
           'hard-foreground': 'hsl(var(--difficulty-hard-foreground))',
         },
+        completed: {
+          DEFAULT: 'hsl(var(--completed))',
+          foreground: 'hsl(var(--completed-foreground))',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
