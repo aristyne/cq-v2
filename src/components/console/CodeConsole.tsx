@@ -2,13 +2,23 @@
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { LoaderCircle, Play, SkipForward, Terminal, Code, Send } from "lucide-react";
-import Editor from 'react-simple-code-editor';
-import { highlight, languages } from 'prismjs/components/prism-core';
-import 'prismjs/components/prism-python';
-import React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
+import {
+  LoaderCircle,
+  Play,
+  SkipForward,
+  Terminal,
+  Code,
+  Send,
+} from "lucide-react";
+import Editor from "react-simple-code-editor";
+import { highlight, languages } from "prismjs/components/prism-core";
+import "prismjs/components/prism-python";
+import React from "react";
+import {
+  Panel,
+  PanelGroup,
+  PanelResizeHandle,
+} from "react-resizable-panels";
 
 type CodeConsoleProps = {
   code: string;
@@ -31,12 +41,17 @@ export default function CodeConsole({
   hasNextLevel,
   isNextLevelUnlocked,
 }: CodeConsoleProps) {
-  const lines = code.split('\n').length;
+  const lines = code.split("\n").length;
 
   return (
     <div className="flex h-full w-full flex-col bg-card">
-      <div className="flex h-12 flex-shrink-0 items-center justify-end border-b px-4 gap-2">
-        <Button onClick={onRunCode} variant="outline" size="sm" disabled={isRunning}>
+      <div className="flex h-12 flex-shrink-0 items-center justify-end gap-2 border-b px-4">
+        <Button
+          onClick={onRunCode}
+          variant="outline"
+          size="sm"
+          disabled={isRunning}
+        >
           {isRunning ? (
             <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
           ) : (
@@ -49,72 +64,77 @@ export default function CodeConsole({
           Submit
         </Button>
         {hasNextLevel && (
-            <Button
-              onClick={onNextLevel}
-              size="sm"
-              variant="outline"
-              disabled={!isNextLevelUnlocked}
-            >
-              <SkipForward className="mr-2 h-4 w-4" />
-              Next Level
-            </Button>
-          )}
+          <Button
+            onClick={onNextLevel}
+            size="sm"
+            variant="outline"
+            disabled={!isNextLevelUnlocked}
+          >
+            <SkipForward className="mr-2 h-4 w-4" />
+            Next Level
+          </Button>
+        )}
       </div>
-      <Tabs defaultValue="editor" className="flex-1 flex flex-col overflow-hidden">
-        <TabsList className="shrink-0 rounded-none bg-transparent border-b justify-start px-4">
-            <TabsTrigger value="editor" className="rounded-none data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary">
-                <Code className="mr-2"/>
-                Editor
-            </TabsTrigger>
-            <TabsTrigger value="output" className="rounded-none data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary">
-                <Terminal className="mr-2"/>
-                Output
-            </TabsTrigger>
-        </TabsList>
-        <TabsContent value="editor" className="flex-1 overflow-hidden m-0">
-          <ScrollArea className="h-full">
-            <div className="flex h-full font-code text-base">
-              <div className="select-none bg-card p-4 pr-3 text-right text-muted-foreground">
-                {Array.from({ length: lines }).map((_, i) => (
-                  <div key={i}>{i + 1}</div>
-                ))}
+      <PanelGroup direction="horizontal" className="flex-grow">
+        <Panel defaultSize={60} minSize={30}>
+          <div className="flex h-full flex-col">
+            <div className="flex h-10 items-center border-b border-t bg-primary/10 px-4">
+              <Code className="mr-2 h-4 w-4 text-primary" />
+              <span className="font-bold text-primary">Editor</span>
+            </div>
+            <ScrollArea className="flex-1">
+              <div className="flex h-full font-code text-base">
+                <div className="select-none p-4 pr-3 text-right text-muted-foreground">
+                  {Array.from({ length: lines }).map((_, i) => (
+                    <div key={i}>{i + 1}</div>
+                  ))}
+                </div>
+                <Editor
+                  value={code}
+                  onValueChange={setCode}
+                  highlight={(code) =>
+                    highlight(code, languages.python, "python")
+                  }
+                  padding={16}
+                  className="flex-grow !ring-0"
+                  style={{
+                    minHeight: "100%",
+                  }}
+                />
               </div>
-              <Editor
-                value={code}
-                onValueChange={setCode}
-                highlight={(code) => highlight(code, languages.python, 'python')}
-                padding={16}
-                className="flex-grow bg-card !ring-0"
-                style={{
-                  minHeight: '100%',
-                }}
-              />
+            </ScrollArea>
+          </div>
+        </Panel>
+        <PanelResizeHandle className="w-2 bg-border transition-colors hover:bg-primary" />
+        <Panel defaultSize={40} minSize={20}>
+          <div className="flex h-full flex-col">
+            <div className="flex h-10 items-center border-b border-t bg-primary/10 px-4">
+              <Terminal className="mr-2 h-4 w-4 text-primary" />
+              <span className="font-bold text-primary">Output</span>
             </div>
-          </ScrollArea>
-        </TabsContent>
-        <TabsContent value="output" className="flex-1 overflow-hidden m-0">
-          <ScrollArea className="h-full">
-            <div className="p-4 font-code text-sm">
-              {output.length > 0 ? (
-                output.map((line, index) => (
-                  <p
-                    key={index}
-                    className={`whitespace-pre-wrap ${
-                      line.includes("✅") ? "text-green-400" : ""
-                    } ${line.includes("❌") ? "text-red-400" : ""}`}
-                  >
-                    {line}
+            <ScrollArea className="flex-1">
+              <div className="p-4 font-code text-sm">
+                {output.length > 0 ? (
+                  output.map((line, index) => (
+                    <p
+                      key={index}
+                      className={`whitespace-pre-wrap ${
+                        line.includes("✅") ? "text-green-400" : ""
+                      } ${line.includes("❌") ? "text-red-400" : ""}`}
+                    >
+                      {line}
+                    </p>
+                  ))
+                ) : (
+                  <p className="text-muted-foreground">
+                    Click "Run" or "Submit" to see the output.
                   </p>
-                ))
-              ) : (
-                <p className="text-muted-foreground">
-                  Click "Run Code" to see the output.
-                </p>
-              )}
-            </div>
-          </ScrollArea>
-        </TabsContent>
-      </Tabs>
+                )}
+              </div>
+            </ScrollArea>
+          </div>
+        </Panel>
+      </PanelGroup>
     </div>
   );
 }
