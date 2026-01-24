@@ -20,6 +20,7 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-python';
 import React from "react";
 import { Level } from "@/lib/levels";
+import { useToast } from "@/hooks/use-toast";
 
 type AiAssistantProps = {
   code: string;
@@ -66,6 +67,7 @@ function AssistantTab({ code, level }: AiAssistantProps) {
       <form action={handleGetHint}>
         <input type="hidden" name="code" value={code} />
         <input type="hidden" name="challengeDescription" value={level.challenge} />
+        <input type="hidden" name="levelId" value={level.id} />
         <SubmitButton />
       </form>
 
@@ -84,7 +86,18 @@ function AssistantTab({ code, level }: AiAssistantProps) {
             <ScrollArea className="h-full max-h-[40vh] pr-4">
               {state.hint && (
                 <div className="prose prose-sm prose-invert max-w-none whitespace-pre-wrap font-body text-sidebar-accent-foreground">
-                  {state.hint}
+                   {state.hint.includes('```') ? (
+                    <Editor
+                      value={state.hint.replace(/```python\n|```/g, '')}
+                      onValueChange={() => {}}
+                      highlight={(code) => highlight(code, languages.python, 'python')}
+                      padding={8}
+                      readOnly
+                      className="!bg-card rounded-md"
+                    />
+                  ) : (
+                    state.hint
+                  )}
                 </div>
               )}
               {state.error && (
@@ -99,6 +112,15 @@ function AssistantTab({ code, level }: AiAssistantProps) {
 }
 
 function GlossaryTab() {
+  const { toast } = useToast();
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Copied to clipboard!",
+      description: "You can now paste the code in the editor.",
+    });
+  };
+
   return (
     <div className="flex h-full flex-col gap-4">
       <p className="text-sm text-sidebar-foreground/80">
@@ -119,7 +141,8 @@ function GlossaryTab() {
                       highlight={(code) => highlight(code, languages.python, 'python')}
                       padding={8}
                       readOnly
-                      className="!bg-card"
+                      onClick={() => copyToClipboard(item.example)}
+                      className="!bg-card cursor-copy"
                     />
                   </div>
                 </AccordionContent>

@@ -12,6 +12,7 @@ export type Level = {
   expectedOutput?: string;
   xp: number;
   difficulty: 'Easy' | 'Medium' | 'Hard';
+  hints: string[];
 };
 
 const findImage = (id: string) => {
@@ -32,6 +33,11 @@ export const levels: Level[] = [
     expectedOutput: "Hello, World!",
     xp: 100,
     difficulty: 'Easy',
+    hints: [
+      "You need to use a special function to make text appear in the console.",
+      "The function you're looking for is `print()`.",
+      "Try writing `print()` with the text 'Hello, World!' inside the parentheses and quotes.",
+    ],
   },
   {
     id: 2,
@@ -39,10 +45,15 @@ export const levels: Level[] = [
     description: "You've entered the Enchanted Forest. A wise old owl asks for your name to grant you passage. You must store your name in a variable and then print it.",
     challenge: "Create a variable named `player_name` with your name as a string. Then print the variable.",
     starterCode: "# Create your variable here\nplayer_name = \"\"\n\n# Print your variable here\n",
-    solution: "print(player_name)",
+    solution: "player_name = \"Alex\"\nprint(player_name)",
     image: findImage('enchanted-forest'),
     xp: 100,
     difficulty: 'Easy',
+    hints: [
+      "You need a way to store your name. In programming, we use 'variables' for that.",
+      "Create a variable called `player_name` and assign your name to it using the `=` sign. Remember that text (strings) needs quotes around it.",
+      "After creating the `player_name` variable, use the `print()` function to display its value.",
+    ],
   },
   {
     id: 3,
@@ -55,6 +66,11 @@ export const levels: Level[] = [
     expectedOutput: "175",
     xp: 150,
     difficulty: 'Medium',
+    hints: [
+      "To solve this, you first need to store the two numbers in variables.",
+      "Once you have the variables, you can use the `+` operator to add them together and store the result in a new variable.",
+      "Create a `total_coins` variable and set it to `gold_coins + found_coins`. Then print `total_coins`.",
+    ],
   },
   {
     id: 4,
@@ -67,6 +83,11 @@ export const levels: Level[] = [
     expectedOutput: "You may pass",
     xp: 150,
     difficulty: 'Medium',
+    hints: [
+      "This problem requires you to make a decision in your code. An `if` statement is perfect for this.",
+      "Your `if` statement should check if `mana_potions` is 'greater than or equal to' 10. The operator for this is `>=`.",
+      "You'll need an `if` block for the success case and an `else` block for the other case.",
+    ],
   },
   {
     id: 5,
@@ -79,5 +100,10 @@ export const levels: Level[] = [
     expectedOutput: "Abracadabra\nAbracadabra\nAbracadabra",
     xp: 200,
     difficulty: 'Hard',
+    hints: [
+      "When you need to repeat an action a specific number of times, a `for` loop is the right tool.",
+      "Python's `range()` function is often used with `for` loops. `for i in range(3):` will run the code inside it 3 times.",
+      "Inside your loop, you just need a single `print()` statement for the chant.",
+    ],
   },
 ];

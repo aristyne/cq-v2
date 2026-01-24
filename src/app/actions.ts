@@ -1,12 +1,13 @@
 "use server";
 
-import { provideHint } from "@/ai/ai-coding-assistant-hints";
+import { levels } from "@/lib/levels";
 import { z } from "zod";
 
 const hintSchema = z.object({
   code: z.string(),
   challengeDescription: z.string(),
   attempts: z.number().min(1),
+  levelId: z.coerce.number(),
 });
 
 
@@ -23,32 +24,36 @@ export async function getHintAction(
     code: formData.get("code"),
     challengeDescription: formData.get("challengeDescription"),
     attempts: Number(formData.get("attempts")),
+    levelId: formData.get("levelId"),
   });
 
   if (!validatedFields.success) {
     return {
       hint: null,
-      error: "Invalid input. Please provide some code.",
+      error: "Invalid input. Please try again.",
     };
+  }
+  
+  const { attempts, levelId } = validatedFields.data;
+  const level = levels.find(l => l.id === levelId);
+
+  if (!level) {
+      return { hint: null, error: "Could not find level data." };
   }
 
-  try {
-    const result = await provideHint({
-        studentCode: validatedFields.data.code,
-        challengeDescription: validatedFields.data.challengeDescription,
-        attempts: validatedFields.data.attempts,
-    });
-    return {
-      hint: result.hint,
-      error: null,
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      hint: null,
-      error: "Failed to get suggestion from AI. Please try again later.",
-    };
+  let hint;
+  if (attempts <= level.hints.length) {
+    hint = level.hints[attempts - 1];
+  } else {
+    hint = `You've asked for a lot of hints! Here is the solution:\n\n${'```python'}
+${level.solution}
+${'```'}`;
   }
+
+  return {
+    hint,
+    error: null,
+  };
 }
 
 // WARNING: This is a VERY simplified Python interpreter for educational purposes.
@@ -105,7 +110,7 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
         if (assignMatch) {
             const varName = assignMatch[1];
             const varValue = evalExpression(assignMatch[2], currentScope);
-            if (varName in blockScope) {
+            if (Object.prototype.hasOwnProperty.call(blockScope, varName)) {
               blockScope[varName] = varValue;
             } else {
               globalScope[varName] = varValue;
