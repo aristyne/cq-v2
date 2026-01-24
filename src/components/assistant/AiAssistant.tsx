@@ -1,8 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
-import { getAiSuggestionAction } from "@/app/actions";
+import { getHintAction } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bot, Lightbulb, LoaderCircle, BookOpen } from "lucide-react";
@@ -19,9 +19,11 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-python';
 import React from "react";
+import { Level } from "@/lib/levels";
 
 type AiAssistantProps = {
   code: string;
+  level: Level;
 };
 
 function SubmitButton() {
@@ -43,34 +45,46 @@ function SubmitButton() {
   );
 }
 
-function AssistantTab({ code }: AiAssistantProps) {
-  const initialState = { suggestion: null, error: null };
-  const [state, formAction] = useActionState(getAiSuggestionAction, initialState);
+function AssistantTab({ code, level }: AiAssistantProps) {
+  const [attempts, setAttempts] = useState(0);
+  const initialState = { hint: null, error: null };
+  const [state, formAction] = useActionState(getHintAction, initialState);
+
+  const handleGetHint = (formData: FormData) => {
+    const newAttempts = attempts + 1;
+    formData.set('attempts', String(newAttempts));
+    formAction(formData);
+    setAttempts(newAttempts);
+  };
 
   return (
     <div className="flex h-full flex-col gap-4">
       <p className="text-sm text-sidebar-foreground/80">
-        Stuck on a problem? Submit your code to get a hint, debugging help, or
-        suggestions for improvement from your AI companion.
+        Stuck on a problem? Get a hint from your AI companion. The more hints you request, the more specific they become.
       </p>
 
-      <form action={formAction}>
+      <form action={handleGetHint}>
         <input type="hidden" name="code" value={code} />
+        <input type="hidden" name="challengeDescription" value={level.challenge} />
         <SubmitButton />
       </form>
 
-      {(state.suggestion || state.error) && (
+      {attempts > 0 && (
+        <p className="text-xs text-center text-sidebar-foreground/60">Hint attempts: {attempts}</p>
+      )}
+
+      {(state.hint || state.error) && (
         <Card className="flex-1 bg-sidebar-accent text-sidebar-accent-foreground">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
-              Suggestion
+              Hint
             </CardTitle>
           </CardHeader>
           <CardContent>
             <ScrollArea className="h-full max-h-[40vh] pr-4">
-              {state.suggestion && (
+              {state.hint && (
                 <div className="prose prose-sm prose-invert max-w-none whitespace-pre-wrap font-body text-sidebar-accent-foreground">
-                  {state.suggestion}
+                  {state.hint}
                 </div>
               )}
               {state.error && (
@@ -118,7 +132,7 @@ function GlossaryTab() {
   );
 }
 
-export default function AiAssistant({ code }: AiAssistantProps) {
+export default function AiAssistant({ code, level }: AiAssistantProps) {
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-3 p-4 pb-0">
@@ -139,7 +153,7 @@ export default function AiAssistant({ code }: AiAssistantProps) {
         </TabsList>
 
         <TabsContent value="assistant" className="flex-1 overflow-y-auto mt-4">
-          <AssistantTab code={code} />
+          <AssistantTab code={code} level={level} key={level.id} />
         </TabsContent>
         <TabsContent value="glossary" className="flex-1 overflow-y-auto mt-4">
           <GlossaryTab />

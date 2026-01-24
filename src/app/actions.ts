@@ -1,44 +1,51 @@
 "use server";
 
-import { aiCodingAssistantSuggestsImprovements } from "@/ai/flows/ai-coding-assistant-improvements";
+import { provideHint } from "@/ai/ai-coding-assistant-hints";
 import { z } from "zod";
 
-const submissionSchema = z.object({
-  code: z.string().min(1, "Code cannot be empty."),
+const hintSchema = z.object({
+  code: z.string(),
+  challengeDescription: z.string(),
+  attempts: z.number().min(1),
 });
 
+
 type FormState = {
-  suggestion: string | null;
+  hint: string | null;
   error: string | null;
 };
 
-export async function getAiSuggestionAction(
+export async function getHintAction(
   prevState: FormState,
   formData: FormData
 ): Promise<FormState> {
-  const validatedFields = submissionSchema.safeParse({
+  const validatedFields = hintSchema.safeParse({
     code: formData.get("code"),
+    challengeDescription: formData.get("challengeDescription"),
+    attempts: Number(formData.get("attempts")),
   });
 
   if (!validatedFields.success) {
     return {
-      suggestion: null,
+      hint: null,
       error: "Invalid input. Please provide some code.",
     };
   }
 
   try {
-    const result = await aiCodingAssistantSuggestsImprovements(
-      validatedFields.data
-    );
+    const result = await provideHint({
+        studentCode: validatedFields.data.code,
+        challengeDescription: validatedFields.data.challengeDescription,
+        attempts: validatedFields.data.attempts,
+    });
     return {
-      suggestion: result.suggestions,
+      hint: result.hint,
       error: null,
     };
   } catch (error) {
     console.error(error);
     return {
-      suggestion: null,
+      hint: null,
       error: "Failed to get suggestion from AI. Please try again later.",
     };
   }
@@ -82,7 +89,7 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
         const lineIndent = line.length - line.trimStart().length;
 
         // The current scope needs to be recalculated on each line to get the latest variable values.
-        const currentScope = {...globalScope, ...blockScope};
+        let currentScope = {...globalScope, ...blockScope};
 
         if (trimmedLine === '' || trimmedLine.startsWith('#')) continue;
 
@@ -96,7 +103,15 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
         // variable assignment
         const assignMatch = trimmedLine.match(/^(\w+)\s*=\s*(.*)$/);
         if (assignMatch) {
-            globalScope[assignMatch[1]] = evalExpression(assignMatch[2], currentScope);
+            const varName = assignMatch[1];
+            const varValue = evalExpression(assignMatch[2], currentScope);
+            if (varName in blockScope) {
+              blockScope[varName] = varValue;
+            } else {
+              globalScope[varName] = varValue;
+            }
+            // Update scope for immediate use
+            currentScope = {...globalScope, ...blockScope};
             continue;
         }
 
@@ -114,7 +129,7 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
             i--;
 
             for(let j=0; j<count; j++) {
-                executeBlock(bodyLines, {[loopVar]: j});
+                executeBlock(bodyLines, {...blockScope, [loopVar]: j});
             }
             continue;
         }
@@ -172,7 +187,7 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
 
 
   try {
-    executeBlock(lines);
+    executeBlock(lines, {});
     return { output, error: null };
   } catch(e: any) {
     return { output: [], error: e.message };

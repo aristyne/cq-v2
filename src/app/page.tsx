@@ -122,7 +122,7 @@ export default function Home() {
       {showConfetti && <Confetti recycle={false} onConfettiComplete={() => setShowConfetti(false)} />}
       <PanelGroup direction="horizontal" className="h-full w-full">
         <Panel defaultSize={25} minSize={25} className="h-full bg-sidebar">
-          <AiAssistant code={code} />
+          <AiAssistant code={code} level={currentLevel} />
         </Panel>
         <PanelResizeHandle className="w-2 bg-border transition-colors hover:bg-primary" />
         <Panel minSize={40}>

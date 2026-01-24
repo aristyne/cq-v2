@@ -47,9 +47,15 @@ The student has written the following code so far:
 
 Student Code: {{{studentCode}}}
 
-The student has made {{{attempts}}} attempts on this challenge.
+The student has made {{{attempts}}} attempts to get a hint for this challenge.
 
-Provide a helpful hint to guide the student towards the correct solution.  Focus on one specific problem in the student's code and provide guidance to solve it, rather than providing the complete solution.  Be encouraging and supportive. Do not include any code in the response.`,
+Your task is to provide a helpful hint to guide the student towards the correct solution. The hint's detail should be based on the number of attempts.
+- Attempt 1: Provide a high-level, conceptual hint about the programming concept they should use.
+- Attempt 2: Point to the specific part of their code that needs fixing, or a concept they are missing.
+- Attempt 3: Give a more direct suggestion on how to fix the code, perhaps with a small pseudo-code example.
+- Attempt 4 and beyond: Provide a very specific explanation, getting very close to the actual answer.
+
+Be encouraging and supportive. Do not just give away the answer on early attempts.`,
 });
 
 const provideHintFlow = ai.defineFlow(
