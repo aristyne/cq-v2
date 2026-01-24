@@ -34,7 +34,11 @@ function AssistantTab({ code, level }: AiAssistantProps) {
   const [displayedHints, setDisplayedHints] = useState<string[]>([]);
   const [isThinking, setIsThinking] = useState(false);
 
+  const solutionShown = attempts > level.hints.length;
+
   const handleGetHint = () => {
+    if (solutionShown) return;
+
     setIsThinking(true);
     const newAttempts = attempts + 1;
     
@@ -58,7 +62,7 @@ function AssistantTab({ code, level }: AiAssistantProps) {
         <p className="text-sm text-sidebar-foreground/80">
           Hints Used: {attempts}/{level.hints.length}
         </p>
-        <Button onClick={handleGetHint} disabled={isThinking} variant="outline" size="sm" className="bg-sidebar-accent hover:bg-sidebar-accent/80">
+        <Button onClick={handleGetHint} disabled={isThinking || solutionShown} variant="outline" size="sm" className="bg-sidebar-accent hover:bg-sidebar-accent/80">
           {isThinking ? (
             <>
               <LoaderCircle className="mr-2 h-4 w-4 animate-spin shrink-0" />
