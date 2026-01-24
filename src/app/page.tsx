@@ -12,6 +12,7 @@ import GameView from "@/components/game/GameView";
 import AiAssistant from "@/components/assistant/AiAssistant";
 import CodeConsole from "@/components/console/CodeConsole";
 import { runPythonCode } from "@/app/actions";
+import Confetti from "react-confetti";
 
 export default function Home() {
   const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
@@ -21,6 +22,7 @@ export default function Home() {
   const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [playerName, setPlayerName] = useState("Adventurer");
+  const [showConfetti, setShowConfetti] = useState(false);
 
   const currentLevel = levels[currentLevelIndex];
   const completedLevels = highestLevelUnlocked > 1 ? highestLevelUnlocked - 1 : 0;
@@ -59,6 +61,7 @@ export default function Home() {
 
     if (success) {
       finalOutput.push("\n✅ Success! You solved the challenge.");
+      setShowConfetti(true);
       
       if (currentLevel.id >= highestLevelUnlocked) {
         setXp((prevXp) => prevXp + currentLevel.xp);
@@ -116,6 +119,7 @@ export default function Home() {
 
   return (
     <div className="h-dvh w-dvw bg-background text-foreground">
+      {showConfetti && <Confetti recycle={false} onConfettiComplete={() => setShowConfetti(false)} />}
       <PanelGroup direction="horizontal" className="h-full w-full">
         <Panel defaultSize={25} minSize={25} className="h-full bg-sidebar">
           <AiAssistant code={code} />
