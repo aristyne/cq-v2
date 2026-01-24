@@ -20,6 +20,7 @@ export default function Home() {
   const [code, setCode] = useState(levels[0].starterCode);
   const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
+  const [playerName, setPlayerName] = useState("Adventurer");
 
   const currentLevel = levels[currentLevelIndex];
   const completedLevels = highestLevelUnlocked > 1 ? highestLevelUnlocked - 1 : 0;
@@ -45,10 +46,15 @@ export default function Home() {
     if (currentLevel.expectedOutput) {
         success = cleanOutput === currentLevel.expectedOutput;
     } else if (currentLevel.id === 2) {
-        const nameIsSet = !code.includes('player_name = ""');
-        const outputIsNotBlank = cleanOutput !== '';
-        const printsVariable = code.includes(currentLevel.solution);
-        success = nameIsSet && outputIsNotBlank && printsVariable;
+        const nameIsSet = !code.includes('player_name = ""') && !code.includes("player_name = ''");
+        
+        const nameValueMatch = code.match(/player_name\s*=\s*["'](.+)["']/);
+        const nameValue = nameValueMatch ? nameValueMatch[1] : "";
+
+        const printsVariable = code.includes(`print(${currentLevel.solution})`) || code.includes(`print(player_name)`);
+        const outputIsCorrect = cleanOutput === nameValue;
+        
+        success = nameIsSet && outputIsCorrect && printsVariable && nameValue !== '';
     }
 
     if (success) {
@@ -117,7 +123,13 @@ export default function Home() {
         <PanelResizeHandle className="w-2 bg-border transition-colors hover:bg-primary" />
         <Panel minSize={40}>
           <div className="flex h-dvh flex-col">
-            <Header xp={xp} completedLevels={completedLevels} totalLevels={levels.length} />
+            <Header
+              playerName={playerName}
+              onPlayerNameChange={setPlayerName}
+              xp={xp}
+              completedLevels={completedLevels}
+              totalLevels={levels.length}
+            />
             <PanelGroup direction="vertical">
               <Panel defaultSize={50} minSize={25}>
                 <main className="h-full overflow-auto p-4 md:p-6">

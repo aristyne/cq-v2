@@ -1,13 +1,18 @@
 import { CodeXml, User, Star } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
 
 type HeaderProps = {
+  playerName: string;
+  onPlayerNameChange: (name: string) => void;
   xp: number;
   completedLevels: number;
   totalLevels: number;
 };
 
 export default function Header({
+  playerName,
+  onPlayerNameChange,
   xp,
   completedLevels,
   totalLevels,
@@ -23,7 +28,13 @@ export default function Header({
       <div className="flex items-center gap-6 text-sm">
         <div className="flex items-center gap-2">
           <User className="h-5 w-5 text-muted-foreground" />
-          <span className="font-medium">Adventurer</span>
+          <Input
+            type="text"
+            value={playerName}
+            onChange={(e) => onPlayerNameChange(e.target.value)}
+            className="h-auto w-32 border-none bg-transparent p-0 font-medium shadow-none ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+            aria-label="Player name"
+          />
         </div>
         <div className="flex items-center gap-2">
           <Star className="h-5 w-5 text-yellow-400" />
