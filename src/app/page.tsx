@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { levels } from "@/lib/levels";
 import {
   Panel,
@@ -15,6 +15,7 @@ import CompletionDialog from "@/components/game/CompletionDialog";
 import dynamic from 'next/dynamic';
 
 const Confetti = dynamic(() => import('react-confetti'), { ssr: false });
+const successSound = typeof Audio !== "undefined" ? new Audio('https://actions.google.com/sounds/v1/cartoon/magic_chime.ogg') : undefined;
 
 // WARNING: This is a VERY simplified Python interpreter for educational purposes.
 // It is NOT safe, secure, or complete. It only supports a tiny subset of Python
@@ -192,6 +193,13 @@ export default function Home() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
 
+  useEffect(() => {
+    if (showConfetti && successSound) {
+      successSound.currentTime = 0;
+      successSound.play();
+    }
+  }, [showConfetti]);
+
   const currentLevel = levels[currentLevelIndex];
   const completedLevels = highestLevelUnlocked > 1 ? highestLevelUnlocked - 1 : 0;
 
@@ -266,7 +274,13 @@ export default function Home() {
 
   return (
     <div className="h-dvh w-dvh bg-background text-foreground">
-      {showConfetti && <Confetti recycle={false} onConfettiComplete={() => setShowConfetti(false)} />}
+      {showConfetti && <Confetti 
+        numberOfPieces={400}
+        gravity={0.25}
+        initialVelocityY={-30}
+        recycle={false} 
+        onConfettiComplete={() => setShowConfetti(false)} 
+      />}
       <CompletionDialog
         open={showCompletionDialog}
         onOpenChange={setShowCompletionDialog}
