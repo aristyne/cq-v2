@@ -69,24 +69,24 @@ export default function Header({
       </div>
       <div className="py-4">
         <ScrollArea className="w-full whitespace-nowrap">
-          <div className="flex w-max items-end gap-4 pb-4">
+          <div className="mt-2 flex w-max items-end gap-4 pb-4">
             {levels.map((mapLevel, index) => {
               const isUnlocked = mapLevel.id <= highestLevelUnlocked;
               const isCurrent = mapLevel.id === currentLevel.id;
               return (
                 <React.Fragment key={mapLevel.id}>
-                  <div className="flex flex-col items-center gap-2 w-28">
+                  <div className="flex w-28 flex-col items-center gap-2">
                     <button
                       onClick={() => isUnlocked && onSelectLevel(mapLevel.id)}
                       disabled={!isUnlocked}
                       className={cn(
-                        "w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold transition-all border-4",
+                        "flex h-16 w-16 items-center justify-center rounded-full border-4 text-xl font-bold transition-all",
                         isCurrent
-                          ? "bg-primary text-primary-foreground border-primary-foreground/50 scale-110 shadow-lg"
-                          : "bg-card border-border",
+                          ? "scale-110 border-primary-foreground/50 bg-primary text-primary-foreground shadow-lg"
+                          : "border-border bg-card",
                         isUnlocked
-                          ? "cursor-pointer hover:bg-accent hover:border-accent-foreground"
-                          : "cursor-not-allowed bg-muted text-muted-foreground border-muted-foreground/20"
+                          ? "cursor-pointer hover:border-accent-foreground hover:bg-accent"
+                          : "cursor-not-allowed border-muted-foreground/20 bg-muted text-muted-foreground"
                       )}
                       aria-label={`Level ${mapLevel.id}: ${mapLevel.title}`}
                     >
@@ -98,7 +98,7 @@ export default function Header({
                     </button>
                     <p
                       className={cn(
-                        "text-xs font-semibold truncate w-full text-center",
+                        "w-full truncate text-center text-xs font-semibold",
                         isUnlocked ? "text-foreground" : "text-muted-foreground"
                       )}
                     >
@@ -106,7 +106,7 @@ export default function Header({
                     </p>
                   </div>
                   {index < levels.length - 1 && (
-                    <div className="w-16 h-1 bg-border rounded-full -translate-y-8" />
+                    <div className="h-1 w-16 -translate-y-8 rounded-full bg-border" />
                   )}
                 </React.Fragment>
               );
