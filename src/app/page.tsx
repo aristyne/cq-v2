@@ -86,6 +86,17 @@ export default function Home() {
     }
   };
 
+  const handleNextLevel = () => {
+    const nextLevelIndex = currentLevelIndex + 1;
+    if (nextLevelIndex < levels.length) {
+      handleSelectLevel(levels[nextLevelIndex].id);
+    }
+  };
+
+  const hasNextLevel = currentLevelIndex < levels.length - 1;
+  const isNextLevelUnlocked =
+    hasNextLevel && levels[currentLevelIndex + 1].id <= highestLevelUnlocked;
+
   return (
     <div className="h-dvh w-dvw bg-background text-foreground">
       <PanelGroup direction="horizontal" className="h-full w-full">
@@ -115,6 +126,9 @@ export default function Home() {
                   output={consoleOutput}
                   onRunCode={handleRunCode}
                   isRunning={isRunning}
+                  onNextLevel={handleNextLevel}
+                  hasNextLevel={hasNextLevel}
+                  isNextLevelUnlocked={isNextLevelUnlocked}
                 />
               </Panel>
             </PanelGroup>

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { LoaderCircle, Play, Terminal } from "lucide-react";
+import { LoaderCircle, Play, SkipForward, Terminal } from "lucide-react";
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-python';
@@ -11,6 +11,9 @@ type CodeConsoleProps = {
   output: string[];
   onRunCode: () => void;
   isRunning: boolean;
+  onNextLevel: () => void;
+  hasNextLevel: boolean;
+  isNextLevelUnlocked: boolean;
 };
 
 export default function CodeConsole({
@@ -19,6 +22,9 @@ export default function CodeConsole({
   output,
   onRunCode,
   isRunning,
+  onNextLevel,
+  hasNextLevel,
+  isNextLevelUnlocked,
 }: CodeConsoleProps) {
   return (
     <div className="flex h-full w-full flex-col">
@@ -27,14 +33,27 @@ export default function CodeConsole({
           <Terminal className="h-5 w-5" />
           <h2 className="font-headline text-lg font-bold">Console</h2>
         </div>
-        <Button onClick={onRunCode} size="sm" disabled={isRunning}>
-          {isRunning ? (
-            <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <Play className="mr-2 h-4 w-4" />
+        <div className="flex items-center gap-2">
+          <Button onClick={onRunCode} size="sm" disabled={isRunning}>
+            {isRunning ? (
+              <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Play className="mr-2 h-4 w-4" />
+            )}
+            {isRunning ? "Running..." : "Run Code"}
+          </Button>
+          {hasNextLevel && (
+            <Button
+              onClick={onNextLevel}
+              size="sm"
+              variant="outline"
+              disabled={!isNextLevelUnlocked}
+            >
+              <SkipForward className="mr-2 h-4 w-4" />
+              Next Level
+            </Button>
           )}
-          {isRunning ? "Running..." : "Run Code"}
-        </Button>
+        </div>
       </div>
       <div className="flex flex-1 overflow-hidden">
         <div className="w-1/2 border-r">
