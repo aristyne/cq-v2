@@ -71,7 +71,7 @@ export default function GameView({
                           </p>
                         </div>
                         {index < levels.length - 1 && (
-                          <div className="w-16 h-1 bg-border rounded-full" />
+                          <div className="w-16 h-1 bg-border rounded-full -translate-y-3" />
                         )}
                       </React.Fragment>
                     );
