@@ -11,8 +11,10 @@ import Header from "@/components/layout/Header";
 import GameView from "@/components/game/GameView";
 import AiAssistant from "@/components/assistant/AiAssistant";
 import CodeConsole from "@/components/console/CodeConsole";
-import Confetti from "react-confetti";
 import CompletionDialog from "@/components/game/CompletionDialog";
+import dynamic from 'next/dynamic';
+
+const Confetti = dynamic(() => import('react-confetti'), { ssr: false });
 
 // WARNING: This is a VERY simplified Python interpreter for educational purposes.
 // It is NOT safe, secure, or complete. It only supports a tiny subset of Python
@@ -263,7 +265,7 @@ export default function Home() {
   const hasNextLevel = currentLevelIndex < levels.length - 1;
 
   return (
-    <div className="h-dvh w-dvw bg-background text-foreground">
+    <div className="h-dvh w-dvh bg-background text-foreground">
       {showConfetti && <Confetti recycle={false} onConfettiComplete={() => setShowConfetti(false)} />}
       <CompletionDialog
         open={showCompletionDialog}
