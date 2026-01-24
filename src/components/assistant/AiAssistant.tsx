@@ -130,7 +130,7 @@ export default function AiAssistant({ code }: AiAssistantProps) {
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="assistant">
             <Bot className="mr-2 h-4 w-4" />
-            Assistant
+            AI Assistant
           </TabsTrigger>
           <TabsTrigger value="glossary">
             <BookOpen className="mr-2 h-4 w-4" />
