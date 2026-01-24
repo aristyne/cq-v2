@@ -32,7 +32,7 @@ export default function Header({
             type="text"
             value={playerName}
             onChange={(e) => onPlayerNameChange(e.target.value)}
-            className="h-auto w-32 border-none bg-transparent p-0 font-medium shadow-none ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="h-9 w-32 font-medium"
             aria-label="Player name"
           />
         </div>
