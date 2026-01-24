@@ -12,10 +12,6 @@ import GameView from "@/components/game/GameView";
 import AiAssistant from "@/components/assistant/AiAssistant";
 import CodeConsole from "@/components/console/CodeConsole";
 import CompletionDialog from "@/components/game/CompletionDialog";
-import dynamic from 'next/dynamic';
-
-const Confetti = dynamic(() => import('react-confetti'), { ssr: false });
-const successSound = typeof Audio !== "undefined" ? new Audio('https://actions.google.com/sounds/v1/human_voices/party_horn.ogg') : undefined;
 
 // WARNING: This is a VERY simplified Python interpreter for educational purposes.
 // It is NOT safe, secure, or complete. It only supports a tiny subset of Python
@@ -190,32 +186,7 @@ export default function Home() {
   const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [playerName, setPlayerName] = useState("Adventurer");
-  const [showConfetti, setShowConfetti] = useState(false);
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
-  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
-
-  useEffect(() => {
-    // This effect runs only on the client
-    const handleResize = () => {
-      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
-    if (showConfetti) {
-      if (successSound) {
-        successSound.currentTime = 0;
-        successSound.play();
-      }
-      const timer = setTimeout(() => {
-        setShowConfetti(false);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [showConfetti]);
 
   const currentLevel = levels[currentLevelIndex];
   const completedLevels = highestLevelUnlocked > 1 ? highestLevelUnlocked - 1 : 0;
@@ -245,7 +216,6 @@ export default function Home() {
 
     if (success) {
       finalOutput.push("\n✅ Success! You solved the challenge.");
-      setShowConfetti(true);
       setShowCompletionDialog(true);
       
       if (currentLevel.id >= highestLevelUnlocked) {
@@ -291,20 +261,6 @@ export default function Home() {
 
   return (
     <div className="h-dvh w-dvh bg-background text-foreground">
-      {showConfetti && windowSize.width > 0 && <Confetti
-        width={windowSize.width}
-        height={windowSize.height}
-        confettiSource={{
-          x: windowSize.width / 2,
-          y: windowSize.height / 2,
-          w: 0,
-          h: 0,
-        }}
-        recycle={false}
-        numberOfPieces={400}
-        spread={360}
-        gravity={0.3}
-      />}
       <CompletionDialog
         open={showCompletionDialog}
         onOpenChange={setShowCompletionDialog}

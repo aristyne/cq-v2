@@ -31,7 +31,6 @@
     "patch-package": "^8.0.0",
     "prismjs": "^1.29.0",
     "react": "^19.2.1",
-    "react-confetti": "^6.1.0",
     "react-dom": "^19.2.1",
     "react-resizable-panels": "^2.0.20",
     "react-simple-code-editor": "^0.13.1",
