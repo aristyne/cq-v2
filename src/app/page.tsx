@@ -43,7 +43,7 @@ export default function Home() {
     }
 
     let success = false;
-    const cleanOutput = result.output.map(s => s.trim()).filter(Boolean).join('\\n');
+    const cleanOutput = result.output.map(s => s.trim()).filter(Boolean).join('\n');
 
     if (currentLevel.expectedOutput) {
         success = cleanOutput === currentLevel.expectedOutput;
