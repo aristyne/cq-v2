@@ -76,12 +76,13 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
   };
 
   const executeBlock = (blockLines: string[], blockScope: Record<string, any> = {}) => {
-      const currentScope = {...globalScope, ...blockScope};
-      
       for (let i = 0; i < blockLines.length; i++) {
         let line = blockLines[i];
         const trimmedLine = line.trim();
         const lineIndent = line.length - line.trimStart().length;
+
+        // The current scope needs to be recalculated on each line to get the latest variable values.
+        const currentScope = {...globalScope, ...blockScope};
 
         if (trimmedLine === '' || trimmedLine.startsWith('#')) continue;
 
