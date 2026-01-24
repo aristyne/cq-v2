@@ -30,12 +30,12 @@ function SubmitButton() {
     <Button type="submit" disabled={pending} className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
       {pending ? (
         <>
-          <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+          <LoaderCircle className="mr-2 h-4 w-4 animate-spin shrink-0" />
           Thinking...
         </>
       ) : (
         <>
-          <Lightbulb className="mr-2 h-4 w-4" />
+          <Lightbulb className="mr-2 h-4 w-4 shrink-0" />
           Get a Hint
         </>
       )}
@@ -122,18 +122,18 @@ export default function AiAssistant({ code }: AiAssistantProps) {
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-3 p-4 pb-0">
-        <Bot className="h-8 w-8 text-sidebar-primary" />
+        <Bot className="h-8 w-8 text-sidebar-primary shrink-0" />
         <h2 className="font-headline text-2xl font-bold">Code Guide</h2>
       </div>
 
       <Tabs defaultValue="assistant" className="flex-1 flex flex-col p-4">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="assistant">
-            <Bot className="mr-2 h-4 w-4" />
+            <Bot className="mr-2 h-4 w-4 shrink-0" />
             AI Assistant
           </TabsTrigger>
           <TabsTrigger value="glossary">
-            <BookOpen className="mr-2 h-4 w-4" />
+            <BookOpen className="mr-2 h-4 w-4 shrink-0" />
             Glossary
           </TabsTrigger>
         </TabsList>
