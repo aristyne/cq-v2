@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Textarea } from "@/components/ui/textarea";
 import { LoaderCircle, Play, Terminal } from "lucide-react";
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-python';
 
 type CodeConsoleProps = {
   code: string;
@@ -37,11 +39,15 @@ export default function CodeConsole({
       <div className="flex flex-1 overflow-hidden">
         <div className="w-1/2 border-r">
           <ScrollArea className="h-full">
-            <Textarea
+            <Editor
               value={code}
-              onChange={(e) => setCode(e.target.value)}
-              placeholder="Write your Python code here..."
-              className="h-full w-full resize-none rounded-none border-0 bg-card p-4 font-code text-base !ring-0"
+              onValueChange={setCode}
+              highlight={(code) => highlight(code, languages.python, 'python')}
+              padding={16}
+              className="h-full w-full bg-card font-code text-base !ring-0"
+              style={{
+                minHeight: '100%',
+              }}
             />
           </ScrollArea>
         </div>

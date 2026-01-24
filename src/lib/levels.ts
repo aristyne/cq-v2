@@ -9,6 +9,7 @@ export type Level = {
   starterCode: string;
   solution: string;
   image: ImagePlaceholder;
+  expectedOutput?: string;
 };
 
 const findImage = (id: string) => {
@@ -26,6 +27,7 @@ export const levels: Level[] = [
     starterCode: "# Your code here\n",
     solution: "print('Hello, World!')",
     image: findImage('start-village'),
+    expectedOutput: "Hello, World!",
   },
   {
     id: 2,
@@ -44,5 +46,6 @@ export const levels: Level[] = [
     starterCode: "gold_coins = 120\nfound_coins = 55\n\n# Calculate and print the total\ntotal_coins = \n",
     solution: "total_coins = gold_coins + found_coins\nprint(total_coins)",
     image: findImage('dragons-cave'),
+    expectedOutput: "175",
   },
 ];

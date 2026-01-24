@@ -36,7 +36,21 @@ export default function Home() {
       finalOutput.push(`Error: ${result.error}`);
     }
 
-    if (code.includes(currentLevel.solution)) {
+    let success = false;
+    const cleanOutput = result.output.map(s => s.trim()).filter(Boolean).join('\\n');
+
+    if (currentLevel.expectedOutput) {
+        success = cleanOutput === currentLevel.expectedOutput;
+    } else if (currentLevel.id === 2) {
+        // Special case for Level 2 where output is dynamic
+        const nameIsSet = !code.includes('player_name = ""');
+        const outputIsNotBlank = cleanOutput !== '';
+        // Also check if they are actually printing the variable
+        const printsVariable = code.includes(currentLevel.solution);
+        success = nameIsSet && outputIsNotBlank && printsVariable;
+    }
+
+    if (success) {
       finalOutput.push("\n✅ Success! You solved the challenge.");
       setConsoleOutput(finalOutput);
 
