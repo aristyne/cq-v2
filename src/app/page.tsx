@@ -12,6 +12,7 @@ import GameView from "@/components/game/GameView";
 import AiAssistant from "@/components/assistant/AiAssistant";
 import CodeConsole from "@/components/console/CodeConsole";
 import Confetti from "react-confetti";
+import CompletionDialog from "@/components/game/CompletionDialog";
 
 // WARNING: This is a VERY simplified Python interpreter for educational purposes.
 // It is NOT safe, secure, or complete. It only supports a tiny subset of Python
@@ -187,6 +188,7 @@ export default function Home() {
   const [isRunning, setIsRunning] = useState(false);
   const [playerName, setPlayerName] = useState("Adventurer");
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showCompletionDialog, setShowCompletionDialog] = useState(false);
 
   const currentLevel = levels[currentLevelIndex];
   const completedLevels = highestLevelUnlocked > 1 ? highestLevelUnlocked - 1 : 0;
@@ -217,6 +219,7 @@ export default function Home() {
     if (success) {
       finalOutput.push("\n✅ Success! You solved the challenge.");
       setShowConfetti(true);
+      setShowCompletionDialog(true);
       
       if (currentLevel.id >= highestLevelUnlocked) {
         setXp((prevXp) => prevXp + currentLevel.xp);
@@ -231,18 +234,6 @@ export default function Home() {
       }
       
       setConsoleOutput(finalOutput);
-
-      setTimeout(() => {
-        const nextLevelOutput = [...finalOutput];
-        if (currentLevelIndex < levels.length - 1) {
-          nextLevelOutput.push("\n🚀 Select the next task to continue your journey!");
-        } else {
-          nextLevelOutput.push(
-            "\n🎉 Congratulations! You have completed all levels!"
-          );
-        }
-        setConsoleOutput(nextLevelOutput);
-      }, 500);
     } else {
       finalOutput.push(
         "\n❌ Almost there! Your code didn't produce the correct result. Try again or ask the AI assistant for a hint."
@@ -262,6 +253,7 @@ export default function Home() {
   };
 
   const handleNextLevel = () => {
+    setShowCompletionDialog(false);
     const nextLevelIndex = currentLevelIndex + 1;
     if (nextLevelIndex < levels.length) {
       handleSelectLevel(levels[nextLevelIndex].id);
@@ -269,12 +261,18 @@ export default function Home() {
   };
 
   const hasNextLevel = currentLevelIndex < levels.length - 1;
-  const isNextLevelUnlocked =
-    hasNextLevel && (levels[currentLevelIndex + 1].id <= highestLevelUnlocked || highestLevelUnlocked > levels.length) ;
 
   return (
     <div className="h-dvh w-dvw bg-background text-foreground">
       {showConfetti && <Confetti recycle={false} onConfettiComplete={() => setShowConfetti(false)} />}
+      <CompletionDialog
+        open={showCompletionDialog}
+        onOpenChange={setShowCompletionDialog}
+        level={currentLevel}
+        xpGained={currentLevel.xp}
+        onNextLevel={handleNextLevel}
+        hasNextLevel={hasNextLevel}
+      />
       <PanelGroup direction="horizontal" className="h-full w-full">
         <Panel defaultSize={25} minSize={20} className="h-full bg-sidebar">
           <AiAssistant code={code} level={currentLevel} />
@@ -309,9 +307,6 @@ export default function Home() {
                   output={consoleOutput}
                   onRunCode={handleRunCode}
                   isRunning={isRunning}
-                  onNextLevel={handleNextLevel}
-                  hasNextLevel={hasNextLevel}
-                  isNextLevelUnlocked={isNextLevelUnlocked}
                 />
               </Panel>
             </PanelGroup>

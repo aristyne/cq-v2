@@ -5,7 +5,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   LoaderCircle,
   Play,
-  SkipForward,
   Terminal,
   Code,
   Send,
@@ -26,9 +25,6 @@ type CodeConsoleProps = {
   output: string[];
   onRunCode: () => void;
   isRunning: boolean;
-  onNextLevel: () => void;
-  hasNextLevel: boolean;
-  isNextLevelUnlocked: boolean;
 };
 
 export default function CodeConsole({
@@ -37,9 +33,6 @@ export default function CodeConsole({
   output,
   onRunCode,
   isRunning,
-  onNextLevel,
-  hasNextLevel,
-  isNextLevelUnlocked,
 }: CodeConsoleProps) {
   const lines = code.split("\n").length;
 
@@ -63,17 +56,6 @@ export default function CodeConsole({
           <Send className="mr-2 h-4 w-4" />
           Submit
         </Button>
-        {hasNextLevel && (
-          <Button
-            onClick={onNextLevel}
-            size="sm"
-            variant="outline"
-            disabled={!isNextLevelUnlocked}
-          >
-            <SkipForward className="mr-2 h-4 w-4" />
-            Next Level
-          </Button>
-        )}
       </div>
       <PanelGroup direction="horizontal" className="flex-grow">
         <Panel defaultSize={60} minSize={30}>
