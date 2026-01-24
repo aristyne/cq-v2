@@ -1,8 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
-import { useFormStatus } from "react-dom";
-import { getHintAction } from "@/app/actions";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bot, Lightbulb, LoaderCircle, BookOpen } from "lucide-react";
@@ -27,49 +25,56 @@ type AiAssistantProps = {
   level: Level;
 };
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" disabled={pending} className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-      {pending ? (
-        <>
-          <LoaderCircle className="mr-2 h-4 w-4 animate-spin shrink-0" />
-          Thinking...
-        </>
-      ) : (
-        <>
-          <Lightbulb className="mr-2 h-4 w-4 shrink-0" />
-          Get a Hint
-        </>
-      )}
-    </Button>
-  );
-}
+type HintState = {
+  hint: string | null;
+  error: string | null;
+};
 
 function AssistantTab({ code, level }: AiAssistantProps) {
   const [attempts, setAttempts] = useState(0);
-  const initialState = { hint: null, error: null };
-  const [state, formAction] = useActionState(getHintAction, initialState);
+  const [state, setState] = useState<HintState>({ hint: null, error: null });
+  const [isThinking, setIsThinking] = useState(false);
 
-  const handleGetHint = (formData: FormData) => {
+  const handleGetHint = () => {
+    setIsThinking(true);
     const newAttempts = attempts + 1;
-    formData.set('attempts', String(newAttempts));
-    formAction(formData);
-    setAttempts(newAttempts);
+    
+    let hint;
+    if (newAttempts <= level.hints.length) {
+      hint = level.hints[newAttempts - 1];
+    } else {
+      hint = `You've asked for a lot of hints! Here is the solution:\n\n${'```python'}
+${level.solution}
+${'```'}`;
+    }
+    
+    // Simulate thinking so the user sees the loading state
+    setTimeout(() => {
+        setAttempts(newAttempts);
+        setState({ hint, error: null });
+        setIsThinking(false);
+    }, 300);
   };
 
   return (
     <div className="flex h-full flex-col gap-4">
       <p className="text-sm text-sidebar-foreground/80">
-        Stuck on a problem? Get a hint from your AI companion. The more hints you request, the more specific they become.
+        Stuck on a problem? Get a hint. The more hints you request, the more specific they become.
       </p>
 
-      <form action={handleGetHint}>
-        <input type="hidden" name="code" value={code} />
-        <input type="hidden" name="challengeDescription" value={level.challenge} />
-        <input type="hidden" name="levelId" value={level.id} />
-        <SubmitButton />
-      </form>
+      <Button onClick={handleGetHint} disabled={isThinking} className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
+        {isThinking ? (
+          <>
+            <LoaderCircle className="mr-2 h-4 w-4 animate-spin shrink-0" />
+            Thinking...
+          </>
+        ) : (
+          <>
+            <Lightbulb className="mr-2 h-4 w-4 shrink-0" />
+            Get a Hint
+          </>
+        )}
+      </Button>
 
       {attempts > 0 && (
         <p className="text-xs text-center text-sidebar-foreground/60">Hint attempts: {attempts}</p>
