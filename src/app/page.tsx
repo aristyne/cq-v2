@@ -194,6 +194,15 @@ export default function Home() {
   const currentLevel = levels[currentLevelIndex];
   const completedLevels = highestLevelUnlocked > 1 ? highestLevelUnlocked - 1 : 0;
 
+  useEffect(() => {
+    // When the dialog is closed, reset the "gained" stats for the next run.
+    if (!showCompletionDialog) {
+        setXpGained(0);
+        setGemsGained(0);
+    }
+  }, [showCompletionDialog]);
+
+
   const handleRunCode = async () => {
     setIsRunning(true);
     const initialOutput = [`> Running code for: ${currentLevel.title}`];
@@ -230,7 +239,7 @@ export default function Home() {
         setGems((prevGems) => prevGems + earnedGems);
 
         if (highestLevelUnlocked <= levels.length) {
-          setHighestLevelUnlocked(highestLevelUnlocked + 1);
+          setHighestLevelUnlocked(prev => prev + 1);
           if (currentLevel.id < levels.length) {
             finalOutput.push("✨ New task unlocked!");
           }
