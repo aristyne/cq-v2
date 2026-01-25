@@ -1,6 +1,14 @@
 # CodeQuest
 
-This is a gamified learning platform to help you master Python, built with Next.js in Firebase Studio.
+Welcome to **CodeQuest**, a gamified RPG where you learn to master the Python programming language. Built with Next.js and Firebase Studio, this interactive adventure will take you from a novice coder to a seasoned programmer.
+
+## Your Adventure
+
+-   **Explore a Fantasy World:** Navigate a beautiful, hand-crafted world map to progress on your journey.
+-   **Master 9 Core Topics:** Journey through 27 unique challenges spread across 9 topics, from the basics of `print()` to the complexities of nested loops and conditional logic.
+-   **Learn Progressively:** Each topic is broken down into three tasks, creating a gradual learning curve that builds your confidence and skills.
+-   **Earn Rewards:** Solve coding puzzles to earn XP, collect gems, and watch your character level up.
+-   **AI-Powered Guidance:** Feeling stuck? The friendly AI Assistant is always available to provide a helpful hint or explain a tricky concept.
 
 To get started, launch the app and begin your first quest!
 
