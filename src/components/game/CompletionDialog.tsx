@@ -25,7 +25,7 @@ type CompletionDialogProps = {
   hasNextLevel: boolean;
 };
 
-const partyHornUrl = 'https://www.myinstants.com/media/sounds/yaaaaaaaay.mp3';
+const partyHornUrl = 'https://s3.amazonaws.com/freecodecamp/drums/Party-Horn.mp3';
 
 export default function CompletionDialog({
   open,
@@ -68,7 +68,7 @@ export default function CompletionDialog({
         <>
           <ReactConfetti
             style={{ pointerEvents: 'none', zIndex: 1000 }}
-            numberOfPieces={200}
+            numberOfPieces={400}
             recycle={false}
             confettiSource={{
               x: 0,
@@ -79,7 +79,7 @@ export default function CompletionDialog({
           />
           <ReactConfetti
             style={{ pointerEvents: 'none', zIndex: 1000 }}
-            numberOfPieces={200}
+            numberOfPieces={400}
             recycle={false}
             confettiSource={{
               x: window.innerWidth,
