@@ -200,7 +200,7 @@ export default function Header({
                         </button>
                         <p
                           className={cn(
-                            'text-xs font-semibold h-8 pt-1',
+                            'text-xs font-semibold h-8',
                             isUnlocked ? 'text-white/90' : 'text-white/40'
                           )}
                         >
