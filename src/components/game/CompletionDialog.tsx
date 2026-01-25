@@ -25,7 +25,7 @@ type CompletionDialogProps = {
   hasNextLevel: boolean;
 };
 
-const partyHornUrl = 'https://actions.google.com/sounds/v1/human_voices/human_male_yay.ogg';
+const partyHornUrl = 'https://www.myinstants.com/media/sounds/yaaaaaaaay.mp3';
 
 export default function CompletionDialog({
   open,
