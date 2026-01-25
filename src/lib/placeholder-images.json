@@ -29,6 +29,12 @@
       "description": "A tall, spiral tower that represents a loop.",
       "imageUrl": "https://images.unsplash.com/photo-1617303531482-75854b29a244?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmYW50YXN5JTIwdG93ZXJ8ZW58MHx8fHwxNzcwMTE3NDMwfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "fantasy tower"
+    },
+    {
+      "id": "golem-gauntlet",
+      "description": "A golem's gauntlet where logical prowess is tested.",
+      "imageUrl": "https://images.unsplash.com/photo-1621834245609-380535345037?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxyb2NrJTIwZ29sZW18ZW58MHx8fHwxNzcxMjM1NjYzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "stone golem"
     }
   ]
 }

@@ -143,7 +143,7 @@ export default function Header({
         {isMapOpen && (
           <div className="border-t border-map-path/20 map-pattern">
             <ScrollArea className="w-full whitespace-nowrap">
-              <div className="mx-auto flex w-max items-center justify-center gap-x-2 p-6 sm:w-full sm:gap-x-4">
+              <div className="mx-auto flex w-max items-center justify-center gap-x-2 p-6 sm:gap-x-4">
                 {topics.map((topic, index) => {
                   const isUnlocked = topic.id <= highestLevelUnlocked;
                   const topicLevels = levels.filter(
@@ -199,7 +199,7 @@ export default function Header({
                         </button>
                         <p
                           className={cn(
-                            'text-xs font-semibold h-8',
+                            'text-xs font-semibold h-8 text-white/90',
                             isUnlocked ? 'text-white/90' : 'text-white/40'
                           )}
                         >
@@ -226,7 +226,7 @@ export default function Header({
                   );
                 })}
               </div>
-              <ScrollBar orientation="horizontal" className="sm:hidden" />
+              <ScrollBar orientation="horizontal" />
             </ScrollArea>
             <div className="border-t border-border bg-card px-4 pt-2 pb-3 text-foreground">
               <div className="flex items-center justify-between gap-8">
