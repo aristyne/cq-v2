@@ -10,9 +10,8 @@ import {
   Gem,
   Home,
   Trees,
-  Flame,
+  TowerControl,
   GitMerge,
-  Infinity,
   Map,
   ChevronDown,
   ChevronUp,
@@ -52,23 +51,23 @@ export default function Header({
 }: HeaderProps) {
   const [isMapOpen, setIsMapOpen] = useState(true);
 
-  const getIconForLevel = (levelId: number) => {
+  const getIconForTopic = (topicId: number) => {
     const iconProps = {
       className: 'h-8 w-8 group-hover:scale-110 transition-transform',
     };
-    switch (levelId) {
+    switch (topicId) {
       case 1:
         return <Home {...iconProps} />;
       case 2:
         return <Trees {...iconProps} />;
       case 3:
-        return <Flame {...iconProps} />;
+        return <Gem {...iconProps} />;
       case 4:
         return <GitMerge {...iconProps} />;
       case 5:
-        return <Infinity {...iconProps} />;
+        return <TowerControl {...iconProps} />;
       default:
-        return <Gem {...iconProps} />;
+        return <CodeXml {...iconProps} />;
     }
   };
 
@@ -179,7 +178,7 @@ export default function Header({
                           aria-label={`Topic: ${topic.topicTitle}`}
                         >
                           {isUnlocked ? (
-                            getIconForLevel(topic.topicId)
+                            getIconForTopic(topic.topicId)
                           ) : (
                             <Lock className="h-8 w-8" />
                           )}
@@ -244,7 +243,7 @@ export default function Header({
                             disabled={!isTaskUnlocked}
                             title={task.title}
                             className={cn(
-                              'flex h-10 w-12 items-center justify-center rounded-md border-2 transition-all',
+                              'flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all',
                               !isTaskUnlocked &&
                                 'cursor-not-allowed border-muted-foreground/20 bg-muted/50 text-muted-foreground',
                               isTaskUnlocked &&
@@ -263,7 +262,7 @@ export default function Header({
                           </button>
                         </div>
                         {index < currentTopicTasks.length - 1 && (
-                          <div className="h-full w-4 border-b-2 border-border" />
+                          <div className="h-px w-4 bg-border" />
                         )}
                       </React.Fragment>
                     );
