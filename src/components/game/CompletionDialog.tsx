@@ -25,7 +25,7 @@ type CompletionDialogProps = {
   hasNextLevel: boolean;
 };
 
-const partyHornUrl = 'https://www.myinstants.com/media/sounds/yaaaaaaaay.mp3';
+const partyHornUrl = 'https://actions.google.com/sounds/v1/human_voices/human_male_yay.ogg';
 
 export default function CompletionDialog({
   open,
@@ -39,12 +39,11 @@ export default function CompletionDialog({
   const [isClient, setIsClient] = useState(false);
   const [playPartyHorn] = useSound(partyHornUrl, { volume: 0.5 });
   const [isCelebrating, setIsCelebrating] = useState(false);
+  const hasRewards = xpGained > 0 || gemsGained > 0;
 
   useEffect(() => {
     setIsClient(true);
   }, []);
-
-  const hasRewards = xpGained > 0 || gemsGained > 0;
 
   useEffect(() => {
     if (open && hasRewards) {
