@@ -199,7 +199,7 @@ export default function Header({
                         </button>
                         <p
                           className={cn(
-                            'text-xs font-semibold',
+                            'text-xs font-semibold w-24',
                             isUnlocked ? 'text-white/90' : 'text-white/40'
                           )}
                         >
@@ -214,7 +214,7 @@ export default function Header({
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
-                            d={isEven ? "M2 14 C 16 34, 16 34, 30 34" : "M2 34 C 16 14, 16 14, 30 14"}
+                            d={isEven ? "M2 34 C 16 14, 16 14, 30 14" : "M2 14 C 16 34, 16 34, 30 34"}
                             stroke="hsl(var(--map-path))"
                             strokeWidth="2"
                             strokeDasharray="4 3"
