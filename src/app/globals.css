@@ -47,6 +47,12 @@
     --completed-foreground: 120 60% 30%;
     --map-background: 35 52% 92%;
     --map-foreground: 35 32% 42%;
+    /* NEW */
+    --map-bg: 205 25% 24%;
+    --map-path: 205 15% 55%;
+    --map-node-completed: 150 45% 45%;
+    --map-node-current: 30 90% 60%;
+    --map-node-locked: 205 20% 30%;
   }
   .dark {
     --background: 224 71% 4%;
@@ -92,6 +98,12 @@
     --completed-foreground: 210 40% 98%;
     --map-background: 35 22% 18%;
     --map-foreground: 35 52% 82%;
+    /* NEW */
+    --map-bg: 205 25% 24%;
+    --map-path: 205 15% 55%;
+    --map-node-completed: 150 45% 45%;
+    --map-node-current: 30 90% 60%;
+    --map-node-locked: 205 20% 30%;
   }
 }
 
@@ -101,6 +113,14 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .map-pattern {
+    background-color: hsl(var(--map-bg));
+    background-image: radial-gradient(hsl(var(--map-path) / 0.2) 1px, transparent 1px);
+    background-size: 1.5rem 1.5rem;
   }
 }
 

@@ -15,6 +15,8 @@ import {
   Map,
   ChevronDown,
   ChevronUp,
+  Sparkles,
+  Crown,
 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
@@ -53,7 +55,7 @@ export default function Header({
 
   const getIconForTopic = (topicId: number) => {
     const iconProps = {
-      className: 'h-8 w-8 group-hover:scale-110 transition-transform',
+      className: 'h-8 w-8 text-white',
     };
     switch (topicId) {
       case 1:
@@ -119,10 +121,10 @@ export default function Header({
           </div>
         </div>
       </div>
-      <div className="border-t bg-map text-map-foreground">
+      <div className="border-t">
         <button
           onClick={() => setIsMapOpen(!isMapOpen)}
-          className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-map-foreground/10"
+          className="flex w-full items-center justify-between p-4 text-left transition-colors bg-map-bg text-white hover:bg-map-bg/90"
           aria-expanded={isMapOpen}
         >
           <div className="flex items-center gap-2">
@@ -139,9 +141,9 @@ export default function Header({
         </button>
 
         {isMapOpen && (
-          <div className="border-t border-map-foreground/20">
+          <div className="border-t border-map-path/20 map-pattern">
             <ScrollArea className="w-full whitespace-nowrap">
-              <div className="mx-auto flex w-max items-center justify-center gap-x-2 p-4 sm:w-full sm:gap-x-4">
+              <div className="mx-auto flex w-max items-center justify-center gap-x-2 p-6 sm:w-full sm:gap-x-4">
                 {topics.map((topic, index) => {
                   const isUnlocked = topic.id <= highestLevelUnlocked;
                   const topicLevels = levels.filter(
@@ -152,15 +154,16 @@ export default function Header({
                   ).length;
                   const isCompleted =
                     completedTasksInTopic === topicLevels.length;
-                  const isCurrent = topic.topicId === currentLevel.topicId;
+                  const isCurrent =
+                    !isCompleted && topic.topicId === currentLevel.topicId;
                   const isEven = index % 2 === 0;
 
                   return (
                     <React.Fragment key={topic.id}>
                       <div
                         className={cn(
-                          'flex w-20 flex-col items-center gap-2 text-center',
-                          isEven ? 'sm:pt-12' : 'sm:pb-12'
+                          'flex flex-col items-center gap-2 text-center',
+                          isEven ? 'sm:pt-10' : 'sm:pb-10'
                         )}
                       >
                         <button
@@ -169,47 +172,42 @@ export default function Header({
                           }
                           disabled={!isUnlocked}
                           className={cn(
-                            'group relative flex h-20 w-20 items-center justify-center rounded-full border-4 bg-map transition-all',
+                            'group relative flex h-16 w-16 items-center justify-center rounded-xl transition-all',
                             !isUnlocked
-                              ? 'cursor-not-allowed border-muted-foreground/20 text-muted-foreground'
+                              ? 'cursor-not-allowed bg-map-node-locked'
                               : [
                                   'cursor-pointer',
                                   isCurrent
-                                    ? 'scale-105 border-primary shadow-lg shadow-primary/30'
-                                    : isCompleted
-                                    ? 'border-green-500/50 bg-green-500/10 text-map-foreground hover:border-green-500'
-                                    : 'border-map-foreground/20 hover:border-primary',
+                                    ? 'bg-map-node-current shadow-lg shadow-map-node-current/30'
+                                    : 'bg-map-node-completed',
                                 ]
                           )}
                           aria-label={`Topic: ${topic.topicTitle}`}
                         >
-                          {isUnlocked ? (
-                            getIconForTopic(topic.topicId)
+                          {!isUnlocked ? (
+                            <Crown className="h-7 w-7 text-white/70" />
+                          ) : isCompleted ? (
+                            <Star className="h-7 w-7 fill-white text-white" />
+                          ) : isCurrent ? (
+                            <>
+                              {getIconForTopic(topic.topicId)}
+                              <Sparkles className="absolute -top-1 -right-1 h-5 w-5 text-white" />
+                            </>
                           ) : (
-                            <Lock className="h-8 w-8" />
-                          )}
-                          {isCompleted && (
-                            <div className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full border-4 border-map bg-green-500 text-white">
-                              <Check className="h-4 w-4" />
-                            </div>
+                            getIconForTopic(topic.topicId)
                           )}
                         </button>
                         <p
                           className={cn(
-                            'w-full text-xs font-semibold',
-                            isUnlocked
-                              ? 'text-map-foreground'
-                              : 'text-map-foreground/50'
+                            'w-20 truncate text-xs font-semibold',
+                            isUnlocked ? 'text-white/90' : 'text-white/40'
                           )}
                         >
                           {topic.topicTitle}
                         </p>
-                        <p className="text-xs text-map-foreground/70">
-                          {completedTasksInTopic}/{topicLevels.length}
-                        </p>
                       </div>
                       {index < topics.length - 1 && (
-                        <div className="hidden h-px w-8 flex-shrink-0 self-center border-t-2 border-dashed border-map-foreground/40 sm:block" />
+                        <div className="hidden h-px w-8 flex-shrink-0 self-center border-t-2 border-dashed border-map-path sm:block" />
                       )}
                     </React.Fragment>
                   );

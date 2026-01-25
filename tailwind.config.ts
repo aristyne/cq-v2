@@ -80,6 +80,13 @@ export default {
         map: {
           DEFAULT: 'hsl(var(--map-background))',
           foreground: 'hsl(var(--map-foreground))',
+          bg: 'hsl(var(--map-bg))',
+          path: 'hsl(var(--map-path))',
+          node: {
+            completed: 'hsl(var(--map-node-completed))',
+            current: 'hsl(var(--map-node-current))',
+            locked: 'hsl(var(--map-node-locked))',
+          },
         },
       },
       borderRadius: {
