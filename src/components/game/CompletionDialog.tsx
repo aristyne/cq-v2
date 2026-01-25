@@ -52,7 +52,7 @@ export default function CompletionDialog({
       const timer = setTimeout(() => setIsCelebrating(false), 5000); // Let confetti fall for 5s
       return () => clearTimeout(timer);
     }
-  }, [open, playPartyHorn, hasRewards]);
+  }, [open, hasRewards, playPartyHorn, xpGained, gemsGained]);
   
   const handleContinue = () => {
     onOpenChange(false);
