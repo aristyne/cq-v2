@@ -207,7 +207,20 @@ export default function Header({
                         </p>
                       </div>
                       {index < topics.length - 1 && (
-                        <div className="hidden h-px w-8 flex-shrink-0 self-center border-t-2 border-dashed border-map-path sm:block" />
+                        <svg
+                          className="hidden h-12 w-8 flex-shrink-0 sm:block"
+                          viewBox="0 0 32 48"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d={isEven ? "M2 14 C 16 34, 16 34, 30 34" : "M2 34 C 16 14, 16 14, 30 14"}
+                            stroke="hsl(var(--map-path))"
+                            strokeWidth="2"
+                            strokeDasharray="4 3"
+                            strokeLinecap="round"
+                          />
+                        </svg>
                       )}
                     </React.Fragment>
                   );
