@@ -162,7 +162,7 @@ export default function Header({
                     <React.Fragment key={topic.id}>
                       <div
                         className={cn(
-                          'flex flex-col items-center gap-2 text-center',
+                          'flex flex-col items-center gap-2 text-center w-24',
                           isEven ? 'sm:pt-10' : 'sm:pb-10'
                         )}
                       >
@@ -199,7 +199,7 @@ export default function Header({
                         </button>
                         <p
                           className={cn(
-                            'text-xs font-semibold w-24',
+                            'text-xs font-semibold',
                             isUnlocked ? 'text-white/90' : 'text-white/40'
                           )}
                         >
