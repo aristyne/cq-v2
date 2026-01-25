@@ -109,7 +109,7 @@ export default function Header({
 
               return (
                 <React.Fragment key={topic.id}>
-                  <div className="flex w-28 flex-col items-center gap-2 text-center">
+                  <div className="flex w-20 flex-col items-center gap-2 text-center whitespace-normal">
                     <button
                       onClick={() => isUnlocked && onSelectLevel(topic.id)}
                       disabled={!isUnlocked}
