@@ -25,7 +25,7 @@ type CompletionDialogProps = {
   hasNextLevel: boolean;
 };
 
-const partyHornUrl = 'https://www.myinstants.com/media/sounds/party-horn.mp3';
+const partyHornUrl = 'https://s3.amazonaws.com/freecodecamp/drums/Party-Horn.mp3';
 
 export default function CompletionDialog({
   open,
@@ -44,6 +44,8 @@ export default function CompletionDialog({
     setIsClient(true);
   }, []);
 
+  const hasRewards = xpGained > 0 || gemsGained > 0;
+
   useEffect(() => {
     if (open && hasRewards) {
       setIsCelebrating(true);
@@ -51,7 +53,7 @@ export default function CompletionDialog({
       const timer = setTimeout(() => setIsCelebrating(false), 5000); // Let confetti fall for 5s
       return () => clearTimeout(timer);
     }
-  }, [open, playPartyHorn]);
+  }, [open, playPartyHorn, hasRewards]);
   
   const handleContinue = () => {
     onOpenChange(false);
@@ -59,8 +61,6 @@ export default function CompletionDialog({
         onNextLevel();
     }
   }
-
-  const hasRewards = xpGained > 0 || gemsGained > 0;
 
   return (
     <>
