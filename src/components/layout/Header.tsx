@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -163,7 +162,7 @@ export default function Header({
                     <React.Fragment key={topic.id}>
                       <div
                         className={cn(
-                          'flex flex-col items-center gap-2 text-center w-24',
+                          'flex flex-col items-center gap-2 text-center w-28',
                           isEven ? 'sm:pt-10' : 'sm:pb-10'
                         )}
                       >
