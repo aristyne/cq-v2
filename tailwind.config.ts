@@ -77,6 +77,10 @@ export default {
           DEFAULT: 'hsl(var(--completed))',
           foreground: 'hsl(var(--completed-foreground))',
         },
+        map: {
+          DEFAULT: 'hsl(var(--map-background))',
+          foreground: 'hsl(var(--map-foreground))',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',

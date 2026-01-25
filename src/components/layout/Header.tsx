@@ -119,10 +119,10 @@ export default function Header({
           </div>
         </div>
       </div>
-      <div className="border-t bg-background/50">
+      <div className="border-t bg-map text-map-foreground">
         <button
           onClick={() => setIsMapOpen(!isMapOpen)}
-          className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-accent/50"
+          className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-map-foreground/10"
           aria-expanded={isMapOpen}
         >
           <div className="flex items-center gap-2">
@@ -132,16 +132,16 @@ export default function Header({
             </p>
           </div>
           {isMapOpen ? (
-            <ChevronUp className="h-5 w-5 text-muted-foreground" />
+            <ChevronUp className="h-5 w-5" />
           ) : (
-            <ChevronDown className="h-5 w-5 text-muted-foreground" />
+            <ChevronDown className="h-5 w-5" />
           )}
         </button>
 
         {isMapOpen && (
-          <div className="border-t border-border">
-            <ScrollArea className="w-full whitespace-nowrap p-4">
-              <div className="mx-auto flex w-max items-start gap-4 pb-4 pt-2">
+          <div className="border-t border-map-foreground/20">
+            <ScrollArea className="w-full whitespace-nowrap">
+              <div className="mx-auto flex w-max items-center justify-center gap-x-2 p-4 sm:w-full sm:gap-x-4">
                 {topics.map((topic, index) => {
                   const isUnlocked = topic.id <= highestLevelUnlocked;
                   const topicLevels = levels.filter(
@@ -153,26 +153,32 @@ export default function Header({
                   const isCompleted =
                     completedTasksInTopic === topicLevels.length;
                   const isCurrent = topic.topicId === currentLevel.topicId;
+                  const isEven = index % 2 === 0;
 
                   return (
                     <React.Fragment key={topic.id}>
-                      <div className="flex w-20 flex-col items-center gap-2 whitespace-normal text-center">
+                      <div
+                        className={cn(
+                          'flex w-20 flex-col items-center gap-2 text-center',
+                          isEven ? 'sm:pt-12' : 'sm:pb-12'
+                        )}
+                      >
                         <button
                           onClick={() =>
                             isUnlocked && onSelectLevel(topic.id)
                           }
                           disabled={!isUnlocked}
                           className={cn(
-                            'group relative flex h-20 w-20 items-center justify-center rounded-full border-4 transition-all',
+                            'group relative flex h-20 w-20 items-center justify-center rounded-full border-4 bg-map transition-all',
                             !isUnlocked
-                              ? 'cursor-not-allowed border-muted-foreground/20 bg-muted/50 text-muted-foreground'
+                              ? 'cursor-not-allowed border-muted-foreground/20 text-muted-foreground'
                               : [
                                   'cursor-pointer',
                                   isCurrent
                                     ? 'scale-105 border-primary shadow-lg shadow-primary/30'
                                     : isCompleted
-                                    ? 'border-green-500/50 bg-green-500/10 text-foreground hover:border-green-500'
-                                    : 'border-border bg-card hover:border-primary',
+                                    ? 'border-green-500/50 bg-green-500/10 text-map-foreground hover:border-green-500'
+                                    : 'border-map-foreground/20 hover:border-primary',
                                 ]
                           )}
                           aria-label={`Topic: ${topic.topicTitle}`}
@@ -183,7 +189,7 @@ export default function Header({
                             <Lock className="h-8 w-8" />
                           )}
                           {isCompleted && (
-                            <div className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full border-4 border-card bg-green-500 text-white">
+                            <div className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full border-4 border-map bg-green-500 text-white">
                               <Check className="h-4 w-4" />
                             </div>
                           )}
@@ -192,34 +198,32 @@ export default function Header({
                           className={cn(
                             'w-full text-xs font-semibold',
                             isUnlocked
-                              ? 'text-foreground'
-                              : 'text-muted-foreground'
+                              ? 'text-map-foreground'
+                              : 'text-map-foreground/50'
                           )}
                         >
                           {topic.topicTitle}
                         </p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-map-foreground/70">
                           {completedTasksInTopic}/{topicLevels.length}
                         </p>
                       </div>
                       {index < topics.length - 1 && (
-                        <div className="flex h-20 items-center">
-                          <div className="h-px w-12 border-t-2 border-border" />
-                        </div>
+                        <div className="hidden h-px w-8 flex-shrink-0 self-center border-t-2 border-dashed border-map-foreground/40 sm:block" />
                       )}
                     </React.Fragment>
                   );
                 })}
               </div>
-              <ScrollBar orientation="horizontal" />
+              <ScrollBar orientation="horizontal" className="sm:hidden" />
             </ScrollArea>
-            <div className="border-t border-border px-4 pt-2 pb-3">
+            <div className="border-t border-border bg-card px-4 pt-2 pb-3 text-foreground">
               <div className="flex items-center justify-between gap-8">
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-bold uppercase tracking-wider text-primary">
                     {currentLevel.topicTitle}
                   </p>
-                  <h2 className="truncate font-headline text-lg font-bold text-foreground">
+                  <h2 className="truncate font-headline text-lg font-bold">
                     {currentLevel.title}
                   </h2>
                   <p className="truncate text-xs text-muted-foreground">

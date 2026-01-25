@@ -45,6 +45,8 @@
     --difficulty-hard-foreground: 0 90% 30%;
     --completed: 120 60% 90%;
     --completed-foreground: 120 60% 30%;
+    --map-background: 35 52% 92%;
+    --map-foreground: 35 32% 42%;
   }
   .dark {
     --background: 224 71% 4%;
@@ -88,6 +90,8 @@
     --difficulty-hard-foreground: 0 80% 80%;
     --completed: 122 65% 57%;
     --completed-foreground: 210 40% 98%;
+    --map-background: 35 22% 18%;
+    --map-foreground: 35 52% 82%;
   }
 }
 
