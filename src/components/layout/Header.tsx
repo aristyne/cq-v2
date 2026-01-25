@@ -16,7 +16,7 @@ import {
   ChevronDown,
   ChevronUp,
   Sparkles,
-  Crown,
+  HelpCircle,
 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
@@ -185,7 +185,7 @@ export default function Header({
                           aria-label={`Topic: ${topic.topicTitle}`}
                         >
                           {!isUnlocked ? (
-                            <Crown className="h-7 w-7 text-white/70" />
+                            <HelpCircle className="h-7 w-7 text-white/70" />
                           ) : isCompleted ? (
                             <Star className="h-7 w-7 fill-white text-white" />
                           ) : isCurrent ? (
@@ -199,7 +199,7 @@ export default function Header({
                         </button>
                         <p
                           className={cn(
-                            'w-20 truncate text-xs font-semibold',
+                            'text-xs font-semibold',
                             isUnlocked ? 'text-white/90' : 'text-white/40'
                           )}
                         >
