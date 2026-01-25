@@ -35,6 +35,24 @@
       "description": "A golem's gauntlet where logical prowess is tested.",
       "imageUrl": "https://images.unsplash.com/photo-1621834245609-380535345037?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxyb2NrJTIwZ29sZW18ZW58MHx8fHwxNzcxMjM1NjYzfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "stone golem"
+    },
+    {
+      "id": "weavers-loom",
+      "description": "A loom for weaving strings of code together.",
+      "imageUrl": "https://images.unsplash.com/photo-1599849281788-7513f524c9c2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3ZWF2aW5nJTIwbG9vbXxlbnwwfHx8fDE3NzEzMTYyODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "weaving loom"
+    },
+    {
+      "id": "alchemists-lab",
+      "description": "An alchemist's lab for transforming variables.",
+      "imageUrl": "https://images.unsplash.com/photo-1622227934426-809f1f0a2e58?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhbGNoZW1pc3QlMjBsYWJ8ZW58MHx8fHwxNzcxMzE2MzE4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "alchemist lab"
+    },
+    {
+      "id": "oracles-chamber",
+      "description": "A mysterious chamber for deciphering complex logic.",
+      "imageUrl": "https://images.unsplash.com/photo-1587053530364-a7444c9b1c7c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxvcmFjbGUlMjBjaGFtYmVyfGVufDB8fHx8MTc3MTMxNjM1NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "oracle chamber"
     }
   ]
 }
