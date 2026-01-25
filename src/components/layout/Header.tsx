@@ -99,7 +99,7 @@ export default function Header({
       <div className="bg-background/50 border-t p-4">
         <p className="text-center text-xs font-bold tracking-wider text-primary/80 uppercase mb-4">World Map</p>
         <ScrollArea className="w-full whitespace-nowrap">
-          <div className="mx-auto flex w-max items-start gap-4 px-4 pb-4">
+          <div className="mx-auto flex w-max items-start gap-4 px-4 pt-2 pb-4">
             {topics.map((topic, index) => {
               const isUnlocked = topic.id <= highestLevelUnlocked;
               const topicLevels = levels.filter(l => l.topicId === topic.topicId);
