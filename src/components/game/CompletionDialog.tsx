@@ -25,7 +25,7 @@ type CompletionDialogProps = {
   hasNextLevel: boolean;
 };
 
-const partyHornUrl = 'https://s3.amazonaws.com/freecodecamp/drums/Party-Horn.mp3';
+const partyHornUrl = 'https://www.myinstants.com/media/sounds/party-horn-sound-effect.mp3';
 
 export default function CompletionDialog({
   open,
