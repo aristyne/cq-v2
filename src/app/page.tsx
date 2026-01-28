@@ -253,7 +253,7 @@ const LearnPath = ({ levels, highestLevelUnlocked, onSelectLevel, currentLevel }
     return (
         <div className="mx-auto max-w-2xl px-4 py-8">
             <div className="relative flex flex-col items-center gap-8">
-                {Object.values(topics).map((topicLevels: any, index) => (
+                {Object.values(topics).map((topicLevels: Level[], index) => (
                     <div key={index} className="flex flex-col items-center gap-4 w-full">
                         <div
                             className="topic-card w-full text-center"
@@ -476,5 +476,3 @@ export default function Page() {
     </div>
   );
 }
-
-    
