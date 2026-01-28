@@ -3,6 +3,8 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Level } from "@/lib/levels";
@@ -68,8 +70,8 @@ export default function CompletionDialog({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="max-w-none w-full h-full flex flex-col items-center justify-between p-8 bg-background text-foreground">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-primary mb-2">Lesson Complete!</h1>
-            <p className="text-lg text-muted-foreground">You are one step closer to mastering Python.</p>
+            <DialogTitle className="text-3xl font-bold text-primary mb-2">Lesson Complete!</DialogTitle>
+            <DialogDescription className="text-lg text-muted-foreground">You are one step closer to mastering Python.</DialogDescription>
           </div>
           
           <div className="flex flex-col items-center gap-4 my-8">
