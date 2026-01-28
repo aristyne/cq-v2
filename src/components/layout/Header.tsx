@@ -1,6 +1,6 @@
 'use client';
 
-import { Flame, Gem, Heart } from 'lucide-react';
+import { Flame } from 'lucide-react';
 
 type HeaderProps = {};
 
@@ -12,10 +12,6 @@ export default function Header({}: HeaderProps) {
           <div className="flex items-center gap-2 text-orange-500">
             <Flame className="h-7 w-7" />
             <span className="text-lg font-bold">0</span>
-          </div>
-          <div className="flex items-center gap-2 text-red-500">
-            <Heart className="h-7 w-7" />
-            <span className="text-lg font-bold">5</span>
           </div>
         </div>
       </div>
