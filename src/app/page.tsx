@@ -345,14 +345,14 @@ export default function Page() {
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const [xpGained, setXpGained] = useState(0);
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
+  const [hasShownWelcome, setHasShownWelcome] = useState(false);
 
   useEffect(() => {
-    const hasVisited = localStorage.getItem('codequest_has_visited');
-    if (!hasVisited) {
-        setShowWelcomeDialog(true);
-        localStorage.setItem('codequest_has_visited', 'true');
+    if (xp === 0 && !hasShownWelcome) {
+      setShowWelcomeDialog(true);
+      setHasShownWelcome(true);
     }
-  }, []);
+  }, [xp, hasShownWelcome]);
 
   const currentLevel = levels[currentLevelIndex];
   const completedLevels = highestLevelUnlocked > 1 ? highestLevelUnlocked - 1 : 0;
