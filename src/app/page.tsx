@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { levels } from "@/lib/levels";
+import React, { useState, useEffect } from "react";
+import { levels, type Level } from "@/lib/levels";
 import Header from "@/components/layout/Header";
 import GameView from "@/components/game/GameView";
 import CodeConsole from "@/components/console/CodeConsole";
@@ -214,7 +214,12 @@ const OverviewView = () => {
     )
   }
 
-const BottomNav = ({ activeView, setView }) => (
+type BottomNavProps = {
+    activeView: 'path' | 'lesson' | 'overview';
+    setView: React.Dispatch<React.SetStateAction<'path' | 'lesson' | 'overview'>>;
+};
+
+const BottomNav = ({ activeView, setView }: BottomNavProps) => (
     <footer className="h-20 w-full shrink-0 border-t-2">
       <nav className="grid h-full grid-cols-2 items-center">
         <button onClick={() => setView('path')} className={cn("flex flex-col items-center justify-center gap-1 h-full", activeView === 'path' ? 'text-primary' : 'text-muted-foreground/50 hover:text-primary')}>
@@ -229,14 +234,21 @@ const BottomNav = ({ activeView, setView }) => (
     </footer>
 )
 
-const LearnPath = ({ levels, highestLevelUnlocked, onSelectLevel, currentLevel }) => {
+type LearnPathProps = {
+    levels: Level[];
+    highestLevelUnlocked: number;
+    onSelectLevel: (levelId: number) => void;
+    currentLevel: Level;
+};
+
+const LearnPath = ({ levels, highestLevelUnlocked, onSelectLevel, currentLevel }: LearnPathProps) => {
     const topics = levels.reduce((acc, level) => {
         if (!acc[level.topicId]) {
             acc[level.topicId] = [];
         }
         acc[level.topicId].push(level);
         return acc;
-    }, {});
+    }, {} as Record<number, Level[]>);
 
     return (
         <div className="mx-auto max-w-2xl px-4 py-8">
@@ -283,7 +295,17 @@ const LearnPath = ({ levels, highestLevelUnlocked, onSelectLevel, currentLevel }
     );
 }
 
-const LessonView = ({ level, code, setCode, output, onRunCode, isRunning, onExit }) => {
+type LessonViewProps = {
+    level: Level;
+    code: string;
+    setCode: (code: string) => void;
+    output: string[];
+    onRunCode: () => void;
+    isRunning: boolean;
+    onExit: () => void;
+};
+
+const LessonView = ({ level, code, setCode, output, onRunCode, isRunning, onExit }: LessonViewProps) => {
     return (
         <div className="flex h-full flex-col">
              <header className="flex h-16 shrink-0 items-center justify-between border-b-2 px-4">
@@ -454,3 +476,5 @@ export default function Page() {
     </div>
   );
 }
+
+    
