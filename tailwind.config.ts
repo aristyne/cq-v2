@@ -48,6 +48,13 @@ export default {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
+        'lesson-locked-bg': 'hsl(var(--lesson-locked-bg))',
+        'lesson-locked-border': 'hsl(var(--lesson-locked-border))',
+        'lesson-locked-fg': 'hsl(var(--lesson-locked-fg))',
+        'lesson-completed-bg': 'hsl(var(--lesson-completed-bg))',
+        'lesson-completed-border': 'hsl(var(--lesson-completed-border))',
+        'lesson-current-bg': 'hsl(var(--lesson-current-bg))',
+        'lesson-current-border': 'hsl(var(--lesson-current-border))',
         chart: {
           '1': 'hsl(var(--chart-1))',
           '2': 'hsl(var(--chart-2))',

@@ -226,7 +226,7 @@ const LearnPath = ({ levels, highestLevelUnlocked, onSelectLevel, currentLevel }
                                     disabled={!isUnlocked}
                                     className={cn("lesson-bubble",
                                         !isUnlocked && "bg-lesson-locked-bg border-lesson-locked-border text-lesson-locked-fg cursor-not-allowed",
-                                        isCompleted && "bg-lesson-completed-bg border-lesson-completed-border text-white",
+                                        isCompleted && "bg-lesson-current-bg border-lesson-completed-border text-primary",
                                         isCurrent && "bg-lesson-current-bg border-lesson-current-border text-lesson-current-border animate-pulse",
                                         isUnlocked && !isCurrent && !isCompleted && "bg-lesson-current-bg border-lesson-completed-border text-primary"
                                     )}
