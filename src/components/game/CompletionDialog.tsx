@@ -16,7 +16,6 @@ type CompletionDialogProps = {
   onOpenChange: (open: boolean) => void;
   level: Level;
   xpGained: number;
-  gemsGained: number;
   onNextLevel: () => void;
   hasNextLevel: boolean;
 };
@@ -28,7 +27,6 @@ export default function CompletionDialog({
   onOpenChange,
   level,
   xpGained,
-  gemsGained,
   onNextLevel,
   hasNextLevel,
 }: CompletionDialogProps) {
@@ -36,7 +34,7 @@ export default function CompletionDialog({
   const [playPartyHorn] = useSound(partyHornUrl, { volume: 0.5 });
   const [isCelebrating, setIsCelebrating] = useState(false);
   
-  const hasRewards = xpGained > 0 || gemsGained > 0;
+  const hasRewards = xpGained > 0;
 
   useEffect(() => {
     setIsClient(true);
@@ -78,10 +76,6 @@ export default function CompletionDialog({
               <div className="flex items-center gap-2 rounded-full border-2 border-yellow-400 px-6 py-2 text-yellow-500">
                   <Star className="h-7 w-7 fill-current" />
                   <span className="text-2xl font-bold">+{xpGained} XP</span>
-              </div>
-               <div className="flex items-center gap-2 rounded-full border-2 border-blue-400 px-6 py-2 text-blue-500">
-                  <Gem className="h-7 w-7 fill-current" />
-                  <span className="text-2xl font-bold">+{gemsGained} Gems</span>
               </div>
           </div>
 

@@ -6,7 +6,7 @@ import Header from "@/components/layout/Header";
 import GameView from "@/components/game/GameView";
 import CodeConsole from "@/components/console/CodeConsole";
 import CompletionDialog from "@/components/game/CompletionDialog";
-import { Home as HomeIcon, Trophy, Scroll, Star, CodeXml, ChevronLeft, HelpCircle } from "lucide-react";
+import { Home as HomeIcon, Trophy, Scroll, Star, CodeXml, ChevronLeft, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // WARNING: This is a VERY simplified Python interpreter for educational purposes.
@@ -231,7 +231,7 @@ const LearnPath = ({ levels, highestLevelUnlocked, onSelectLevel, currentLevel }
                                         isUnlocked && !isCurrent && !isCompleted && "bg-lesson-current-bg border-lesson-completed-border text-primary"
                                     )}
                                 >
-                                    {isUnlocked ? <Star className="h-10 w-10" /> : <HelpCircle className="h-10 w-10" />}
+                                    {isUnlocked ? <Star className="h-10 w-10" /> : <Lock className="h-10 w-10" />}
                                     {isCurrent && (
                                         <div className="absolute -bottom-3 rounded-full bg-lesson-current-border px-3 py-1 text-xs font-bold uppercase text-white">
                                             Start
@@ -275,28 +275,25 @@ const LessonView = ({ level, code, setCode, output, onRunCode, isRunning, onExit
     )
 }
 
-export default function Home() {
+export default function Page() {
   const [view, setView] = useState<'path' | 'lesson'>('path');
   const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
   const [highestLevelUnlocked, setHighestLevelUnlocked] = useState(1);
   const [xp, setXp] = useState(0);
-  const [gems, setGems] = useState(0);
   const [code, setCode] = useState(levels[0].starterCode);
   const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
-  const [playerName, setPlayerName] = useState("Adventurer");
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const [xpGained, setXpGained] = useState(0);
-  const [gemsGained, setGemsGained] = useState(0);
 
   const currentLevel = levels[currentLevelIndex];
   const completedLevels = highestLevelUnlocked > 1 ? highestLevelUnlocked - 1 : 0;
 
   useEffect(() => {
-    if (open && (xpGained > 0 || gemsGained > 0)) {
+    if (open && (xpGained > 0)) {
         setShowCompletionDialog(true);
     }
-  }, [xpGained, gemsGained]);
+  }, [xpGained]);
 
   const handleRunCode = async () => {
     setIsRunning(true);
@@ -324,13 +321,10 @@ export default function Home() {
       finalOutput.push("\n✅ Success! You solved the challenge.");
       
       let earnedXp = 0;
-      let earnedGems = 0;
 
       if (currentLevel.id >= highestLevelUnlocked) {
         earnedXp = currentLevel.xp;
-        earnedGems = 10;
         setXp((prevXp) => prevXp + earnedXp);
-        setGems((prevGems) => prevGems + earnedGems);
 
         if (highestLevelUnlocked <= levels.length) {
           setHighestLevelUnlocked(prev => prev + 1);
@@ -338,7 +332,6 @@ export default function Home() {
       }
       
       setXpGained(earnedXp);
-      setGemsGained(earnedGems);
       setShowCompletionDialog(true);
       
       setConsoleOutput(finalOutput);
@@ -358,7 +351,6 @@ export default function Home() {
       setCode(levels[levelIndex].starterCode);
       setConsoleOutput([]);
       setXpGained(0);
-      setGemsGained(0);
       setView('lesson');
     }
   };
@@ -366,7 +358,6 @@ export default function Home() {
   const handleExitLesson = () => {
     setView('path');
     setXpGained(0);
-    setGemsGained(0);
   }
 
   const handleNextLevel = () => {
@@ -388,13 +379,12 @@ export default function Home() {
         onOpenChange={setShowCompletionDialog}
         level={currentLevel}
         xpGained={xpGained}
-        gemsGained={gemsGained}
         onNextLevel={handleNextLevel}
         hasNextLevel={hasNextLevel}
       />
       {view === 'path' && (
         <>
-            <Header xp={xp} gems={gems} />
+            <Header />
             <main className="flex-1 overflow-y-auto">
                 <LearnPath 
                     levels={levels}
