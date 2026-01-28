@@ -4,106 +4,66 @@
 
 @layer base {
   :root {
-    --background: 220 40% 98%;
-    --foreground: 220 10% 20%;
-    --card: 220 40% 99%;
-    --card-foreground: 220 10% 20%;
-    --popover: 220 40% 99%;
-    --popover-foreground: 220 10% 20%;
-    --primary: 122 65% 57%;
-    --primary-foreground: 210 40% 98%;
+    --background: 0 0% 100%;
+    --foreground: 224 25% 23%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 25% 23%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 25% 23%;
+    --primary: 98 75% 45%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 220 15% 94%;
-    --secondary-foreground: 220 10% 20%;
+    --secondary-foreground: 224 25% 23%;
     --muted: 220 15% 94%;
-    --muted-foreground: 220 10% 45%;
-    --accent: 122 65% 57%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 220 20% 88%;
-    --input: 220 20% 90%;
-    --ring: 122 65% 57%;
-    --chart-1: 340 90% 78%;
-    --chart-2: 200 95% 75%;
-    --chart-3: 340 70% 68%;
-    --chart-4: 200 75% 65%;
-    --chart-5: 220 50% 75%;
-    --radius: 0.5rem;
-    --sidebar-background: 220 20% 96%;
-    --sidebar-foreground: 220 10% 30%;
-    --sidebar-primary: 340 90% 78%;
-    --sidebar-primary-foreground: 340 90% 15%;
-    --sidebar-accent: 220 20% 92%;
-    --sidebar-accent-foreground: 220 10% 15%;
-    --sidebar-border: 220 20% 88%;
-    --sidebar-ring: 340 90% 78%;
-    --difficulty-easy: 120 60% 90%;
-    --difficulty-easy-foreground: 120 60% 30%;
-    --difficulty-medium: 45 90% 90%;
-    --difficulty-medium-foreground: 45 90% 30%;
-    --difficulty-hard: 0 90% 90%;
-    --difficulty-hard-foreground: 0 90% 30%;
-    --completed: 120 60% 90%;
-    --completed-foreground: 120 60% 30%;
-    --map-background: 35 52% 92%;
-    --map-foreground: 35 32% 42%;
-    /* NEW */
-    --map-bg: 205 25% 24%;
-    --map-path: 205 15% 55%;
-    --map-node-completed: 150 45% 45%;
-    --map-node-current: 30 90% 60%;
-    --map-node-locked: 205 20% 30%;
+    --muted-foreground: 220 10% 55%;
+    --accent: 220 15% 94%;
+    --accent-foreground: 224 25% 23%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 15% 88%;
+    --input: 220 15% 88%;
+    --ring: 98 75% 45%;
+    --radius: 0.8rem;
+
+    --lesson-locked-border: hsl(220, 15%, 88%);
+    --lesson-locked-bg: hsl(220, 15%, 96%);
+    --lesson-locked-fg: hsl(220, 10%, 65%);
+    --lesson-completed-border: hsl(98, 75%, 45%);
+    --lesson-completed-bg: hsl(98, 75%, 45%);
+    --lesson-current-border: hsl(210, 100%, 56%);
+    --lesson-current-bg: hsl(0, 0%, 100%);
+    --lesson-gold-border: hsl(45, 100%, 51%);
+
+    --topic-color-1: hsl(190, 80%, 60%);
+    --topic-color-2: hsl(340, 80%, 60%);
+    --topic-color-3: hsl(120, 80%, 60%);
+    --topic-color-4: hsl(270, 80%, 60%);
+    --topic-color-5: hsl(30, 80%, 60%);
+    --topic-color-6: hsl(220, 80%, 60%);
+    --topic-color-7: hsl(0, 80%, 60%);
+    --topic-color-8: hsl(60, 80%, 60%);
+    --topic-color-9: hsl(150, 80%, 60%);
   }
   .dark {
-    --background: 224 71% 4%;
-    --foreground: 210 20% 85%;
+    --background: 224 71% 10%;
+    --foreground: 210 20% 90%;
     --card: 225 15% 18%;
-    --card-foreground: 210 20% 85%;
+    --card-foreground: 210 20% 90%;
     --popover: 225 15% 15%;
-    --popover-foreground: 210 20% 85%;
-    --primary: 122 65% 57%;
-    --primary-foreground: 210 40% 98%;
+    --popover-foreground: 210 20% 90%;
+    --primary: 98 75% 45%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 225 15% 30%;
     --secondary-foreground: 210 40% 98%;
     --muted: 225 15% 25%;
     --muted-foreground: 215 20% 65%;
-    --accent: 122 65% 57%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 225 15% 25%;
+    --accent-foreground: 210 20% 90%;
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
-    --border: 216 34% 17%;
+    --border: 216 34% 22%;
     --input: 225 15% 25%;
-    --ring: 122 65% 57%;
-    --chart-1: 210 40% 98%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 34% 71%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 82% 65%;
-    --radius: 0.5rem;
-    --sidebar-background: 220 13% 18%;
-    --sidebar-foreground: 210 20% 85%;
-    --sidebar-primary: 122 65% 57%;
-    --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 216 34% 22%;
-    --sidebar-accent-foreground: 210 20% 90%;
-    --sidebar-border: 216 34% 22%;
-    --sidebar-ring: 122 65% 57%;
-    --difficulty-easy: 120 40% 25%;
-    --difficulty-easy-foreground: 120 70% 80%;
-    --difficulty-medium: 45 40% 25%;
-    --difficulty-medium-foreground: 45 80% 80%;
-    --difficulty-hard: 0 50% 28%;
-    --difficulty-hard-foreground: 0 80% 80%;
-    --completed: 122 65% 57%;
-    --completed-foreground: 210 40% 98%;
-    --map-background: 35 22% 18%;
-    --map-foreground: 35 52% 82%;
-    /* NEW */
-    --map-bg: 205 25% 24%;
-    --map-path: 205 15% 55%;
-    --map-node-completed: 150 45% 45%;
-    --map-node-current: 30 90% 60%;
-    --map-node-locked: 205 20% 30%;
+    --ring: 98 75% 45%;
   }
 }
 
@@ -117,20 +77,15 @@
 }
 
 @layer components {
-  .map-pattern {
-    background-color: hsl(var(--map-bg));
-    background-image: radial-gradient(hsl(var(--map-path) / 0.2) 1px, transparent 1px);
-    background-size: 1.5rem 1.5rem;
+  .lesson-bubble {
+    @apply relative h-20 w-20 rounded-full border-4 flex items-center justify-center transition-all duration-300;
+  }
+  .topic-card {
+    @apply rounded-xl p-4 text-white font-bold;
   }
 }
 
 /* Make prism editor play nice with tailwind */
 .prism-editor__textarea:focus {
   outline: none;
-}
-
-pre[class*="language-"] {
-  background: hsl(var(--card)) !important;
-  font-family: inherit !important;
-  font-size: inherit !important;
 }

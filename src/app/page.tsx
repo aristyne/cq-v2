@@ -2,16 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { levels } from "@/lib/levels";
-import {
-  Panel,
-  PanelGroup,
-  PanelResizeHandle,
-} from "react-resizable-panels";
 import Header from "@/components/layout/Header";
 import GameView from "@/components/game/GameView";
-import AiAssistant from "@/components/assistant/AiAssistant";
 import CodeConsole from "@/components/console/CodeConsole";
 import CompletionDialog from "@/components/game/CompletionDialog";
+import { Home as HomeIcon, Trophy, Scroll, Star, CodeXml, ChevronLeft, HelpCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 // WARNING: This is a VERY simplified Python interpreter for educational purposes.
 // It is NOT safe, secure, or complete. It only supports a tiny subset of Python
@@ -169,7 +165,6 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
     }
   }
 
-
   try {
     executeBlock(lines, {});
     return { output, error: null };
@@ -178,7 +173,110 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
   }
 }
 
+const BottomNav = () => (
+    <footer className="h-20 w-full shrink-0 border-t-2">
+      <nav className="grid h-full grid-cols-3 items-center">
+        <a href="#" className="flex flex-col items-center justify-center gap-1 text-primary">
+          <HomeIcon className="h-7 w-7" />
+          <span className="text-xs font-bold">LEARN</span>
+        </a>
+        <a href="#" className="flex flex-col items-center justify-center gap-1 text-muted-foreground/50 hover:text-primary">
+          <Trophy className="h-7 w-7" />
+          <span className="text-xs font-bold">LEADERBOARD</span>
+        </a>
+        <a href="#" className="flex flex-col items-center justify-center gap-1 text-muted-foreground/50 hover:text-primary">
+          <Scroll className="h-7 w-7" />
+          <span className="text-xs font-bold">QUESTS</span>
+        </a>
+      </nav>
+    </footer>
+)
+
+const LearnPath = ({ levels, highestLevelUnlocked, onSelectLevel, currentLevel }) => {
+    const topics = levels.reduce((acc, level) => {
+        if (!acc[level.topicId]) {
+            acc[level.topicId] = [];
+        }
+        acc[level.topicId].push(level);
+        return acc;
+    }, {});
+
+    return (
+        <div className="mx-auto max-w-2xl px-4 py-8">
+            <div className="relative flex flex-col items-center gap-8">
+                {Object.values(topics).map((topicLevels: any, index) => (
+                    <div key={index} className="flex flex-col items-center gap-4 w-full">
+                        <div
+                            className="topic-card w-full text-center"
+                            style={{ backgroundColor: `var(--topic-color-${topicLevels[0].topicId})` }}
+                        >
+                            <h2 className="text-xl">{topicLevels[0].topicTitle}</h2>
+                            <p className="text-sm opacity-80">{topicLevels[0].description}</p>
+                        </div>
+                        {topicLevels.map((level, taskIndex) => {
+                            const isUnlocked = level.id <= highestLevelUnlocked;
+                            const isCurrent = level.id === highestLevelUnlocked;
+                            const isCompleted = level.id < highestLevelUnlocked;
+                            const isCurrentTopic = level.topicId === currentLevel.topicId;
+
+                            return (
+                                <button
+                                    key={level.id}
+                                    onClick={() => isUnlocked && onSelectLevel(level.id)}
+                                    disabled={!isUnlocked}
+                                    className={cn("lesson-bubble",
+                                        !isUnlocked && "bg-lesson-locked-bg border-lesson-locked-border text-lesson-locked-fg cursor-not-allowed",
+                                        isCompleted && "bg-lesson-completed-bg border-lesson-completed-border text-white",
+                                        isCurrent && "bg-lesson-current-bg border-lesson-current-border text-lesson-current-border animate-pulse",
+                                        isUnlocked && !isCurrent && !isCompleted && "bg-lesson-current-bg border-lesson-completed-border text-primary"
+                                    )}
+                                >
+                                    {isUnlocked ? <Star className="h-10 w-10" /> : <HelpCircle className="h-10 w-10" />}
+                                    {isCurrent && (
+                                        <div className="absolute -bottom-3 rounded-full bg-lesson-current-border px-3 py-1 text-xs font-bold uppercase text-white">
+                                            Start
+                                        </div>
+                                    )}
+                                </button>
+                            )
+                        })}
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+const LessonView = ({ level, code, setCode, output, onRunCode, isRunning, onExit }) => {
+    return (
+        <div className="flex h-full flex-col">
+             <header className="flex h-16 shrink-0 items-center justify-between border-b-2 px-4">
+                <button onClick={onExit} className="p-2 rounded-xl hover:bg-muted">
+                    <ChevronLeft className="h-7 w-7 text-muted-foreground" />
+                </button>
+                <div className="flex-1">
+                    <div className="mx-auto h-4 w-full max-w-sm rounded-full bg-muted">
+                        <div className="h-full rounded-full bg-primary" style={{ width: '50%' }}></div>
+                    </div>
+                </div>
+                 <div className="w-10"></div>
+            </header>
+            <main className="flex-1 overflow-y-auto p-4 md:p-6">
+                <GameView level={level} />
+            </main>
+            <CodeConsole
+                code={code}
+                setCode={setCode}
+                output={output}
+                onRunCode={onRunCode}
+                isRunning={isRunning}
+            />
+        </div>
+    )
+}
+
 export default function Home() {
+  const [view, setView] = useState<'path' | 'lesson'>('path');
   const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
   const [highestLevelUnlocked, setHighestLevelUnlocked] = useState(1);
   const [xp, setXp] = useState(0);
@@ -195,20 +293,16 @@ export default function Home() {
   const completedLevels = highestLevelUnlocked > 1 ? highestLevelUnlocked - 1 : 0;
 
   useEffect(() => {
-    // When the dialog is closed, reset the "gained" stats for the next run.
-    if (!showCompletionDialog) {
-        setXpGained(0);
-        setGemsGained(0);
+    if (open && (xpGained > 0 || gemsGained > 0)) {
+        setShowCompletionDialog(true);
     }
-  }, [showCompletionDialog]);
-
+  }, [xpGained, gemsGained]);
 
   const handleRunCode = async () => {
     setIsRunning(true);
     const initialOutput = [`> Running code for: ${currentLevel.title}`];
     setConsoleOutput(initialOutput);
 
-    // A simple timeout to simulate code execution
     const result = simplePythonInterpreter(code);
 
     let finalOutput = [...initialOutput];
@@ -240,9 +334,6 @@ export default function Home() {
 
         if (highestLevelUnlocked <= levels.length) {
           setHighestLevelUnlocked(prev => prev + 1);
-          if (currentLevel.id < levels.length) {
-            finalOutput.push("✨ New task unlocked!");
-          }
         }
       }
       
@@ -253,7 +344,7 @@ export default function Home() {
       setConsoleOutput(finalOutput);
     } else {
       finalOutput.push(
-        "\n❌ Almost there! Your code didn't produce the correct result. Try again or ask the AI assistant for a hint."
+        "\n❌ Almost there! Your code didn't produce the correct result. Try again."
       );
       setConsoleOutput(finalOutput);
     }
@@ -266,21 +357,32 @@ export default function Home() {
       setCurrentLevelIndex(levelIndex);
       setCode(levels[levelIndex].starterCode);
       setConsoleOutput([]);
+      setXpGained(0);
+      setGemsGained(0);
+      setView('lesson');
     }
   };
+  
+  const handleExitLesson = () => {
+    setView('path');
+    setXpGained(0);
+    setGemsGained(0);
+  }
 
   const handleNextLevel = () => {
     setShowCompletionDialog(false);
     const nextLevelIndex = currentLevelIndex + 1;
     if (nextLevelIndex < levels.length) {
       handleSelectLevel(levels[nextLevelIndex].id);
+    } else {
+        setView('path');
     }
   };
 
   const hasNextLevel = currentLevelIndex < levels.length - 1;
 
   return (
-    <div className="h-dvh w-dvh bg-background text-foreground">
+    <div className="h-dvh w-dvh bg-background text-foreground flex flex-col">
       <CompletionDialog
         open={showCompletionDialog}
         onOpenChange={setShowCompletionDialog}
@@ -290,47 +392,31 @@ export default function Home() {
         onNextLevel={handleNextLevel}
         hasNextLevel={hasNextLevel}
       />
-      <PanelGroup direction="horizontal" className="h-full w-full">
-        <Panel defaultSize={25} minSize={20} className="h-full bg-sidebar">
-          <AiAssistant code={code} level={currentLevel} />
-        </Panel>
-        <PanelResizeHandle className="w-2 bg-border transition-colors hover:bg-primary" />
-        <Panel minSize={50}>
-          <div className="flex h-dvh flex-col">
-            <Header
-              playerName={playerName}
-              onPlayerNameChange={setPlayerName}
-              xp={xp}
-              gems={gems}
-              completedLevels={completedLevels}
-              totalLevels={levels.length}
-              levels={levels}
-              currentLevel={currentLevel}
-              highestLevelUnlocked={highestLevelUnlocked}
-              onSelectLevel={handleSelectLevel}
-            />
-            <PanelGroup direction="vertical">
-              <Panel defaultSize={40} minSize={25}>
-                <main className="h-full overflow-auto p-4 md:p-6">
-                  <GameView
-                    level={currentLevel}
-                  />
-                </main>
-              </Panel>
-              <PanelResizeHandle className="h-2 w-full bg-border transition-colors hover:bg-primary" />
-              <Panel defaultSize={60} minSize={25} className="bg-card">
-                <CodeConsole
-                  code={code}
-                  setCode={setCode}
-                  output={consoleOutput}
-                  onRunCode={handleRunCode}
-                  isRunning={isRunning}
+      {view === 'path' && (
+        <>
+            <Header xp={xp} gems={gems} />
+            <main className="flex-1 overflow-y-auto">
+                <LearnPath 
+                    levels={levels}
+                    highestLevelUnlocked={highestLevelUnlocked}
+                    onSelectLevel={handleSelectLevel}
+                    currentLevel={currentLevel}
                 />
-              </Panel>
-            </PanelGroup>
-          </div>
-        </Panel>
-      </PanelGroup>
+            </main>
+            <BottomNav />
+        </>
+      )}
+      {view === 'lesson' && (
+        <LessonView 
+            level={currentLevel}
+            code={code}
+            setCode={setCode}
+            output={consoleOutput}
+            onRunCode={handleRunCode}
+            isRunning={isRunning}
+            onExit={handleExitLesson}
+        />
+      )}
     </div>
   );
 }

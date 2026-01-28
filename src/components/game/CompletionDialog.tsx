@@ -3,14 +3,10 @@
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Level } from "@/lib/levels";
-import { Gem, SkipForward, Star, CheckCircle } from "lucide-react";
+import { Gem, SkipForward, Star } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import useSound from 'use-sound';
 import ReactConfetti from 'react-confetti';
@@ -39,6 +35,7 @@ export default function CompletionDialog({
   const [isClient, setIsClient] = useState(false);
   const [playPartyHorn] = useSound(partyHornUrl, { volume: 0.5 });
   const [isCelebrating, setIsCelebrating] = useState(false);
+  
   const hasRewards = xpGained > 0 || gemsGained > 0;
 
   useEffect(() => {
@@ -51,80 +48,47 @@ export default function CompletionDialog({
       playPartyHorn();
       const timer = setTimeout(() => setIsCelebrating(false), 5000); // Let confetti fall for 5s
       return () => clearTimeout(timer);
+    } else {
+        setIsCelebrating(false);
     }
-  }, [open, hasRewards, playPartyHorn, xpGained, gemsGained]);
+  }, [open, hasRewards, playPartyHorn]);
   
   const handleContinue = () => {
     onOpenChange(false);
-    if(hasNextLevel) {
-        onNextLevel();
-    }
+    onNextLevel();
   }
 
   return (
     <>
       {isClient && isCelebrating && (
-        <>
-          <ReactConfetti
-            style={{ pointerEvents: 'none', zIndex: 1000 }}
+        <ReactConfetti
+            style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1000, pointerEvents: 'none' }}
             numberOfPieces={400}
             recycle={false}
-            confettiSource={{
-              x: 0,
-              y: window.innerHeight,
-              w: 0,
-              h: 0,
-            }}
           />
-          <ReactConfetti
-            style={{ pointerEvents: 'none', zIndex: 1000 }}
-            numberOfPieces={400}
-            recycle={false}
-            confettiSource={{
-              x: window.innerWidth,
-              y: window.innerHeight,
-              w: 0,
-              h: 0,
-            }}
-          />
-        </>
       )}
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-md text-center">
-          <DialogHeader className="items-center">
-            <CheckCircle className="h-16 w-16 text-green-500 mb-2" />
-            <DialogTitle className="text-2xl font-bold">
-              Task Complete!
-            </DialogTitle>
-            <DialogDescription>
-              You successfully completed "{level.title}".
-            </DialogDescription>
-          </DialogHeader>
-          {hasRewards && (
-              <div className="flex justify-center items-center gap-4 my-4">
-                  <div className="flex items-center gap-2 rounded-full bg-yellow-400/10 px-4 py-2 text-yellow-400">
-                      <Star className="h-5 w-5" />
-                      <span className="font-bold">+{xpGained} XP</span>
-                  </div>
-                   <div className="flex items-center gap-2 rounded-full bg-blue-400/10 px-4 py-2 text-blue-400">
-                      <Gem className="h-5 w-5" />
-                      <span className="font-bold">+{gemsGained} Gems</span>
-                  </div>
+        <DialogContent className="max-w-none w-full h-full flex flex-col items-center justify-between p-8 bg-background text-foreground">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold text-primary mb-2">Lesson Complete!</h1>
+            <p className="text-lg text-muted-foreground">You are one step closer to mastering Python.</p>
+          </div>
+          
+          <div className="flex flex-col items-center gap-4 my-8">
+              <div className="flex items-center gap-2 rounded-full border-2 border-yellow-400 px-6 py-2 text-yellow-500">
+                  <Star className="h-7 w-7 fill-current" />
+                  <span className="text-2xl font-bold">+{xpGained} XP</span>
               </div>
-          )}
-          <DialogFooter className="sm:justify-center">
-            {hasNextLevel ? (
-              <Button onClick={handleContinue}>
-                <SkipForward className="mr-2 h-4 w-4" />
-                Continue to Next Task
-              </Button>
-            ) : (
-               <Button onClick={handleContinue} className="bg-green-600 hover:bg-green-700">
-                <CheckCircle className="mr-2 h-4 w-4" />
-                Finish Quest
-              </Button>
-            )}
-          </DialogFooter>
+               <div className="flex items-center gap-2 rounded-full border-2 border-blue-400 px-6 py-2 text-blue-500">
+                  <Gem className="h-7 w-7 fill-current" />
+                  <span className="text-2xl font-bold">+{gemsGained} Gems</span>
+              </div>
+          </div>
+
+          <Button onClick={handleContinue} size="lg" className="w-full text-lg font-bold uppercase tracking-wider">
+            <SkipForward className="mr-2 h-5 w-5" />
+            Continue
+          </Button>
         </DialogContent>
       </Dialog>
     </>
