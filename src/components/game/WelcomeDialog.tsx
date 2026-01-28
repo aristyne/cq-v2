@@ -9,7 +9,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Star, HomeIcon, LayoutGrid } from "lucide-react";
+import { Star, HomeIcon, LayoutGrid, ArrowUp, ArrowDown } from "lucide-react";
 
 type WelcomeDialogProps = {
   open: boolean;
@@ -28,29 +28,38 @@ export default function WelcomeDialog({ open, onOpenChange }: WelcomeDialogProps
         </DialogHeader>
         <div className="grid gap-6 py-4">
           <div className="flex items-start gap-4">
-            <HomeIcon className="h-8 w-8 text-primary mt-1 shrink-0" />
+            <div className="flex-shrink-0 pt-1 flex items-center gap-1">
+              <HomeIcon className="h-8 w-8 text-primary" />
+              <ArrowDown className="h-6 w-6 text-muted-foreground" />
+            </div>
             <div>
-              <h3 className="font-bold">The Learn Path</h3>
+              <h3 className="font-bold">The Learn Path (Below)</h3>
               <p className="text-sm text-muted-foreground">
-                This is your main map. Follow the path, complete challenges, and unlock new topics. Click the pulsing <span className="font-bold text-primary">Start</span> bubble to begin a lesson.
+                This is your main map. Follow the path to complete challenges, and click the pulsing <span className="font-bold text-primary">Start</span> bubble to begin a lesson.
               </p>
             </div>
           </div>
           <div className="flex items-start gap-4">
-            <Star className="h-8 w-8 text-yellow-400 mt-1 shrink-0" />
+            <div className="flex-shrink-0 pt-1 flex items-center gap-1">
+              <Star className="h-8 w-8 text-yellow-400" />
+              <ArrowUp className="h-6 w-6 text-muted-foreground" />
+            </div>
             <div>
-              <h3 className="font-bold">XP and Ranks</h3>
+              <h3 className="font-bold">XP & Rank (Above)</h3>
               <p className="text-sm text-muted-foreground">
-                See your total XP and current Rank in the header. Solving challenges earns you XP and helps you advance from a Beginner to a Master.
+                Look up at the header to track your Rank and total XP. Solving challenges helps you advance from a Beginner to a Master.
               </p>
             </div>
           </div>
            <div className="flex items-start gap-4">
-            <LayoutGrid className="h-8 w-8 text-primary mt-1 shrink-0" />
+            <div className="flex-shrink-0 pt-1 flex items-center gap-1">
+                <LayoutGrid className="h-8 w-8 text-primary" />
+                <ArrowDown className="h-6 w-6 text-muted-foreground" />
+            </div>
             <div>
-              <h3 className="font-bold">The Overview Tab</h3>
+              <h3 className="font-bold">The Overview Tab (Below)</h3>
               <p className="text-sm text-muted-foreground">
-                Feeling stuck or need a refresher? The <strong>OVERVIEW</strong> tab contains a handy glossary of all the Python concepts you'll encounter.
+                At the bottom, you'll find the <strong>OVERVIEW</strong> tab. Use it for a handy glossary of all the Python concepts you'll encounter.
               </p>
             </div>
           </div>
