@@ -347,12 +347,6 @@ export default function Page() {
   const currentLevel = levels[currentLevelIndex];
   const completedLevels = highestLevelUnlocked > 1 ? highestLevelUnlocked - 1 : 0;
 
-  useEffect(() => {
-    if (open && (xpGained > 0)) {
-        setShowCompletionDialog(true);
-    }
-  }, [xpGained]);
-
   const handleRunCode = async () => {
     setIsRunning(true);
     const initialOutput = [`> Running code for: ${currentLevel.title}`];
