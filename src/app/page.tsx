@@ -6,8 +6,18 @@ import Header from "@/components/layout/Header";
 import GameView from "@/components/game/GameView";
 import CodeConsole from "@/components/console/CodeConsole";
 import CompletionDialog from "@/components/game/CompletionDialog";
-import { Home as HomeIcon, Trophy, Scroll, Star, CodeXml, ChevronLeft, Lock } from "lucide-react";
+import { Home as HomeIcon, LayoutGrid, Scroll, Star, ChevronLeft, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Editor from "react-simple-code-editor";
+import { highlight, languages } from "prismjs/components/prism-core";
+import "prismjs/components/prism-python";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { glossary } from "@/lib/glossary";
 
 // WARNING: This is a VERY simplified Python interpreter for educational purposes.
 // It is NOT safe, secure, or complete. It only supports a tiny subset of Python
@@ -173,21 +183,48 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
   }
 }
 
-const BottomNav = () => (
+const OverviewView = () => {
+    return (
+        <div className="p-4 md:p-6 space-y-4">
+            <h1 className="text-2xl font-bold">Python Overview</h1>
+            <p className="text-muted-foreground">A quick introduction to the major concepts you'll learn in CodeQuest.</p>
+            <Accordion type="single" collapsible className="w-full">
+                {glossary.map((topic) => (
+                    <AccordionItem value={topic.term} key={topic.term}>
+                        <AccordionTrigger>{topic.term}</AccordionTrigger>
+                        <AccordionContent>
+                            <p className="mb-2">{topic.definition}</p>
+                            <Editor
+                              value={topic.example}
+                              onValueChange={() => {}}
+                              highlight={(code) => highlight(code, languages.python, 'python')}
+                              padding={8}
+                              readOnly
+                              className="!bg-card rounded-md text-sm font-code"
+                              style={{
+                                backgroundColor: 'hsl(var(--card))',
+                                color: 'hsl(var(--foreground))'
+                              }}
+                            />
+                        </AccordionContent>
+                    </AccordionItem>
+                ))}
+            </Accordion>
+        </div>
+    )
+  }
+
+const BottomNav = ({ activeView, setView }) => (
     <footer className="h-20 w-full shrink-0 border-t-2">
-      <nav className="grid h-full grid-cols-3 items-center">
-        <a href="#" className="flex flex-col items-center justify-center gap-1 text-primary">
+      <nav className="grid h-full grid-cols-2 items-center">
+        <button onClick={() => setView('path')} className={cn("flex flex-col items-center justify-center gap-1 h-full", activeView === 'path' ? 'text-primary' : 'text-muted-foreground/50 hover:text-primary')}>
           <HomeIcon className="h-7 w-7" />
           <span className="text-xs font-bold">LEARN</span>
-        </a>
-        <a href="#" className="flex flex-col items-center justify-center gap-1 text-muted-foreground/50 hover:text-primary">
-          <Trophy className="h-7 w-7" />
-          <span className="text-xs font-bold">LEADERBOARD</span>
-        </a>
-        <a href="#" className="flex flex-col items-center justify-center gap-1 text-muted-foreground/50 hover:text-primary">
-          <Scroll className="h-7 w-7" />
-          <span className="text-xs font-bold">QUESTS</span>
-        </a>
+        </button>
+        <button onClick={() => setView('overview')} className={cn("flex flex-col items-center justify-center gap-1 h-full", activeView === 'overview' ? 'text-primary' : 'text-muted-foreground/50 hover:text-primary')}>
+          <LayoutGrid className="h-7 w-7" />
+          <span className="text-xs font-bold">OVERVIEW</span>
+        </button>
       </nav>
     </footer>
 )
@@ -226,11 +263,11 @@ const LearnPath = ({ levels, highestLevelUnlocked, onSelectLevel, currentLevel }
                                     disabled={!isUnlocked}
                                     className={cn("lesson-bubble",
                                         !isUnlocked && "bg-muted border-border text-muted-foreground cursor-not-allowed",
-                                        isCompleted && "bg-card border-border text-primary",
+                                        isCompleted && "bg-primary border-primary text-primary-foreground",
                                         isCurrent && "bg-card border-primary text-primary animate-pulse"
                                     )}
                                 >
-                                    {isUnlocked ? <Star className={cn("h-10 w-10", (isCompleted || isCurrent) && "fill-current")} /> : <Lock className="h-10 w-10" />}
+                                    {isUnlocked ? <Star className={cn("h-10 w-10", isCompleted && "fill-current", isCurrent && "fill-primary")} /> : <Lock className="h-10 w-10" />}
                                     {isCurrent && (
                                         <div className="absolute -bottom-3 rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase text-primary-foreground">
                                             Start
@@ -275,7 +312,7 @@ const LessonView = ({ level, code, setCode, output, onRunCode, isRunning, onExit
 }
 
 export default function Page() {
-  const [view, setView] = useState<'path' | 'lesson'>('path');
+  const [view, setView] = useState<'path' | 'lesson' | 'overview'>('path');
   const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
   const [highestLevelUnlocked, setHighestLevelUnlocked] = useState(1);
   const [xp, setXp] = useState(0);
@@ -372,6 +409,26 @@ export default function Page() {
 
   const hasNextLevel = currentLevelIndex < levels.length - 1;
 
+  const MainContent = () => (
+    <>
+      <Header streak={streak} xp={xp} />
+      <main className="flex-1 overflow-y-auto">
+        {view === 'path' && (
+          <LearnPath 
+            levels={levels}
+            highestLevelUnlocked={highestLevelUnlocked}
+            onSelectLevel={handleSelectLevel}
+            currentLevel={currentLevel}
+          />
+        )}
+        {view === 'overview' && (
+          <OverviewView />
+        )}
+      </main>
+      <BottomNav activeView={view} setView={setView} />
+    </>
+  );
+
   return (
     <div className="h-dvh w-dvh bg-background text-foreground flex flex-col">
       <CompletionDialog
@@ -382,21 +439,7 @@ export default function Page() {
         onNextLevel={handleNextLevel}
         hasNextLevel={hasNextLevel}
       />
-      {view === 'path' && (
-        <>
-            <Header streak={streak} xp={xp} />
-            <main className="flex-1 overflow-y-auto">
-                <LearnPath 
-                    levels={levels}
-                    highestLevelUnlocked={highestLevelUnlocked}
-                    onSelectLevel={handleSelectLevel}
-                    currentLevel={currentLevel}
-                />
-            </main>
-            <BottomNav />
-        </>
-      )}
-      {view === 'lesson' && (
+      {view === 'lesson' ? (
         <LessonView 
             level={currentLevel}
             code={code}
@@ -406,6 +449,8 @@ export default function Page() {
             isRunning={isRunning}
             onExit={handleExitLesson}
         />
+      ) : (
+        <MainContent />
       )}
     </div>
   );
