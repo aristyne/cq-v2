@@ -231,7 +231,7 @@ const LearnPath = ({ levels, highestLevelUnlocked, onSelectLevel, currentLevel }
                                         isUnlocked && !isCurrent && !isCompleted && "bg-lesson-current-bg border-lesson-completed-border text-primary"
                                     )}
                                 >
-                                    {isUnlocked ? <Star className="h-10 w-10" /> : <Lock className="h-10 w-10" />}
+                                    {isUnlocked ? <Star className={cn("h-10 w-10", isCompleted && "fill-current")} /> : <Lock className="h-10 w-10" />}
                                     {isCurrent && (
                                         <div className="absolute -bottom-3 rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase text-primary-foreground">
                                             Start
