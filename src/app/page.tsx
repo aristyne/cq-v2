@@ -316,7 +316,6 @@ export default function Page() {
   const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
   const [highestLevelUnlocked, setHighestLevelUnlocked] = useState(1);
   const [xp, setXp] = useState(0);
-  const [streak, setStreak] = useState(0);
   const [code, setCode] = useState(levels[0].starterCode);
   const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
@@ -411,7 +410,7 @@ export default function Page() {
 
   const MainContent = () => (
     <>
-      <Header streak={streak} xp={xp} />
+      <Header xp={xp} />
       <main className="flex-1 overflow-y-auto">
         {view === 'path' && (
           <LearnPath 
