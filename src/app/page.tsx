@@ -6,6 +6,7 @@ import Header from "@/components/layout/Header";
 import GameView from "@/components/game/GameView";
 import CodeConsole from "@/components/console/CodeConsole";
 import CompletionDialog from "@/components/game/CompletionDialog";
+import WelcomeDialog from "@/components/game/WelcomeDialog";
 import { Home as HomeIcon, LayoutGrid, Scroll, Star, ChevronLeft, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Editor from "react-simple-code-editor";
@@ -262,7 +263,7 @@ const LearnPath = ({ levels, highestLevelUnlocked, onSelectLevel, currentLevel }
                             <h2 className="text-xl">{topicLevels[0].topicTitle}</h2>
                             <p className="text-sm opacity-80">{topicLevels[0].description}</p>
                         </div>
-                        {topicLevels.map((level, taskIndex) => {
+                        {topicLevels.map((level: Level, taskIndex: number) => {
                             const isUnlocked = level.id <= highestLevelUnlocked;
                             const isCurrent = level.id === highestLevelUnlocked;
                             const isCompleted = level.id < highestLevelUnlocked;
@@ -343,6 +344,15 @@ export default function Page() {
   const [isRunning, setIsRunning] = useState(false);
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const [xpGained, setXpGained] = useState(0);
+  const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem('codequest_has_visited');
+    if (!hasVisited) {
+        setShowWelcomeDialog(true);
+        localStorage.setItem('codequest_has_visited', 'true');
+    }
+  }, []);
 
   const currentLevel = levels[currentLevelIndex];
   const completedLevels = highestLevelUnlocked > 1 ? highestLevelUnlocked - 1 : 0;
@@ -446,6 +456,7 @@ export default function Page() {
 
   return (
     <div className="h-dvh w-dvh bg-background text-foreground flex flex-col">
+      <WelcomeDialog open={showWelcomeDialog} onOpenChange={setShowWelcomeDialog} />
       <CompletionDialog
         open={showCompletionDialog}
         onOpenChange={setShowCompletionDialog}
