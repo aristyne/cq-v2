@@ -25,15 +25,6 @@
     --ring: 98 75% 45%;
     --radius: 0.8rem;
 
-    --lesson-locked-border: hsl(220, 15%, 88%);
-    --lesson-locked-bg: hsl(220, 15%, 96%);
-    --lesson-locked-fg: hsl(220, 10%, 65%);
-    --lesson-completed-border: hsl(98, 75%, 45%);
-    --lesson-completed-bg: hsl(98, 75%, 45%);
-    --lesson-current-border: hsl(210, 100%, 56%);
-    --lesson-current-bg: hsl(0, 0%, 100%);
-    --lesson-gold-border: hsl(45, 100%, 51%);
-
     --topic-color-1: hsl(190, 80%, 60%);
     --topic-color-2: hsl(340, 80%, 60%);
     --topic-color-3: hsl(120, 80%, 60%);

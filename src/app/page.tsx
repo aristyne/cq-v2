@@ -225,13 +225,12 @@ const LearnPath = ({ levels, highestLevelUnlocked, onSelectLevel, currentLevel }
                                     onClick={() => isUnlocked && onSelectLevel(level.id)}
                                     disabled={!isUnlocked}
                                     className={cn("lesson-bubble",
-                                        !isUnlocked && "bg-lesson-locked-bg border-lesson-locked-border text-lesson-locked-fg cursor-not-allowed",
-                                        isCompleted && "bg-lesson-current-bg border-lesson-completed-border text-primary",
-                                        isCurrent && "bg-lesson-current-bg border-lesson-current-border text-lesson-current-border animate-pulse",
-                                        isUnlocked && !isCurrent && !isCompleted && "bg-lesson-current-bg border-lesson-completed-border text-primary"
+                                        !isUnlocked && "bg-muted border-border text-muted-foreground cursor-not-allowed",
+                                        isCompleted && "bg-card border-border text-primary",
+                                        isCurrent && "bg-card border-primary text-primary animate-pulse"
                                     )}
                                 >
-                                    {isUnlocked ? <Star className={cn("h-10 w-10", isCompleted && "fill-current")} /> : <Lock className="h-10 w-10" />}
+                                    {isUnlocked ? <Star className={cn("h-10 w-10", (isCompleted || isCurrent) && "fill-current")} /> : <Lock className="h-10 w-10" />}
                                     {isCurrent && (
                                         <div className="absolute -bottom-3 rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase text-primary-foreground">
                                             Start
