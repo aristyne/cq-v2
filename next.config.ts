@@ -4,6 +4,9 @@ const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
 
 const nextConfig: NextConfig = {
   output: 'export',
+  // Add basePath and assetPrefix for GitHub Pages
+  basePath: isGithubActions ? '/cq-v2' : undefined,
+  assetPrefix: isGithubActions ? '/cq-v2' : undefined,
   /* config options here */
   typescript: {
     ignoreBuildErrors: true,
