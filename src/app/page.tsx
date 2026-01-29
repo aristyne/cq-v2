@@ -255,7 +255,7 @@ const LearnPath = ({ levels, highestLevelUnlocked, onSelectLevel, currentLevel }
         <div className="mx-auto max-w-2xl px-4 py-8">
             <div className="relative flex flex-col items-center gap-8">
                 {Object.values(topics).map((topicLevels: Level[], index) => (
-                    <div key={index} className="flex flex-col items-center gap-4 w-full">
+                    <div key={index} className="flex flex-col items-center gap-4 w-full max-w-sm">
                         <div
                             className="topic-card w-full text-center"
                             style={{ backgroundColor: `var(--topic-color-${topicLevels[0].topicId})` }}
@@ -269,7 +269,7 @@ const LearnPath = ({ levels, highestLevelUnlocked, onSelectLevel, currentLevel }
                             const isCompleted = level.id < highestLevelUnlocked;
 
                             return (
-                                <div key={level.id} className="grid grid-cols-3 items-center w-full max-w-sm">
+                                <div key={level.id} className="grid grid-cols-3 items-center w-full">
                                     <div className="flex justify-end pr-4">
                                         {isCurrent && (
                                             <ChevronRight className="h-8 w-8 text-primary animate-pulse" />
