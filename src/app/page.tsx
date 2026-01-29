@@ -252,10 +252,10 @@ const LearnPath = ({ levels, highestLevelUnlocked, onSelectLevel, currentLevel }
     }, {} as Record<number, Level[]>);
 
     return (
-        <div className="mx-auto max-w-2xl px-4 py-8">
+        <div className="mx-auto max-w-sm px-4 py-8">
             <div className="relative flex flex-col items-center gap-8">
                 {Object.values(topics).map((topicLevels: Level[], index) => (
-                    <div key={index} className="flex flex-col items-center gap-4 w-full max-w-sm">
+                    <div key={index} className="flex flex-col items-center gap-4 w-full">
                         <div
                             className="topic-card w-full text-center"
                             style={{ backgroundColor: `var(--topic-color-${topicLevels[0].topicId})` }}
@@ -461,7 +461,7 @@ export default function Page() {
   const MainContent = () => (
     <>
       <Header xp={xp} className={cn({'tour-highlight rounded-none': tourStep === 0})} />
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-scroll">
         {view === 'path' && (
           <div className={cn({'tour-highlight': tourStep === 2})}>
             <LearnPath 
