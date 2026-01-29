@@ -43,7 +43,7 @@ export default function Header({ xp, className }: HeaderProps) {
         </div>
         <div className="col-span-1 text-center">
           <h1 className="flex items-center justify-center gap-2 text-2xl font-bold text-foreground">
-            <Terminal className="h-7 w-7" />
+            <Terminal className="h-7 w-7 text-primary" />
             CodeQuest
           </h1>
         </div>
