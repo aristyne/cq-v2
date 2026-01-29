@@ -7,10 +7,12 @@ import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
 import "prismjs/components/prism-python";
 import React from "react";
+import { Level } from "@/lib/levels";
 
 type CodeConsoleProps = {
-  code: string;
-  setCode: (code: string) => void;
+  level: Level;
+  code?: string;
+  setCode?: (code: string) => void;
   output: string[];
   onRunCode: () => void;
   isRunning: boolean;
@@ -19,8 +21,9 @@ type CodeConsoleProps = {
 };
 
 export default function CodeConsole({
-  code,
-  setCode,
+  level,
+  code = '',
+  setCode = () => {},
   output,
   onRunCode,
   isRunning,
@@ -28,6 +31,8 @@ export default function CodeConsole({
   setShowOutput,
 }: CodeConsoleProps) {
   const lines = code.split("\n").length;
+
+  const showEditor = level.type === 'code';
 
   return (
     <div className="flex flex-col border-t-2">
@@ -58,32 +63,35 @@ export default function CodeConsole({
           </ScrollArea>
         </div>
       )}
-
-      <div className="flex-1">
-        <ScrollArea className="h-64">
-          <div className="flex h-full font-code text-base">
-            <div className="select-none p-4 pr-3 text-right text-muted-foreground">
-              {Array.from({ length: lines }).map((_, i) => (
-                <div key={i}>{i + 1}</div>
-              ))}
+      
+      {showEditor && (
+        <div className="flex-1">
+          <ScrollArea className="h-64">
+            <div className="flex h-full font-code text-base">
+              <div className="select-none p-4 pr-3 text-right text-muted-foreground">
+                {Array.from({ length: lines }).map((_, i) => (
+                  <div key={i}>{i + 1}</div>
+                ))}
+              </div>
+              <Editor
+                value={code}
+                onValueChange={setCode}
+                highlight={(code) =>
+                  highlight(code, languages.python, "python")
+                }
+                padding={16}
+                className="flex-grow !ring-0"
+                style={{
+                  minHeight: "100%",
+                  backgroundColor: 'hsl(var(--background))',
+                  color: 'hsl(var(--foreground))'
+                }}
+              />
             </div>
-            <Editor
-              value={code}
-              onValueChange={setCode}
-              highlight={(code) =>
-                highlight(code, languages.python, "python")
-              }
-              padding={16}
-              className="flex-grow !ring-0"
-              style={{
-                minHeight: "100%",
-                backgroundColor: 'hsl(var(--background))',
-                color: 'hsl(var(--foreground))'
-              }}
-            />
-          </div>
-        </ScrollArea>
-      </div>
+          </ScrollArea>
+        </div>
+      )}
+
 
       <div className="flex h-24 items-center justify-center border-t-2 px-4">
         <Button
@@ -97,9 +105,11 @@ export default function CodeConsole({
           ) : (
             <Send className="mr-2 h-5 w-5" />
           )}
-          {isRunning ? "Running..." : "Check"}
+          {isRunning ? "Checking..." : "Check"}
         </Button>
       </div>
     </div>
   );
 }
+
+    

@@ -307,14 +307,33 @@ type LessonViewProps = {
     code: string;
     setCode: (code: string) => void;
     output: string[];
-    onRunCode: () => void;
+    onSubmit: () => void;
     isRunning: boolean;
     onExit: () => void;
     showOutput: boolean;
     setShowOutput: (show: boolean) => void;
+    // For interactive questions
+    selectedAnswer?: number | null;
+    setSelectedAnswer?: (index: number) => void;
+    blankValue?: string;
+    setBlankValue?: (value: string) => void;
+    isAnswerChecked?: boolean;
 };
 
-const LessonView = ({ level, code, setCode, output, onRunCode, isRunning, onExit, showOutput, setShowOutput }: LessonViewProps) => {
+const LessonView = ({ 
+  level, 
+  code, setCode, 
+  output, onSubmit, 
+  isRunning, 
+  onExit, 
+  showOutput, 
+  setShowOutput,
+  selectedAnswer,
+  setSelectedAnswer,
+  blankValue,
+  setBlankValue,
+  isAnswerChecked,
+}: LessonViewProps) => {
     return (
         <div className="flex h-full flex-col">
              <header className="flex h-16 shrink-0 items-center justify-between border-b-2 px-4">
@@ -329,13 +348,21 @@ const LessonView = ({ level, code, setCode, output, onRunCode, isRunning, onExit
                  <div className="w-10"></div>
             </header>
             <main className="flex-1 overflow-y-auto p-4 md:p-6">
-                <GameView level={level} />
+                <GameView 
+                  level={level}
+                  selectedAnswer={selectedAnswer}
+                  onSelectAnswer={setSelectedAnswer}
+                  blankValue={blankValue}
+                  onBlankValueChange={setBlankValue}
+                  isAnswerChecked={isAnswerChecked}
+                />
             </main>
             <CodeConsole
+                level={level}
                 code={code}
                 setCode={setCode}
                 output={output}
-                onRunCode={onRunCode}
+                onRunCode={onSubmit}
                 isRunning={isRunning}
                 showOutput={showOutput}
                 setShowOutput={setShowOutput}
@@ -349,12 +376,17 @@ export default function Page() {
   const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
   const [highestLevelUnlocked, setHighestLevelUnlocked] = useState(1);
   const [xp, setXp] = useState(0);
-  const [code, setCode] = useState(levels[0].starterCode);
+  const [code, setCode] = useState(levels[0].type === 'code' ? levels[0].starterCode : '');
   const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const [xpGained, setXpGained] = useState(0);
   
+  // State for new question types
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [blankValue, setBlankValue] = useState('');
+  const [isAnswerChecked, setIsAnswerChecked] = useState(false);
+
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
   const [hasShownWelcome, setHasShownWelcome] = useState(false);
   const [tourStep, setTourStep] = useState(-1);
@@ -377,32 +409,33 @@ export default function Page() {
 
   const currentLevel = levels[currentLevelIndex];
 
-  const handleRunCode = async () => {
+  const handleSubmitAnswer = async () => {
     setIsRunning(true);
-    const initialOutput = [`> Running code for: ${currentLevel.title}`];
-    setConsoleOutput(initialOutput);
+    let success = false;
+    let feedback = [];
+
     setShowConsoleOutput(true);
 
-    const result = simplePythonInterpreter(code);
+    if (currentLevel.type === 'code') {
+        feedback.push(`> Running code for: ${currentLevel.title}`);
+        const result = simplePythonInterpreter(code);
+        if (result.output) feedback.push(...result.output);
+        if (result.error) feedback.push(`Error: ${result.error}`);
 
-    let finalOutput = [...initialOutput];
-    if (result.output) {
-      finalOutput.push(...result.output);
-    }
-    if (result.error) {
-      finalOutput.push(`Error: ${result.error}`);
-    }
-
-    let success = false;
-    const cleanOutput = result.output.map(s => s.trim()).filter(Boolean).join('\n');
-
-    if (currentLevel.expectedOutput) {
+        const cleanOutput = result.output.map(s => s.trim()).filter(Boolean).join('\n');
         success = cleanOutput === currentLevel.expectedOutput;
+
+    } else if (currentLevel.type === 'multiple-choice') {
+        success = selectedAnswer === currentLevel.correctAnswer;
+        
+    } else if (currentLevel.type === 'fill-in-the-blank') {
+        success = blankValue.trim() === currentLevel.solution;
     }
+    
+    setIsAnswerChecked(true);
 
     if (success) {
-      finalOutput.push("\n✅ Success! You solved the challenge.");
-      
+      feedback.push("\n✅ Success! You solved the challenge.");
       let earnedXp = 0;
 
       if (currentLevel.id >= highestLevelUnlocked) {
@@ -415,15 +448,18 @@ export default function Page() {
       }
       
       setXpGained(earnedXp);
-      setShowCompletionDialog(true);
       
-      setConsoleOutput(finalOutput);
+      setTimeout(() => {
+        setShowCompletionDialog(true);
+      }, 1000);
+      
     } else {
-      finalOutput.push(
-        "\n❌ Almost there! Your code didn't produce the correct result. Try again."
+      feedback.push(
+        "\n❌ Almost there! That's not quite right. Try again."
       );
-      setConsoleOutput(finalOutput);
     }
+
+    setConsoleOutput(feedback);
     setIsRunning(false);
   };
 
@@ -431,7 +467,17 @@ export default function Page() {
     const levelIndex = levels.findIndex(l => l.id === levelId);
     if (levelIndex !== -1 && levelId <= highestLevelUnlocked) {
       setCurrentLevelIndex(levelIndex);
-      setCode(levels[levelIndex].starterCode);
+      const newLevel = levels[levelIndex];
+
+      if (newLevel.type === 'code') {
+        setCode(newLevel.starterCode);
+      } else {
+        setCode('');
+      }
+
+      setSelectedAnswer(null);
+      setBlankValue('');
+      setIsAnswerChecked(false);
       setConsoleOutput([]);
       setXpGained(0);
       setView('lesson');
@@ -447,7 +493,6 @@ export default function Page() {
 
   const handleNextLevel = () => {
     setShowCompletionDialog(false);
-    setShowConsoleOutput(false);
     const nextLevelIndex = currentLevelIndex + 1;
     if (nextLevelIndex < levels.length) {
       handleSelectLevel(levels[nextLevelIndex].id);
@@ -461,7 +506,7 @@ export default function Page() {
   const MainContent = () => (
     <>
       <Header xp={xp} className={cn({'tour-highlight rounded-none': tourStep === 0})} />
-      <main className="flex-1 overflow-y-scroll">
+      <main className="flex-1 overflow-y-scroll scrollbar-gutter-stable">
         {view === 'path' && (
           <div className={cn({'tour-highlight': tourStep === 2})}>
             <LearnPath 
@@ -504,11 +549,16 @@ export default function Page() {
             code={code}
             setCode={setCode}
             output={consoleOutput}
-            onRunCode={handleRunCode}
+            onSubmit={handleSubmitAnswer}
             isRunning={isRunning}
             onExit={handleExitLesson}
             showOutput={showConsoleOutput}
             setShowOutput={setShowConsoleOutput}
+            selectedAnswer={selectedAnswer}
+            setSelectedAnswer={setSelectedAnswer}
+            blankValue={blankValue}
+            setBlankValue={setBlankValue}
+            isAnswerChecked={isAnswerChecked}
         />
       ) : (
         <MainContent />
@@ -516,3 +566,5 @@ export default function Page() {
     </div>
   );
 }
+
+    
