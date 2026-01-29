@@ -33,25 +33,25 @@ export default function Header({ xp, className }: HeaderProps) {
 
   return (
     <header className={cn("h-20 w-full shrink-0 border-b-2", className)}>
-      <div className="grid h-full w-full grid-cols-[1fr_auto_1fr] items-center gap-12 pl-4 pr-8">
-        <div>
-            <div className="mb-1 flex justify-between">
-                <span className="text-sm font-bold text-primary">{currentRank.name}</span>
-                {nextRank && <span className="text-sm font-bold text-muted-foreground">Next: {nextRank.minXp} XP</span>}
+      <div className="grid h-full w-full grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 sm:gap-8 md:px-6">
+        <div className="min-w-0">
+            <div className="mb-1 flex items-baseline justify-between gap-2">
+                <span className="truncate text-sm font-bold text-primary">{currentRank.name}</span>
+                {nextRank && <span className="hidden shrink-0 text-xs font-bold text-muted-foreground sm:inline">Next: {nextRank.minXp} XP</span>}
             </div>
           <Progress value={progress} className="h-3" />
         </div>
         
-        <div className="flex items-center justify-center gap-3">
+        <div className="flex items-center justify-center gap-2 sm:gap-3">
           <div className="rounded-lg border-2 border-primary p-1">
-            <Terminal className="h-6 w-6 text-primary" />
+            <Terminal className="h-5 w-5 text-primary sm:h-6 sm:w-6" />
           </div>
-          <h1 className="text-2xl font-bold text-foreground">CodeQuest</h1>
+          <h1 className="text-xl font-bold text-foreground sm:text-2xl">CodeQuest</h1>
         </div>
         
-        <div className="flex items-center justify-end gap-2 text-yellow-400">
-          <Star className="h-6 w-6 fill-current" />
-          <span className="text-lg font-bold">{xp}</span>
+        <div className="flex items-center justify-end gap-1 text-yellow-400 sm:gap-2">
+          <Star className="h-5 w-5 fill-current sm:h-6 sm:w-6" />
+          <span className="text-base font-bold sm:text-lg">{xp}</span>
         </div>
       </div>
     </header>
