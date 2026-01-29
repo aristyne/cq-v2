@@ -98,7 +98,7 @@ export default function WelcomeDialog({ open, onOpenChange, step, setStep }: Wel
                 {tourSteps.map((_, index) => (
                     <button 
                         key={index} 
-                        className={`h-2 rounded-full transition-all duration-300 ${index === step ? 'bg-primary w-4' : 'bg-muted w-2'}`} 
+                        className={`h-2 rounded-full transition-all duration-300 ${index === step ? 'bg-primary w-4' : 'bg-border w-2'}`} 
                         onClick={() => setStep(index)}
                         aria-label={`Go to step ${index + 1}`}
                     />
