@@ -33,15 +33,16 @@ export default function Header({ xp, className }: HeaderProps) {
 
   return (
     <header className={cn("h-20 w-full shrink-0 border-b-2", className)}>
-      <div className="mx-auto grid h-full max-w-5xl grid-cols-3 items-center gap-8 px-4">
-        <div className="w-full col-span-1">
+      <div className="mx-auto grid h-full max-w-5xl grid-cols-[1fr_auto_1fr] items-center gap-8 px-4">
+        <div>
             <div className="mb-1 flex justify-between">
                 <span className="text-sm font-bold text-primary">{currentRank.name}</span>
                 {nextRank && <span className="text-sm font-bold text-muted-foreground">Next: {nextRank.minXp} XP</span>}
             </div>
           <Progress value={progress} className="h-3" />
         </div>
-        <div className="col-span-1 text-center">
+        
+        <div className="text-center">
           <h1 className="inline-flex items-center gap-3 text-2xl font-bold text-foreground">
             <div className="rounded-lg border-2 border-primary p-1">
               <Terminal className="h-5 w-5 text-primary" />
@@ -49,7 +50,8 @@ export default function Header({ xp, className }: HeaderProps) {
             CodeQuest
           </h1>
         </div>
-        <div className="col-span-1 flex w-full items-center justify-end gap-2 text-yellow-400">
+        
+        <div className="flex items-center justify-end gap-2 text-yellow-400">
           <Star className="h-6 w-6 fill-current" />
           <span className="text-lg font-bold">{xp}</span>
         </div>
