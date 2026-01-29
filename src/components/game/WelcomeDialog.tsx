@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -39,13 +38,6 @@ const tourSteps = [
 
 
 export default function WelcomeDialog({ open, onOpenChange, step, setStep }: WelcomeDialogProps) {
-
-  useEffect(() => {
-    if (open && step === -1) {
-        setStep(0);
-    }
-  }, [open, step, setStep]);
-
   const currentStepData = tourSteps[step];
   const isLastStep = step === tourSteps.length - 1;
 
@@ -65,7 +57,7 @@ export default function WelcomeDialog({ open, onOpenChange, step, setStep }: Wel
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] z-[60]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center">{currentStepData.title}</DialogTitle>
           {step === 0 && 
