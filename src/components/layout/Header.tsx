@@ -34,12 +34,14 @@ export default function Header({ xp, className }: HeaderProps) {
   return (
     <header className={cn("h-20 w-full shrink-0 border-b-2", className)}>
       <div className="grid h-full w-full grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 sm:gap-8 md:px-6">
-        <div className="min-w-0">
+        <div className="min-w-0 flex justify-end">
+          <div className="w-2/3">
             <div className="mb-1 flex items-baseline justify-between gap-2">
                 <span className="truncate text-sm font-bold text-primary">{currentRank.name}</span>
                 {nextRank && <span className="hidden shrink-0 text-xs font-bold text-muted-foreground sm:inline">Next: {nextRank.minXp} XP</span>}
             </div>
-          <Progress value={progress} className="h-3" />
+            <Progress value={progress} className="h-3" />
+          </div>
         </div>
         
         <div className="flex items-center justify-center gap-2 sm:gap-3">
