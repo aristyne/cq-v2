@@ -310,9 +310,11 @@ type LessonViewProps = {
     onRunCode: () => void;
     isRunning: boolean;
     onExit: () => void;
+    showOutput: boolean;
+    setShowOutput: (show: boolean) => void;
 };
 
-const LessonView = ({ level, code, setCode, output, onRunCode, isRunning, onExit }: LessonViewProps) => {
+const LessonView = ({ level, code, setCode, output, onRunCode, isRunning, onExit, showOutput, setShowOutput }: LessonViewProps) => {
     return (
         <div className="flex h-full flex-col">
              <header className="flex h-16 shrink-0 items-center justify-between border-b-2 px-4">
@@ -335,6 +337,8 @@ const LessonView = ({ level, code, setCode, output, onRunCode, isRunning, onExit
                 output={output}
                 onRunCode={onRunCode}
                 isRunning={isRunning}
+                showOutput={showOutput}
+                setShowOutput={setShowOutput}
             />
         </div>
     )
@@ -354,6 +358,7 @@ export default function Page() {
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
   const [hasShownWelcome, setHasShownWelcome] = useState(false);
   const [tourStep, setTourStep] = useState(-1);
+  const [showConsoleOutput, setShowConsoleOutput] = useState(false);
 
   useEffect(() => {
     if (xp === 0 && !hasShownWelcome) {
@@ -376,6 +381,7 @@ export default function Page() {
     setIsRunning(true);
     const initialOutput = [`> Running code for: ${currentLevel.title}`];
     setConsoleOutput(initialOutput);
+    setShowConsoleOutput(true);
 
     const result = simplePythonInterpreter(code);
 
@@ -429,16 +435,19 @@ export default function Page() {
       setConsoleOutput([]);
       setXpGained(0);
       setView('lesson');
+      setShowConsoleOutput(false);
     }
   };
   
   const handleExitLesson = () => {
     setView('path');
     setXpGained(0);
+    setShowConsoleOutput(false);
   }
 
   const handleNextLevel = () => {
     setShowCompletionDialog(false);
+    setShowConsoleOutput(false);
     const nextLevelIndex = currentLevelIndex + 1;
     if (nextLevelIndex < levels.length) {
       handleSelectLevel(levels[nextLevelIndex].id);
@@ -498,6 +507,8 @@ export default function Page() {
             onRunCode={handleRunCode}
             isRunning={isRunning}
             onExit={handleExitLesson}
+            showOutput={showConsoleOutput}
+            setShowOutput={setShowConsoleOutput}
         />
       ) : (
         <MainContent />

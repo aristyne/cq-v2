@@ -14,6 +14,8 @@ type CodeConsoleProps = {
   output: string[];
   onRunCode: () => void;
   isRunning: boolean;
+  showOutput: boolean;
+  setShowOutput: (show: boolean) => void;
 };
 
 export default function CodeConsole({
@@ -22,15 +24,10 @@ export default function CodeConsole({
   output,
   onRunCode,
   isRunning,
+  showOutput,
+  setShowOutput,
 }: CodeConsoleProps) {
   const lines = code.split("\n").length;
-  const [showOutput, setShowOutput] = React.useState(false);
-
-  React.useEffect(() => {
-    if (output.length > 0) {
-      setShowOutput(true);
-    }
-  }, [output]);
 
   return (
     <div className="flex flex-col border-t-2">
