@@ -42,8 +42,10 @@ export default function Header({ xp, className }: HeaderProps) {
           <Progress value={progress} className="h-3" />
         </div>
         <div className="col-span-1 text-center">
-          <h1 className="flex items-center justify-center gap-2 text-2xl font-bold text-foreground">
-            <Terminal className="h-7 w-7 text-primary" />
+          <h1 className="flex items-center justify-center gap-3 text-2xl font-bold text-foreground">
+            <div className="rounded-lg border-2 border-primary p-1">
+              <Terminal className="h-5 w-5 text-primary" />
+            </div>
             CodeQuest
           </h1>
         </div>
