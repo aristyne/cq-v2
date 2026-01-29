@@ -76,6 +76,24 @@
   }
 }
 
+@layer utilities {
+  @keyframes tour-highlight-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0rem 0.25rem hsl(var(--primary) / 0.5);
+    }
+    50% {
+      box-shadow: 0 0 1rem 0.5rem hsl(var(--primary) / 0.5);
+    }
+  }
+
+  .tour-highlight {
+    position: relative;
+    z-index: 51; /* Just above the dialog overlay (z-50) */
+    animation: tour-highlight-pulse 1.5s infinite ease-in-out;
+    background: hsl(var(--background));
+  }
+}
+
 /* Make prism editor play nice with tailwind */
 .prism-editor__textarea:focus {
   outline: none;

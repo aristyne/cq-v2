@@ -15,6 +15,8 @@ import { Star, HomeIcon, LayoutGrid } from "lucide-react";
 type WelcomeDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  step: number;
+  setStep: (step: number | ((s: number) => number)) => void;
 };
 
 const tourSteps = [
@@ -36,15 +38,13 @@ const tourSteps = [
 ];
 
 
-export default function WelcomeDialog({ open, onOpenChange }: WelcomeDialogProps) {
-  const [step, setStep] = useState(0);
+export default function WelcomeDialog({ open, onOpenChange, step, setStep }: WelcomeDialogProps) {
 
-  // Reset step if dialog is reopened
   useEffect(() => {
-    if (open) {
+    if (open && step === -1) {
         setStep(0);
     }
-  }, [open]);
+  }, [open, step, setStep]);
 
   const currentStepData = tourSteps[step];
   const isLastStep = step === tourSteps.length - 1;
@@ -61,7 +61,7 @@ export default function WelcomeDialog({ open, onOpenChange }: WelcomeDialogProps
       onOpenChange(isOpen);
   }
 
-  if (!open) return null;
+  if (!open || !currentStepData) return null;
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>

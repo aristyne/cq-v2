@@ -2,9 +2,11 @@
 
 import { Star } from 'lucide-react';
 import { Progress } from "@/components/ui/progress";
+import { cn } from '@/lib/utils';
 
 type HeaderProps = {
   xp: number;
+  className?: string;
 };
 
 const ranks = [
@@ -15,7 +17,7 @@ const ranks = [
     { name: 'Master', minXp: 1500 },
 ];
 
-export default function Header({ xp }: HeaderProps) {
+export default function Header({ xp, className }: HeaderProps) {
     const currentRank = ranks.slice().reverse().find(rank => xp >= rank.minXp) || ranks[0];
     const nextRankIndex = ranks.findIndex(rank => rank.name === currentRank.name) + 1;
     const nextRank = nextRankIndex < ranks.length ? ranks[nextRankIndex] : null;
@@ -30,7 +32,7 @@ export default function Header({ xp }: HeaderProps) {
     }
 
   return (
-    <header className="h-20 w-full shrink-0 border-b-2">
+    <header className={cn("h-20 w-full shrink-0 border-b-2", className)}>
       <div className="mx-auto grid h-full max-w-5xl grid-cols-3 items-center gap-8 px-4">
         <div className="w-full col-span-1">
             <div className="mb-1 flex justify-between">

@@ -344,18 +344,27 @@ export default function Page() {
   const [isRunning, setIsRunning] = useState(false);
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const [xpGained, setXpGained] = useState(0);
+  
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(false);
   const [hasShownWelcome, setHasShownWelcome] = useState(false);
+  const [tourStep, setTourStep] = useState(-1);
 
   useEffect(() => {
     if (xp === 0 && !hasShownWelcome) {
       setShowWelcomeDialog(true);
+      setTourStep(0);
       setHasShownWelcome(true);
     }
   }, [xp, hasShownWelcome]);
 
+  const handleWelcomeChange = (open: boolean) => {
+    setShowWelcomeDialog(open);
+    if (!open) {
+      setTourStep(-1); // Deactivate tour highlights
+    }
+  };
+
   const currentLevel = levels[currentLevelIndex];
-  const completedLevels = highestLevelUnlocked > 1 ? highestLevelUnlocked - 1 : 0;
 
   const handleRunCode = async () => {
     setIsRunning(true);
@@ -436,27 +445,36 @@ export default function Page() {
 
   const MainContent = () => (
     <>
-      <Header xp={xp} />
+      <Header xp={xp} className={cn({'tour-highlight rounded-none': tourStep === 1})} />
       <main className="flex-1 overflow-y-auto">
         {view === 'path' && (
-          <LearnPath 
-            levels={levels}
-            highestLevelUnlocked={highestLevelUnlocked}
-            onSelectLevel={handleSelectLevel}
-            currentLevel={currentLevel}
-          />
+          <div className={cn({'tour-highlight': tourStep === 0})}>
+            <LearnPath 
+              levels={levels}
+              highestLevelUnlocked={highestLevelUnlocked}
+              onSelectLevel={handleSelectLevel}
+              currentLevel={currentLevel}
+            />
+          </div>
         )}
         {view === 'overview' && (
           <OverviewView />
         )}
       </main>
-      <BottomNav activeView={view} setView={setView} />
+      <div className={cn({'tour-highlight rounded-none': tourStep === 2})}>
+        <BottomNav activeView={view} setView={setView} />
+      </div>
     </>
   );
 
   return (
     <div className="h-dvh w-dvh bg-background text-foreground flex flex-col">
-      <WelcomeDialog open={showWelcomeDialog} onOpenChange={setShowWelcomeDialog} />
+      <WelcomeDialog
+        open={showWelcomeDialog}
+        onOpenChange={handleWelcomeChange}
+        step={tourStep}
+        setStep={setTourStep}
+      />
       <CompletionDialog
         open={showCompletionDialog}
         onOpenChange={setShowCompletionDialog}
