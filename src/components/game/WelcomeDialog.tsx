@@ -61,7 +61,7 @@ export default function WelcomeDialog({ open, onOpenChange, step, setStep }: Wel
       case 1: // For the Footer
         return "top-[35%]";
       case 2: // For the Learn Path
-        return "sm:top-3/4";
+        return "top-[70%]";
       default: // Center
         return "top-[50%]";
     }
