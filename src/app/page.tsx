@@ -7,7 +7,7 @@ import GameView from "@/components/game/GameView";
 import CodeConsole from "@/components/console/CodeConsole";
 import CompletionDialog from "@/components/game/CompletionDialog";
 import WelcomeDialog from "@/components/game/WelcomeDialog";
-import { Home as HomeIcon, LayoutGrid, Scroll, Star, ChevronLeft, Lock } from "lucide-react";
+import { Home as HomeIcon, LayoutGrid, Scroll, Star, ChevronLeft, Lock, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
@@ -263,31 +263,37 @@ const LearnPath = ({ levels, highestLevelUnlocked, onSelectLevel, currentLevel }
                             <h2 className="text-xl">{topicLevels[0].topicTitle}</h2>
                             <p className="text-sm opacity-80">{topicLevels[0].description}</p>
                         </div>
-                        {topicLevels.map((level: Level, taskIndex: number) => {
+                        {topicLevels.map((level: Level) => {
                             const isUnlocked = level.id <= highestLevelUnlocked;
                             const isCurrent = level.id === highestLevelUnlocked;
                             const isCompleted = level.id < highestLevelUnlocked;
-                            const isCurrentTopic = level.topicId === currentLevel.topicId;
 
                             return (
-                                <button
-                                    key={level.id}
-                                    onClick={() => isUnlocked && onSelectLevel(level.id)}
-                                    disabled={!isUnlocked}
-                                    className={cn("lesson-bubble",
-                                        !isUnlocked && "bg-muted border-border text-muted-foreground cursor-not-allowed",
-                                        isCompleted && "bg-primary border-primary text-primary-foreground",
-                                        isCurrent && "bg-card border-primary text-primary animate-pulse"
-                                    )}
-                                >
-                                    {isUnlocked ? <Star className={cn("h-10 w-10", isCompleted && "fill-current", isCurrent && "fill-primary")} /> : <Lock className="h-10 w-10" />}
-                                    {isCurrent && (
-                                        <div className="absolute -bottom-3 rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase text-primary-foreground">
-                                            Start
-                                        </div>
-                                    )}
-                                </button>
-                            )
+                                <div key={level.id} className="grid grid-cols-3 items-center w-full max-w-sm">
+                                    <div className="flex justify-end pr-4">
+                                        {isCurrent && (
+                                            <ChevronRight className="h-8 w-8 text-primary animate-pulse" />
+                                        )}
+                                    </div>
+                                    <button
+                                        onClick={() => isUnlocked && onSelectLevel(level.id)}
+                                        disabled={!isUnlocked}
+                                        className={cn("lesson-bubble mx-auto",
+                                            !isUnlocked && "bg-muted border-border text-muted-foreground cursor-not-allowed",
+                                            isCompleted && "bg-primary border-primary text-primary-foreground",
+                                            isCurrent && "bg-card border-primary text-primary animate-pulse"
+                                        )}
+                                    >
+                                        {isUnlocked ? <Star className={cn("h-10 w-10", isCompleted && "fill-current", isCurrent && "fill-primary")} /> : <Lock className="h-10 w-10" />}
+                                        {isCurrent && (
+                                            <div className="absolute -bottom-3 rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase text-primary-foreground">
+                                                Start
+                                            </div>
+                                        )}
+                                    </button>
+                                    <div />
+                                </div>
+                            );
                         })}
                     </div>
                 ))}
