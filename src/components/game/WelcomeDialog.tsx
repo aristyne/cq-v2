@@ -21,11 +21,6 @@ type WelcomeDialogProps = {
 
 const tourSteps = [
     {
-        icon: <HomeIcon className="h-10 w-10 text-primary" />,
-        title: "The Learn Path",
-        description: "This is your main map. Follow the path downwards to complete challenges. Click the pulsing 'Start' bubble to begin a lesson.",
-    },
-    {
         icon: <Star className="h-10 w-10 text-yellow-400" />,
         title: "XP & Rank",
         description: "Look up! The header shows your Rank and XP. Solving challenges helps you advance from a Beginner to a Master.",
@@ -34,6 +29,11 @@ const tourSteps = [
         icon: <LayoutGrid className="h-10 w-10 text-primary" />,
         title: "The Overview Tab",
         description: "Look down! At the bottom, you'll find the 'OVERVIEW' tab. Use it for a handy glossary of all the Python concepts you'll encounter.",
+    },
+    {
+        icon: <HomeIcon className="h-10 w-10 text-primary" />,
+        title: "The Learn Path",
+        description: "This is your main map. Follow the path downwards to complete challenges. Click the pulsing 'Start' bubble to begin a lesson.",
     }
 ];
 
@@ -56,10 +56,12 @@ export default function WelcomeDialog({ open, onOpenChange, step, setStep }: Wel
 
   const getPositionClass = () => {
     switch (step) {
-      case 1: // For the Header
+      case 0: // For the Header
         return "top-[65%]";
-      case 2: // For the Footer
+      case 1: // For the Footer
         return "top-[35%]";
+      case 2: // For the Learn Path
+        return "sm:top-3/4";
       default: // Center
         return "top-[50%]";
     }

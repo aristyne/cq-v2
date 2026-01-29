@@ -445,10 +445,10 @@ export default function Page() {
 
   const MainContent = () => (
     <>
-      <Header xp={xp} className={cn({'tour-highlight rounded-none': tourStep === 1})} />
+      <Header xp={xp} className={cn({'tour-highlight rounded-none': tourStep === 0})} />
       <main className="flex-1 overflow-y-auto">
         {view === 'path' && (
-          <div className={cn({'tour-highlight': tourStep === 0})}>
+          <div className={cn({'tour-highlight': tourStep === 2})}>
             <LearnPath 
               levels={levels}
               highestLevelUnlocked={highestLevelUnlocked}
@@ -461,7 +461,7 @@ export default function Page() {
           <OverviewView />
         )}
       </main>
-      <div className={cn({'tour-highlight rounded-none': tourStep === 2})}>
+      <div className={cn({'tour-highlight rounded-none': tourStep === 1})}>
         <BottomNav activeView={view} setView={setView} />
       </div>
     </>
