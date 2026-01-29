@@ -1,6 +1,6 @@
 'use client';
 
-import { Star } from 'lucide-react';
+import { Star, Terminal } from 'lucide-react';
 import { Progress } from "@/components/ui/progress";
 import { cn } from '@/lib/utils';
 
@@ -42,7 +42,10 @@ export default function Header({ xp, className }: HeaderProps) {
           <Progress value={progress} className="h-3" />
         </div>
         <div className="col-span-1 text-center">
-          <h1 className="text-2xl font-bold text-foreground">CodeQuest</h1>
+          <h1 className="flex items-center justify-center gap-2 text-2xl font-bold text-foreground">
+            <Terminal className="h-7 w-7" />
+            CodeQuest
+          </h1>
         </div>
         <div className="col-span-1 flex w-full items-center justify-end gap-2 text-yellow-400">
           <Star className="h-6 w-6 fill-current" />
