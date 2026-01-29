@@ -33,7 +33,7 @@ export default function Header({ xp, className }: HeaderProps) {
 
   return (
     <header className={cn("h-20 w-full shrink-0 border-b-2", className)}>
-      <div className="grid h-full w-full grid-cols-[1fr_auto_1fr] items-center gap-8 px-4">
+      <div className="grid h-full w-full grid-cols-[1fr_auto_1fr] items-center gap-12 px-4">
         <div>
             <div className="mb-1 flex justify-between">
                 <span className="text-sm font-bold text-primary">{currentRank.name}</span>
