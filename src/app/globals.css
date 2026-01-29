@@ -97,6 +97,10 @@
 }
 
 @layer utilities {
+  .scrollbar-gutter-stable {
+    scrollbar-gutter: stable;
+  }
+  
   @keyframes tour-highlight-pulse {
     0%,
     100% {

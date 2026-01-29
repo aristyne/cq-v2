@@ -461,7 +461,7 @@ export default function Page() {
   const MainContent = () => (
     <>
       <Header xp={xp} className={cn({'tour-highlight rounded-none': tourStep === 0})} />
-      <main className="flex-1 overflow-y-scroll">
+      <main className="flex-1 overflow-y-auto scrollbar-gutter-stable">
         {view === 'path' && (
           <div className={cn({'tour-highlight': tourStep === 2})}>
             <LearnPath 
