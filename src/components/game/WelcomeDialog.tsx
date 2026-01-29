@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Star, HomeIcon, LayoutGrid } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type WelcomeDialogProps = {
   open: boolean;
@@ -53,11 +54,22 @@ export default function WelcomeDialog({ open, onOpenChange, step, setStep }: Wel
       onOpenChange(isOpen);
   }
 
+  const getPositionClass = () => {
+    switch (step) {
+      case 1: // For the Header
+        return "top-[65%]";
+      case 2: // For the Footer
+        return "top-[35%]";
+      default: // Center
+        return "top-[50%]";
+    }
+  };
+
   if (!open || !currentStepData) return null;
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[425px] z-[60]">
+      <DialogContent className={cn("sm:max-w-[425px] z-[60] transition-all duration-300 ease-in-out", getPositionClass())}>
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center">{currentStepData.title}</DialogTitle>
           {step === 0 && 
