@@ -319,13 +319,13 @@ type BottomNavProps = {
 const BottomNav = ({ activeView, setView }: BottomNavProps) => (
     <footer className="h-20 w-full shrink-0 border-t-2">
       <nav className="grid h-full grid-cols-3 items-center">
-        <button onClick={() => setView('path')} className={cn("flex flex-col items-center justify-center gap-1 h-full", activeView === 'path' ? 'text-primary' : 'text-muted-foreground/50 hover:text-primary')}>
-          <HomeIcon className="h-7 w-7" />
-          <span className="text-xs font-bold">LEARN</span>
-        </button>
         <button onClick={() => setView('overview')} className={cn("flex flex-col items-center justify-center gap-1 h-full", activeView === 'overview' ? 'text-primary' : 'text-muted-foreground/50 hover:text-primary')}>
           <LayoutGrid className="h-7 w-7" />
           <span className="text-xs font-bold">OVERVIEW</span>
+        </button>
+        <button onClick={() => setView('path')} className={cn("flex flex-col items-center justify-center gap-1 h-full border-x-2", activeView === 'path' ? 'text-primary' : 'text-muted-foreground/50 hover:text-primary')}>
+          <HomeIcon className="h-7 w-7" />
+          <span className="text-xs font-bold">LEARN</span>
         </button>
         <button onClick={() => setView('compiler')} className={cn("flex flex-col items-center justify-center gap-1 h-full", activeView === 'compiler' ? 'text-primary' : 'text-muted-foreground/50 hover:text-primary')}>
           <Code2 className="h-7 w-7" />
@@ -669,3 +669,5 @@ export default function Page() {
     </div>
   );
 }
+
+    
