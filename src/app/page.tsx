@@ -29,9 +29,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 function simplePythonInterpreter(code: string): { output: string[], error: string | null } {
   const output: string[] = [];
   const globalScope: Record<string, any> = {};
-
   const lines = code.split('\n');
-  
+
   const evalExpression = (expression: string, currentScope: Record<string, any>): any => {
     expression = expression.trim();
     if ((expression.startsWith("'") && expression.endsWith("'")) || (expression.startsWith('"') && expression.endsWith('"'))) {
@@ -43,6 +42,7 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
     if (!isNaN(Number(expression))) {
       return Number(expression);
     }
+    // Note: This doesn't respect operator precedence, but it works for simple cases.
     if (expression.includes('+')) {
       const parts = expression.split('+').map(p => p.trim());
       const values = parts.map(p => evalExpression(p, currentScope));
@@ -76,13 +76,16 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
   const executeBlock = (blockLines: string[], blockScope: Record<string, any> = {}) => {
       for (let i = 0; i < blockLines.length; i++) {
         let line = blockLines[i];
+
+        // Strip comments
+        line = line.split('#')[0];
+
         const trimmedLine = line.trim();
         const lineIndent = line.length - line.trimStart().length;
 
-        // The current scope needs to be recalculated on each line to get the latest variable values.
         let currentScope = {...globalScope, ...blockScope};
 
-        if (trimmedLine === '' || trimmedLine.startsWith('#')) continue;
+        if (trimmedLine === '') continue;
 
         // print()
         const printMatch = trimmedLine.match(/^print\((.*)\)$/);
@@ -101,7 +104,6 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
             } else {
               globalScope[varName] = varValue;
             }
-            // Update scope for immediate use
             currentScope = {...globalScope, ...blockScope};
             continue;
         }
@@ -111,18 +113,12 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
         if(forMatch) {
             const loopVar = forMatch[1];
             const rangeArgs = forMatch[2].split(',').map(s => parseInt(s.trim(), 10));
-            let start = 0;
-            let end = 0;
-            if (rangeArgs.length === 1) {
-              end = rangeArgs[0];
-            } else if (rangeArgs.length === 2) {
-              start = rangeArgs[0];
-              end = rangeArgs[1];
-            } else {
-              throw new Error("SyntaxError: Invalid range() arguments");
-            }
+            let start = 0, end = 0;
+            if (rangeArgs.length === 1) { end = rangeArgs[0]; }
+            else if (rangeArgs.length === 2) { [start, end] = rangeArgs; }
+            else { throw new Error("SyntaxError: Invalid range() arguments"); }
             
-            const bodyLines = [];
+            const bodyLines: string[] = [];
             i++;
             while(i < blockLines.length && (blockLines[i].length - blockLines[i].trimStart().length > lineIndent || blockLines[i].trim() === '')) {
                 bodyLines.push(blockLines[i]);
@@ -136,52 +132,68 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
             continue;
         }
 
-        // if statement
-        const ifMatch = trimmedLine.match(/^if\s+(.*):$/);
-        if (ifMatch) {
-            const condition = ifMatch[1];
-            const condParts = condition.split(/\s*(>=|<=|==|!=|>|<)\s*/);
-            if (condParts.length < 3) throw new Error("Invalid if condition");
+        // if/elif/else chain
+        const ifMatch = trimmedLine.match(/^(if|elif)\s+(.*):$/);
+        if (ifMatch && ifMatch[1] === 'if') {
+            let chainExecuted = false;
+            let currentIndex = i;
 
-            const varValue = evalExpression(condParts[0], currentScope);
-            const operator = condParts[1];
-            const value = evalExpression(condParts[2], currentScope);
+            while(currentIndex < blockLines.length) {
+                let currentLine = blockLines[currentIndex].split('#')[0];
+                let currentTrimmed = currentLine.trim();
+                let currentIndent = currentLine.length - currentLine.trimStart().length;
 
-            let conditionResult = false;
-            if (operator === '>=') conditionResult = varValue >= value;
-            else if (operator === '<=') conditionResult = varValue <= value;
-            else if (operator === '>') conditionResult = varValue > value;
-            else if (operator === '<') conditionResult = varValue < value;
-            else if (operator === '==') conditionResult = varValue == value;
-            else if (operator === '!=') conditionResult = varValue != value;
-            
-            const ifBody: string[] = [];
-            const elseBody: string[] = [];
-            let currentBody: string[] = ifBody;
-            
-            i++;
-            while(i < blockLines.length && (blockLines[i].length - blockLines[i].trimStart().length > lineIndent || blockLines[i].trim() === '')) {
-                currentBody.push(blockLines[i]);
-                i++;
-            }
+                if(currentTrimmed !== '' && currentIndent < lineIndent) break;
+                if(currentIndent > lineIndent) { currentIndex++; continue; }
+                if(currentTrimmed === '') { currentIndex++; continue; }
+                
+                const clauseMatch = currentTrimmed.match(/^(if|elif)\s+(.*):$/);
+                const elseMatch = currentTrimmed.match(/^else:$/);
 
-            if (i < blockLines.length && blockLines[i].trim().startsWith('else:')) {
-                currentBody = elseBody;
-                i++;
-                while(i < blockLines.length && (blockLines[i].length - blockLines[i].trimStart().length > lineIndent || blockLines[i].trim() === '')) {
-                    currentBody.push(blockLines[i]);
-                    i++;
+                let bodyLines: string[] = [];
+                let nextIndex = currentIndex + 1;
+                while(nextIndex < blockLines.length && (blockLines[nextIndex].length - blockLines[nextIndex].trimStart().length > lineIndent || blockLines[nextIndex].trim() === '')) {
+                    bodyLines.push(blockLines[nextIndex]);
+                    nextIndex++;
                 }
-            }
-            i--;
 
-            if (conditionResult) {
-                executeBlock(ifBody, blockScope);
-            } else {
-                executeBlock(elseBody, blockScope);
+                if (chainExecuted) { // A previous block in the chain was executed, so just skip this block
+                    currentIndex = nextIndex;
+                    continue;
+                }
+                
+                if (clauseMatch && (clauseMatch[1] === 'if' || clauseMatch[1] === 'elif')) {
+                    const condition = clauseMatch[2];
+                    const condParts = condition.split(/\s*(>=|<=|==|!=|>|<)\s*/);
+                    if (condParts.length < 3) throw new Error("Invalid if condition");
+                    const varValue = evalExpression(condParts[0], currentScope);
+                    const operator = condParts[1];
+                    const value = evalExpression(condParts[2], currentScope);
+
+                    let conditionResult = false;
+                    if (operator === '>=') conditionResult = varValue >= value;
+                    else if (operator === '<=') conditionResult = varValue <= value;
+                    else if (operator === '>') conditionResult = varValue > value;
+                    else if (operator === '<') conditionResult = varValue < value;
+                    else if (operator === '==') conditionResult = varValue == value;
+                    else if (operator === '!=') conditionResult = varValue != value;
+                    
+                    if (conditionResult) {
+                        executeBlock(bodyLines, blockScope);
+                        chainExecuted = true;
+                    }
+                } else if (elseMatch) {
+                    executeBlock(bodyLines, blockScope);
+                    chainExecuted = true;
+                } else {
+                  break;
+                }
+                currentIndex = nextIndex;
             }
+            i = currentIndex - 1;
             continue;
         }
+
 
         throw new Error(`SyntaxError: Unsupported syntax on line: "${trimmedLine}"`);
     }
@@ -669,5 +681,7 @@ export default function Page() {
     </div>
   );
 }
+
+    
 
     
