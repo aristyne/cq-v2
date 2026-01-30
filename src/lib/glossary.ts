@@ -32,7 +32,7 @@ export const glossary: GlossaryTopic[] = [
   },
   {
     term: 'for loop',
-    definition: 'A control flow statement for iterating over a sequence (like a list, tuple, dictionary, set, or string).',
-    example: `for i in range(3):\n    print("Looping!")`,
+    definition: "A control flow statement for iterating over a sequence. It's often used with `range()` to loop a specific number of times. `range(end)` loops from 0 to `end-1`, while `range(start, end)` loops from `start` to `end-1`.",
+    example: `# Loops 0, 1, 2\nfor i in range(3):\n    print(i)\n\n# Loops 2, 3, 4\nfor j in range(2, 5):\n    print(j)`,
   },
 ];
