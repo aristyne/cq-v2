@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -7,7 +8,7 @@ import GameView from "@/components/game/GameView";
 import CodeConsole from "@/components/console/CodeConsole";
 import CompletionDialog from "@/components/game/CompletionDialog";
 import WelcomeDialog from "@/components/game/WelcomeDialog";
-import { Home as HomeIcon, LayoutGrid, Scroll, Star, ChevronLeft, Lock, ChevronRight } from "lucide-react";
+import { Home as HomeIcon, LayoutGrid, Star, ChevronLeft, Lock, ChevronRight, Code2, Send, LoaderCircle, Terminal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
@@ -19,6 +20,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { glossary } from "@/lib/glossary";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 // WARNING: This is a VERY simplified Python interpreter for educational purposes.
 // It is NOT safe, secure, or complete. It only supports a tiny subset of Python
@@ -223,14 +226,99 @@ const OverviewView = () => {
     )
   }
 
+const FreeCompilerView = () => {
+    const [code, setCode] = useState<string>('# Welcome to the free compiler!\n# Write any Python code you want to test.\n\nprint("Hello, World!")');
+    const [output, setOutput] = useState<string[]>([]);
+    const [isRunning, setIsRunning] = useState(false);
+
+    const handleRunCode = () => {
+        setIsRunning(true);
+        const result = simplePythonInterpreter(code);
+        const feedback = [`> Running code...`];
+        if (result.output) feedback.push(...result.output);
+        if (result.error) feedback.push(`Error: ${result.error}`);
+        setOutput(feedback);
+        setIsRunning(false);
+    };
+    
+    const lines = code.split("\n").length;
+
+    return (
+        <div className="flex h-full flex-col">
+            <div className="flex-1 flex flex-col min-h-0">
+                <ScrollArea className="flex-1">
+                    <div className="flex font-code text-base">
+                        <div className="select-none p-4 pr-3 text-right text-muted-foreground">
+                            {Array.from({ length: lines }).map((_, i) => (
+                            <div key={i}>{i + 1}</div>
+                            ))}
+                        </div>
+                        <Editor
+                            value={code}
+                            onValueChange={setCode}
+                            highlight={(code) =>
+                              highlight(code, languages.python, "python")
+                            }
+                            padding={16}
+                            className="flex-grow !ring-0"
+                            style={{
+                              minHeight: "100%",
+                              backgroundColor: 'hsl(var(--background))',
+                              color: 'hsl(var(--foreground))'
+                            }}
+                        />
+                    </div>
+                </ScrollArea>
+                <div className="flex h-48 flex-col bg-secondary border-t-2">
+                    <div className="flex h-12 items-center justify-between px-4">
+                        <div className="flex items-center gap-2">
+                        <Terminal className="mr-2 h-5 w-5 text-secondary-foreground" />
+                        <span className="font-bold text-secondary-foreground">Output</span>
+                        </div>
+                    </div>
+                    <ScrollArea className="flex-1">
+                        <div className="p-4 pt-0 font-code text-sm">
+                        {output.map((line, index) => (
+                            <p
+                            key={index}
+                            className={`whitespace-pre-wrap ${
+                                line.includes("Error:") ? "text-red-500" : ""}`}
+                            >
+                            {line}
+                            </p>
+                        ))}
+                        </div>
+                    </ScrollArea>
+                </div>
+            </div>
+
+            <div className="flex h-24 items-center justify-center border-t-2 px-4">
+                <Button
+                  onClick={handleRunCode}
+                  size="lg"
+                  className="w-full max-w-xs text-lg font-bold uppercase tracking-wider"
+                  disabled={isRunning}
+                >
+                  {isRunning ? (
+                    <LoaderCircle className="mr-2 h-5 w-5 animate-spin" />
+                  ) : (
+                    <Send className="mr-2 h-5 w-5" />
+                  )}
+                  {isRunning ? "Running..." : "Run"}
+                </Button>
+            </div>
+        </div>
+    );
+};
+
 type BottomNavProps = {
-    activeView: 'path' | 'lesson' | 'overview';
-    setView: React.Dispatch<React.SetStateAction<'path' | 'lesson' | 'overview'>>;
+    activeView: 'path' | 'lesson' | 'overview' | 'compiler';
+    setView: React.Dispatch<React.SetStateAction<'path' | 'lesson' | 'overview' | 'compiler'>>;
 };
 
 const BottomNav = ({ activeView, setView }: BottomNavProps) => (
     <footer className="h-20 w-full shrink-0 border-t-2">
-      <nav className="grid h-full grid-cols-2 items-center">
+      <nav className="grid h-full grid-cols-3 items-center">
         <button onClick={() => setView('path')} className={cn("flex flex-col items-center justify-center gap-1 h-full", activeView === 'path' ? 'text-primary' : 'text-muted-foreground/50 hover:text-primary')}>
           <HomeIcon className="h-7 w-7" />
           <span className="text-xs font-bold">LEARN</span>
@@ -238,6 +326,10 @@ const BottomNav = ({ activeView, setView }: BottomNavProps) => (
         <button onClick={() => setView('overview')} className={cn("flex flex-col items-center justify-center gap-1 h-full", activeView === 'overview' ? 'text-primary' : 'text-muted-foreground/50 hover:text-primary')}>
           <LayoutGrid className="h-7 w-7" />
           <span className="text-xs font-bold">OVERVIEW</span>
+        </button>
+        <button onClick={() => setView('compiler')} className={cn("flex flex-col items-center justify-center gap-1 h-full", activeView === 'compiler' ? 'text-primary' : 'text-muted-foreground/50 hover:text-primary')}>
+          <Code2 className="h-7 w-7" />
+          <span className="text-xs font-bold">COMPILER</span>
         </button>
       </nav>
     </footer>
@@ -380,7 +472,7 @@ const LessonView = ({
 }
 
 export default function Page() {
-  const [view, setView] = useState<'path' | 'lesson' | 'overview'>('path');
+  const [view, setView] = useState<'path' | 'lesson' | 'overview' | 'compiler'>('path');
   const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
   const [highestLevelUnlocked, setHighestLevelUnlocked] = useState(1);
   const [xp, setXp] = useState(0);
@@ -516,7 +608,7 @@ export default function Page() {
       <Header xp={xp} className={cn({'tour-highlight rounded-none': tourStep === 0})} />
       <main className="flex-1 overflow-y-scroll scrollbar-gutter-stable">
         {view === 'path' && (
-          <div className={cn({'tour-highlight': tourStep === 2})}>
+          <div className={cn({'tour-highlight': tourStep === 3})}>
             <LearnPath 
               levels={levels}
               highestLevelUnlocked={highestLevelUnlocked}
@@ -528,8 +620,11 @@ export default function Page() {
         {view === 'overview' && (
           <OverviewView />
         )}
+        {view === 'compiler' && (
+          <FreeCompilerView />
+        )}
       </main>
-      <div className={cn({'tour-highlight rounded-none': tourStep === 1})}>
+      <div className={cn({'tour-highlight rounded-none': tourStep === 1 || tourStep === 2})}>
         <BottomNav activeView={view} setView={setView} />
       </div>
     </>
@@ -574,5 +669,3 @@ export default function Page() {
     </div>
   );
 }
-
-    

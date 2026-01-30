@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -9,7 +10,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Star, HomeIcon, LayoutGrid } from "lucide-react";
+import { Star, HomeIcon, LayoutGrid, Code2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type WelcomeDialogProps = {
@@ -29,6 +30,11 @@ const tourSteps = [
         icon: <LayoutGrid className="h-10 w-10 text-primary" />,
         title: "The Overview Tab",
         description: "Look down! At the bottom, you'll find the 'OVERVIEW' tab. Use it for a handy glossary of all the Python concepts you'll encounter.",
+    },
+    {
+        icon: <Code2 className="h-10 w-10 text-primary" />,
+        title: "Free Compiler",
+        description: "Want to experiment? The 'COMPILER' tab gives you a playground to write and run your own Python code anytime.",
     },
     {
         icon: <HomeIcon className="h-10 w-10 text-primary" />,
@@ -58,9 +64,10 @@ export default function WelcomeDialog({ open, onOpenChange, step, setStep }: Wel
     switch (step) {
       case 0: // For the Header
         return "top-[65%]";
-      case 1: // For the Footer
+      case 1: // For the Footer (Overview)
+      case 2: // For the Footer (Compiler)
         return "top-[35%]";
-      case 2: // For the Learn Path
+      case 3: // For the Learn Path
         return "top-[70%]";
       default: // Center
         return "top-[50%]";
