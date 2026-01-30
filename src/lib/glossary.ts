@@ -50,4 +50,14 @@ export const glossary: GlossaryTopic[] = [
     definition: 'A loop that is placed inside another loop. The inner loop completes all its runs for each single run of the outer loop.',
     example: `# The inner loop runs 3 times for each run of the outer loop.\nfor i in range(2):\n    print("Outer")\n    for j in range(3):\n        print("  Inner")`,
   },
+  {
+    term: 'input()',
+    definition: 'A function that pauses your program and waits for the user to type some text and press Enter. It always returns the text as a string.',
+    example: `name = input("What's your name? ")\nprint("Hello, " + name)`,
+  },
+  {
+    term: 'int()',
+    definition: 'A function that converts a string or a number into an integer (a whole number). This is essential for doing math with user input.',
+    example: `age_string = "25"\nage_number = int(age_string)\nprint(age_number + 5) # Prints 30`,
+  },
 ];

@@ -8,7 +8,7 @@ import GameView from "@/components/game/GameView";
 import CodeConsole from "@/components/console/CodeConsole";
 import CompletionDialog from "@/components/game/CompletionDialog";
 import WelcomeDialog from "@/components/game/WelcomeDialog";
-import { Home as HomeIcon, LayoutGrid, Star, ChevronLeft, Lock, ChevronRight, Code2, Send, LoaderCircle, Terminal } from "lucide-react";
+import { Home as HomeIcon, LayoutGrid, Star, ChevronLeft, Lock, ChevronRight, Code2, Send, LoaderCircle, Terminal, FileInput } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
@@ -22,20 +22,35 @@ import {
 import { glossary } from "@/lib/glossary";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+
 
 // WARNING: This is a VERY simplified Python interpreter for educational purposes.
 // It is NOT safe, secure, or complete. It only supports a tiny subset of Python
 // needed for the Code Odyssey game.
-function simplePythonInterpreter(code: string): { output: string[], error: string | null } {
+function simplePythonInterpreter(code: string, inputs: string[] = []): { output: string[], error: string | null } {
   const output: string[] = [];
   const globalScope: Record<string, any> = {};
   const lines = code.split('\n');
+  const inputQueue = [...inputs];
 
   const evalExpression = (expression: string, currentScope: Record<string, any>): any => {
     expression = expression.trim();
     if ((expression.startsWith("'") && expression.endsWith("'")) || (expression.startsWith('"') && expression.endsWith('"'))) {
       return expression.slice(1, -1);
     }
+    
+    const intMatch = expression.match(/^int\((.*)\)$/);
+    if (intMatch) {
+      const valueToConvert = evalExpression(intMatch[1], currentScope);
+      const number = parseInt(valueToConvert, 10);
+      if (isNaN(number)) {
+        throw new Error(`ValueError: invalid literal for int() with base 10: '${valueToConvert}'`);
+      }
+      return number;
+    }
+
     if (expression in currentScope) {
       return currentScope[expression];
     }
@@ -91,6 +106,32 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
         const printMatch = trimmedLine.match(/^print\((.*)\)$/);
         if (printMatch) {
             output.push(String(evalExpression(printMatch[1], currentScope)));
+            continue;
+        }
+
+        // input()
+        const inputMatch = trimmedLine.match(/^(?:(\w+)\s*=\s*)?input\((.*)\)$/);
+        if (inputMatch) {
+            const promptArg = inputMatch[2].trim();
+            if (promptArg) {
+                const prompt = evalExpression(promptArg, currentScope);
+                output.push(prompt);
+            }
+
+            const inputValue = inputQueue.shift();
+            if (inputValue === undefined) {
+                throw new Error("EOFError: EOF when reading a line");
+            }
+            
+            const varName = inputMatch[1];
+            if (varName) {
+                 if (Object.prototype.hasOwnProperty.call(blockScope, varName)) {
+                  blockScope[varName] = inputValue;
+                } else {
+                  globalScope[varName] = inputValue;
+                }
+                currentScope = {...globalScope, ...blockScope};
+            }
             continue;
         }
 
@@ -206,7 +247,7 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
     executeBlock(lines, {});
     return { output, error: null };
   } catch(e: any) {
-    return { output: [], error: e.message };
+    return { output, error: e.message || String(e) };
   }
 }
 
@@ -243,12 +284,14 @@ const OverviewView = () => {
 
 const FreeCompilerView = () => {
     const [code, setCode] = useState<string>('# Welcome to the free compiler!\n# Write any Python code you want to test.\n\nprint("Hello, World!")');
+    const [userInputs, setUserInputs] = useState<string>('');
     const [output, setOutput] = useState<string[]>([]);
     const [isRunning, setIsRunning] = useState(false);
 
     const handleRunCode = () => {
         setIsRunning(true);
-        const result = simplePythonInterpreter(code);
+        const inputsArray = userInputs.split('\n');
+        const result = simplePythonInterpreter(code, inputsArray);
         const feedback = [`> Running code...`];
         if (result.output) feedback.push(...result.output);
         if (result.error) feedback.push(`Error: ${result.error}`);
@@ -260,8 +303,8 @@ const FreeCompilerView = () => {
 
     return (
         <div className="flex h-full flex-col">
-            <div className="flex-1 flex flex-col min-h-0">
-                <ScrollArea className="flex-1">
+            <div className="flex-1 grid grid-rows-2 min-h-0">
+                <ScrollArea className="flex-1 row-span-1">
                     <div className="flex font-code text-base">
                         <div className="select-none p-4 pr-3 text-right text-muted-foreground">
                             {Array.from({ length: lines }).map((_, i) => (
@@ -284,26 +327,42 @@ const FreeCompilerView = () => {
                         />
                     </div>
                 </ScrollArea>
-                <div className="flex h-48 flex-col bg-secondary border-t-2">
-                    <div className="flex h-12 items-center justify-between px-4">
-                        <div className="flex items-center gap-2">
-                        <Terminal className="mr-2 h-5 w-5 text-secondary-foreground" />
-                        <span className="font-bold text-secondary-foreground">Output</span>
-                        </div>
-                    </div>
-                    <ScrollArea className="flex-1">
-                        <div className="p-4 pt-0 font-code text-sm">
-                        {output.map((line, index) => (
-                            <p
-                            key={index}
-                            className={`whitespace-pre-wrap ${
-                                line.includes("Error:") ? "text-red-500" : ""}`}
-                            >
-                            {line}
-                            </p>
-                        ))}
-                        </div>
-                    </ScrollArea>
+                <div className="flex h-full flex-col bg-secondary border-t-2">
+                    <Tabs defaultValue="output" className="flex flex-col h-full">
+                        <TabsList className="grid w-full grid-cols-2 bg-background">
+                            <TabsTrigger value="output">
+                                <Terminal className="mr-2 h-4 w-4" />
+                                Output
+                            </TabsTrigger>
+                            <TabsTrigger value="input">
+                                <FileInput className="mr-2 h-4 w-4" />
+                                Input
+                            </TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="output" className="flex-1 overflow-y-auto mt-0">
+                            <ScrollArea className="h-full">
+                                <div className="p-4 pt-2 font-code text-sm">
+                                {output.map((line, index) => (
+                                    <p
+                                    key={index}
+                                    className={`whitespace-pre-wrap ${
+                                        line.includes("Error:") ? "text-red-500" : ""}`}
+                                    >
+                                    {line}
+                                    </p>
+                                ))}
+                                </div>
+                            </ScrollArea>
+                        </TabsContent>
+                        <TabsContent value="input" className="flex-1 overflow-y-auto mt-0">
+                            <Textarea 
+                                value={userInputs}
+                                onChange={(e) => setUserInputs(e.target.value)}
+                                placeholder="Enter inputs here, one per line."
+                                className="h-full w-full resize-none rounded-none border-0 font-code text-sm !bg-secondary"
+                            />
+                        </TabsContent>
+                    </Tabs>
                 </div>
             </div>
 
@@ -533,11 +592,11 @@ export default function Page() {
 
     if (currentLevel.type === 'code') {
         feedback.push(`> Running code for: ${currentLevel.title}`);
-        const result = simplePythonInterpreter(code);
+        const result = simplePythonInterpreter(code, currentLevel.predefinedInputs || []);
         if (result.output) feedback.push(...result.output);
         if (result.error) feedback.push(`Error: ${result.error}`);
 
-        const cleanOutput = result.output.map(s => s.trim()).filter(Boolean).join('\n');
+        const cleanOutput = result.output.join('\n');
         success = cleanOutput === currentLevel.expectedOutput;
 
     } else if (currentLevel.type === 'multiple-choice') {
@@ -688,3 +747,4 @@ export default function Page() {
     
 
     
+

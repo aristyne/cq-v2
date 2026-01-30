@@ -19,6 +19,7 @@ export type CodeLevel = BaseLevel & {
   starterCode: string;
   solution: string;
   expectedOutput: string;
+  predefinedInputs?: string[];
 };
 
 export type MultipleChoiceLevel = BaseLevel & {
@@ -583,6 +584,70 @@ export const levels: Level[] = [
       "The first `if` statement should check `if i == 2:`. ",
       "In the `else` block of that first `if`, you'll need a second, nested `if/else` block.",
       "This nested `if/else` will check `if i == 4:` to distinguish between 'End' and 'Continue'.",
+    ],
+  },
+  // Topic 10: User Input (3 tasks)
+  {
+    id: 28,
+    type: 'code',
+    topicId: 10,
+    topicTitle: 'User Input',
+    isFirstInTopic: true,
+    title: 'Task 1: Getting User Input',
+    description: 'Learn how to get input from a user.',
+    challenge: "Use the `input()` function to get a user's name, store it in a variable called `name`, and then print a greeting like `Hello, ` followed by the name.",
+    starterCode: '# Your code here\n',
+    solution: "name = input()\nprint('Hello, ' + name)",
+    predefinedInputs: ['Alice'],
+    expectedOutput: 'Hello, Alice',
+    xp: 50,
+    difficulty: 'Medium',
+    hints: [
+      'Use `name = input()` to wait for the user to type something and press Enter.',
+      'The text the user types will be stored in the `name` variable.',
+      "After getting the input, use string concatenation to print the greeting: `print('Hello, ' + name)`.",
+    ],
+  },
+  {
+    id: 29,
+    type: 'code',
+    topicId: 10,
+    topicTitle: 'User Input',
+    isFirstInTopic: false,
+    title: 'Task 2: Prompting the User',
+    description: 'You can display a message to the user when asking for input.',
+    challenge: "Ask the user for their favorite color by using `input()` with the prompt 'What is your favorite color? '. Store the result in a variable and then print `Your favorite color is: ` followed by their answer.",
+    starterCode: '# Your code here\n',
+    solution: "color = input('What is your favorite color? ')\nprint('Your favorite color is: ' + color)",
+    predefinedInputs: ['blue'],
+    expectedOutput: 'What is your favorite color? \nYour favorite color is: blue',
+    xp: 60,
+    difficulty: 'Medium',
+    hints: [
+      "You can put a string inside the `input()` parentheses to show a prompt.",
+      "Example: `name = input('Enter your name: ')`",
+      "Don't forget to print the final sentence after you get the user's input.",
+    ],
+  },
+  {
+    id: 30,
+    type: 'code',
+    topicId: 10,
+    topicTitle: 'User Input',
+    isFirstInTopic: false,
+    title: 'Task 3: Input and Numbers',
+    description: 'Input is always read as text. You need to convert it to a number for math.',
+    challenge: "Get a number from the user using the prompt 'Enter a number: '. Convert it to an integer using `int()`, add 10 to it, and print the result.",
+    starterCode: '# Your code here\n',
+    solution: "num_str = input('Enter a number: ')\nnum = int(num_str)\nprint(num + 10)",
+    predefinedInputs: ['5'],
+    expectedOutput: 'Enter a number: \n15',
+    xp: 70,
+    difficulty: 'Hard',
+    hints: [
+      "First, get the input and store it in a variable, e.g., `num_str = input(...)`.",
+      "`input()` always gives you a string. To do math, you must convert it to a number with `int()`.",
+      "Create a new variable for the number: `num = int(num_str)`. Then you can do math with `num`.",
     ],
   },
 ];
