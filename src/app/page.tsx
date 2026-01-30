@@ -48,6 +48,14 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
       }
       return values.join('');
     }
+    if (expression.includes('-')) {
+      const parts = expression.split('-').map(p => p.trim());
+      const values = parts.map(p => evalExpression(p, currentScope));
+      if (values.every(v => typeof v === 'number' || (typeof v === 'string' && !isNaN(Number(v))))) {
+        return values.map(Number).reduce((a, b) => a - b);
+      }
+      throw new Error(`TypeError: unsupported operand type(s) for -`);
+    }
      if (expression.includes('*')) {
       const parts = expression.split('*').map(p => p.trim());
       const values = parts.map(p => evalExpression(p, currentScope));
