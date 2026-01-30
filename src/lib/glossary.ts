@@ -13,26 +13,41 @@ export const glossary: GlossaryTopic[] = [
   {
     term: 'Variable',
     definition: 'A named storage location in memory that holds a value. You can change the value of a variable.',
-    example: `player_name = "Alex"\nprint(player_name)`,
+    example: `player_name = "Alex"\nscore = 100\nprint(player_name)`,
   },
   {
-    term: 'String',
-    definition: 'A sequence of characters, such as text. In Python, strings are enclosed in single quotes (\'\') or double quotes ("").',
-    example: `greeting = "Hello there!"`,
+    term: 'Data Types',
+    definition: 'The classification of a data item. Common types are String (text), and Integer (whole numbers).',
+    example: `message = "I am a string"\ncount = 10 # This is an integer`,
   },
   {
-    term: 'Integer',
-    definition: 'A whole number (not a fraction) that can be positive, negative, or zero.',
-    example: `score = 100`,
+    term: 'Arithmetic Operators',
+    definition: 'Symbols used to perform math. Common operators are `+` (add), `-` (subtract), and `*` (multiply).',
+    example: `health = 100 - 25\ndamage = 10 * 4\nprint(health)`,
   },
   {
-    term: 'if statement',
-    definition: 'A conditional statement that executes a block of code only if a specified condition is true.',
-    example: `if score > 50:\n    print("You win!")`,
+    term: 'String Concatenation',
+    definition: 'The process of joining two or more strings together using the `+` operator.',
+    example: `word1 = "Python"\nword2 = " is fun"\nprint(word1 + word2)`,
   },
   {
-    term: 'for loop',
-    definition: "A control flow statement for iterating over a sequence. It's often used with `range()` to loop a specific number of times. `range(end)` loops from 0 to `end-1`, while `range(start, end)` loops from `start` to `end-1`.",
+    term: 'if/else Statement',
+    definition: 'A control structure that runs one block of code if a condition is true, and another if it is false.',
+    example: `age = 15\nif age >= 18:\n    print("Access granted")\nelse:\n    print("Access denied")`,
+  },
+  {
+    term: 'for loop with range()',
+    definition: "A statement for iterating a specific number of times. `range(end)` loops from 0 to `end-1`. `range(start, end)` loops from `start` to `end-1`.",
     example: `# Loops 0, 1, 2\nfor i in range(3):\n    print(i)\n\n# Loops 2, 3, 4\nfor j in range(2, 5):\n    print(j)`,
+  },
+  {
+    term: 'Updating Variables in a Loop',
+    definition: 'Modifying the value of a variable repeatedly inside a loop to keep a running total or count.',
+    example: `total_xp = 0\nfor i in range(3):\n    total_xp = total_xp + 10\nprint(total_xp)`,
+  },
+  {
+    term: 'Nested Loop',
+    definition: 'A loop that is placed inside another loop. The inner loop completes all its runs for each single run of the outer loop.',
+    example: `# The inner loop runs 3 times for each run of the outer loop.\nfor i in range(2):\n    print("Outer")\n    for j in range(3):\n        print("  Inner")`,
   },
 ];
