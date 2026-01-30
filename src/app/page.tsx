@@ -133,7 +133,7 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
         }
 
         // if/elif/else chain
-        const ifMatch = trimmedLine.match(/^(if|elif)\s+(.*):$/);
+        const ifMatch = trimmedLine.match(/^(if|elif)\s*(.*):$/);
         if (ifMatch && ifMatch[1] === 'if') {
             let chainExecuted = false;
             let currentIndex = i;
@@ -147,7 +147,7 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
                 if(currentIndent > lineIndent) { currentIndex++; continue; }
                 if(currentTrimmed === '') { currentIndex++; continue; }
                 
-                const clauseMatch = currentTrimmed.match(/^(if|elif)\s+(.*):$/);
+                const clauseMatch = currentTrimmed.match(/^(if|elif)\s*(.*):$/);
                 const elseMatch = currentTrimmed.match(/^else:$/);
 
                 let bodyLines: string[] = [];
@@ -163,7 +163,10 @@ function simplePythonInterpreter(code: string): { output: string[], error: strin
                 }
                 
                 if (clauseMatch && (clauseMatch[1] === 'if' || clauseMatch[1] === 'elif')) {
-                    const condition = clauseMatch[2];
+                    let condition = clauseMatch[2];
+                    if (condition.startsWith('(') && condition.endsWith(')')) {
+                        condition = condition.slice(1, -1);
+                    }
                     const condParts = condition.split(/\s*(>=|<=|==|!=|>|<)\s*/);
                     if (condParts.length < 3) throw new Error("Invalid if condition");
                     const varValue = evalExpression(condParts[0], currentScope);
