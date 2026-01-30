@@ -5,10 +5,9 @@ Welcome to **CodeQuest**, a fun, gamified way to learn the Python programming la
 ## Your Learning Journey
 
 -   **Follow a Clear Path:** Navigate a clean, vertical learning path to track your progress.
--   **Master 9 Core Topics:** Journey through 27 unique challenges spread across 9 topics, from the basics of `print()` to the complexities of nested loops and conditional logic.
+-   **Master Core Topics:** Journey through several unique challenges spread across topics, from the basics of `print()` to the complexities of nested loops and conditional logic.
 -   **Learn Progressively:** Each topic is broken down into three tasks, creating a gradual learning curve that builds your confidence and skills.
 -   **Earn Rewards:** Solve coding puzzles to earn XP and watch your skills grow.
--   **AI-Powered Guidance:** Feeling stuck? The friendly AI Assistant is always available to provide a helpful hint or explain a tricky concept.
 
 To get started, launch the app and begin your first lesson!
 
